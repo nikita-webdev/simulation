@@ -1,5 +1,7 @@
 package simulation;
 
+import simulation.objects.Grass;
+
 import java.sql.Array;
 import java.util.*;
 
@@ -35,9 +37,12 @@ public class SimulationMap {
             String key = entry.getKey();
             allEntities.add(key);
             int[] value = entry.getValue();
-            System.out.println("containsValue: " + map.containsValue(value));
+//            System.out.println("containsValue: " + map.containsValue(value));
             System.out.println("howMuchEntriesInMap: " + key + " " + Arrays.toString(value));
-            System.out.println("howMuchEntriesInMap: " + key + " " + value[0]);
+//            System.out.println("howMuchEntriesInMap: " + key + " " + value[0]);
+//            System.out.println("{1,1} containedInMap: " + key + " " + Arrays.equals(new int[] {1,1}, value));
+//            System.out.println("{1,2} containedInMap: " + key + " " + Arrays.equals(new int[] {1,2}, value));
+//            System.out.println("{1,3} containedInMap: " + key + " " + Arrays.equals(new int[] {1,3}, value));
             // можно первый элемент минус первый и второй также, потом сложить их разность и, если в сумме получается 0, то эта координата занята
             // вот же мы проверяем есть ли у нас такое значение map.containsValue(value)
         }
@@ -45,6 +50,21 @@ public class SimulationMap {
 
     public void getMapValues() {
 //        System.out.println(map.containsValue());
+    }
+
+    // Проверяем содержит ли map координаты
+    public boolean containsCoordinates(int[] valueOfCoordinates) {
+        boolean isContain = false;
+        for (Map.Entry<String, int[]> entry : map.entrySet()) {
+            String key = entry.getKey();
+            int[] value = entry.getValue();
+
+            isContain = Arrays.equals(valueOfCoordinates, value);
+            if (isContain) {
+                break;
+            }
+        }
+        return isContain;
     }
 
     public List<String> getAllEntities() {

@@ -22,7 +22,7 @@ public class Simulation {
          */
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(5);
+        initObjects.initObjectsOnTheMap(25);
 
         Renderer renderer = new Renderer(9,5);
         renderer.createMap();

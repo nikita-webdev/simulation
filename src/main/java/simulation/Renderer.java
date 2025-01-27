@@ -43,8 +43,6 @@ public class Renderer {
         map.howMuchEntriesInMap();
         // для примера вставляем H (Herbivore - травоядное) в матрицу
         matrix[1][1] = " H ";
-//        matrix[map.getEntityCoordinatesX("grass1")][map.getEntityCoordinatesY("grass1")] = " G ";
-//        matrix[map.getEntityCoordinatesX(map.getAllEntities().get(0))][map.getEntityCoordinatesY(map.getAllEntities().get(0))] = " G ";
 
         System.out.println("size getAllEntities: " + map.getAllEntities().size());
 

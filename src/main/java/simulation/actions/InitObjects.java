@@ -6,6 +6,7 @@ import simulation.objects.Grass;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 
 public class InitObjects {
     private SimulationMap map = SimulationMap.getInstance();
@@ -25,21 +26,36 @@ public class InitObjects {
 
     }
 
+    // Генерируем случайные координаты для объекта
+    int[] setRandomCoordinates(int xLimit, int yLimit) {
+        int[] xy = new int[2];
+        Random random = new Random();
+
+        do {
+            xy[0] = random.nextInt((xLimit - 1));
+            xy[1] = random.nextInt((yLimit - 1));
+        } while (map.containsCoordinates(xy));
+
+        return xy;
+    }
+
+
     // Может, в цикле добавлять названия объектов в массив?
     // Пока что количество объктов задаать нельзя
     // , int numberOfHerbivores, int numberOfPredators
-    
+
     public void initObjectsOnTheMap(int numberOfGrasses) {
-//        Grass grass1 = new Grass("grass12", 3, 1);
-//        map.addEntity(grass1);
 
         // Массив для травы
         Grass[] grasses = new Grass[numberOfGrasses];
         // Заполнение массива элементами и добавление их в коллекцию
         for (int i = 0; i < numberOfGrasses; i++) {
-            grasses[i] = new Grass("grass" + (i + 1),3, 1);
+            // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
+            int[] xy = setRandomCoordinates(9, 5);
+            grasses[i] = new Grass("grass" + (i + 1), xy[0], xy[1]);
             map.addEntity(grasses[i]);
         }
+
 
 //        for (Map<String, int[]> entry : map.entrySet()) {
 //

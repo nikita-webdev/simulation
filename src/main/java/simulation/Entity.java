@@ -15,7 +15,7 @@ public abstract class Entity {
     int positionY;
     int positionX;
 
-    public Entity(String name, int positionY, int positionX) {
+    public Entity(String name, int positionX, int positionY) {
         this.name = name;
         this.positionY = positionY;
         this.positionX = positionX;
