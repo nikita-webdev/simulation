@@ -16,14 +16,17 @@ public class Simulation {
 
         */
 
-        /**
+        /*
          * 1. Создаю список и добавляю объекты в список
          * 2. Рендерер рендерит карту
          */
 
-        Renderer renderer = new Renderer(5,9);
-        renderer.renderMap();
+        InitObjects initObjects = new InitObjects();
+        initObjects.initObjectsOnTheMap(5);
 
+        Renderer renderer = new Renderer(9,5);
+        renderer.createMap();
+        renderer.renderMap();
     }
 
     void nextTurn() {
