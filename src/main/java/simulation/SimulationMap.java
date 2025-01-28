@@ -50,17 +50,23 @@ public class SimulationMap {
     // Проверяем содержит ли map координаты
     public boolean containsCoordinates(int[] valueOfCoordinates) {
         boolean isContain = false;
+
+        // Проверяем координаты наоборот - сначала Y, потом X
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
             String key = entry.getKey();
             int[] value = new int[2];
-            value[0] = entry.getValue().positionX;
-            value[1] = entry.getValue().positionY;
+            value[0] = entry.getValue().positionY;
+            value[1] = entry.getValue().positionX;
 
             isContain = Arrays.equals(valueOfCoordinates, value);
+            System.out.println("x: " + entry.getValue().positionX + ", y: " + entry.getValue().positionY + " " + Arrays.equals(valueOfCoordinates, value));
+
             if (isContain) {
                 break;
             }
         }
+        System.out.println(Arrays.toString(valueOfCoordinates));
+        System.out.println("--------");
         return isContain;
     }
 

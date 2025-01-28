@@ -6,13 +6,11 @@ public abstract class Creature extends Entity {
     int speed;
     int hp;
 
-    public Creature(String name, int speed, int hp, int positionX, int positionY) {
-        super(name, positionX, positionY);
-        this.speed = speed;
-        this.hp = hp;
+    public Creature(String name, int positionX, int positionY) {
+        super(name, positionY, positionX);
     }
 
-    void makeMove() {
-
-    }
+//    void makeMove() {
+//
+//    }
 }

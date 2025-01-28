@@ -47,8 +47,6 @@ public class Renderer {
     // Наверное, всё-таки, лучше перенести код из этой функциив createMap(), потому что здесь объекты именно добавляются на карту, а не рендерятся
     void renderMap() {
         map.howMuchEntriesInMap();
-        // для примера вставляем H (Herbivore - травоядное) в матрицу
-        matrix[1][1] = " H ";
 
         System.out.println("size getAllEntities: " + map.getAllEntities().size());
 
@@ -59,7 +57,7 @@ public class Renderer {
             // Не ключ и не значение, а именно имя или иконка, которое задаётся в конструкторе класса или в классе
             String currentEntityName = map.getAllEntities().get(i);
 
-            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = " G ";
+            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).icon;
 //            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).name;
             System.out.println("currentEntityName: " + map.map.get(currentEntityName));
             System.out.println("name from Renderer: " + map.map.get(currentEntityName).name);

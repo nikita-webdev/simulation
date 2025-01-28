@@ -9,6 +9,7 @@ public abstract class Entity {
     */
 
     public String name;
+    public String icon;
     int positionY;
     int positionX;
 

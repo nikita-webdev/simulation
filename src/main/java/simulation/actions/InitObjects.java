@@ -2,6 +2,7 @@ package simulation.actions;
 
 import simulation.SimulationMap;
 import simulation.animals.Herbivore;
+import simulation.animals.Predator;
 import simulation.objects.Grass;
 import simulation.objects.Rock;
 import simulation.objects.Tree;
@@ -54,10 +55,14 @@ public class InitObjects {
             int[] xyGrass = generateRandomCoordinates(20, 15);
             int[] xyRock = generateRandomCoordinates(20, 15);
             int[] xyTree = generateRandomCoordinates(20, 15);
-
+            int[] xyHerbivore = generateRandomCoordinates(20, 15);
+            int[] xyPredator = generateRandomCoordinates(20, 15);
+//
             map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
             map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+            map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[1], xyHerbivore[0]));
+            map.addEntity(new Predator("predator" + (i + 1), xyPredator[1], xyPredator[0]));
         }
 
 //        Grass[] grasses = new Grass[numberOfGrasses];
