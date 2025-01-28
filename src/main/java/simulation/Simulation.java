@@ -21,7 +21,7 @@ public class Simulation {
 //        final int MAX_Y_MAP_SIZE = 5;
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(10);
+        initObjects.initObjectsOnTheMap(20, 10, 20, 10);
 
         Renderer renderer = new Renderer();
         renderer.createMap();

@@ -47,21 +47,37 @@ public class InitObjects {
     // Пока что количество объктов задавать нельзя
     // , int numberOfHerbivores, int numberOfPredators
 
-    public void initObjectsOnTheMap(int numberOfObjects) {
+    public void initObjectsOnTheMap(int numberOfGrasses, int numberOfRocksAndTrees, int numberOfHerbivores, int numberOfPredators) {
 
         // Заменить на keySet()
-        for (int i = 0; i < numberOfObjects; i++) {
+        // Выводим траву
+        for (int i = 0; i < numberOfGrasses; i++) {
             // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
             int[] xyGrass = generateRandomCoordinates(20, 15);
+
+            map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
+        }
+
+        // Выводим камни и деревья
+        for (int i = 0; i < numberOfRocksAndTrees; i++) {
             int[] xyRock = generateRandomCoordinates(20, 15);
             int[] xyTree = generateRandomCoordinates(20, 15);
-            int[] xyHerbivore = generateRandomCoordinates(20, 15);
-            int[] xyPredator = generateRandomCoordinates(20, 15);
-//
-            map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
+
             map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+        }
+
+        // Выводим травоядных
+        for (int i = 0; i < numberOfHerbivores; i++) {
+            int[] xyHerbivore = generateRandomCoordinates(20, 15);
+
             map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[1], xyHerbivore[0]));
+        }
+
+        // Выводим хищников
+        for (int i = 0; i < numberOfPredators; i++) {
+            int[] xyPredator = generateRandomCoordinates(20, 15);
+
             map.addEntity(new Predator("predator" + (i + 1), xyPredator[1], xyPredator[0]));
         }
 
