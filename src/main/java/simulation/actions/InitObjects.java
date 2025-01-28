@@ -3,6 +3,8 @@ package simulation.actions;
 import simulation.SimulationMap;
 import simulation.animals.Herbivore;
 import simulation.objects.Grass;
+import simulation.objects.Rock;
+import simulation.objects.Tree;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class InitObjects {
     }
 
     // Генерируем случайные координаты для объекта
-    int[] setRandomCoordinates(int xLimit, int yLimit) {
+    private int[] generateRandomCoordinates(int xLimit, int yLimit) {
         int[] xy = new int[2];
         Random random = new Random();
 
@@ -41,24 +43,30 @@ public class InitObjects {
 
 
     // Может, в цикле добавлять названия объектов в массив?
-    // Пока что количество объктов задаать нельзя
+    // Пока что количество объктов задавать нельзя
     // , int numberOfHerbivores, int numberOfPredators
 
-    public void initObjectsOnTheMap(int numberOfGrasses) {
+    public void initObjectsOnTheMap(int numberOfObjects) {
 
-        // Массив для травы
-        Grass[] grasses = new Grass[numberOfGrasses];
-        // Заполнение массива элементами и добавление их в коллекцию
-        for (int i = 0; i < numberOfGrasses; i++) {
+        // Заменить на keySet()
+        for (int i = 0; i < numberOfObjects; i++) {
             // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
-            int[] xy = setRandomCoordinates(9, 5);
-            grasses[i] = new Grass("grass" + (i + 1), xy[0], xy[1]);
-            map.addEntity(grasses[i]);
+            int[] xyGrass = generateRandomCoordinates(20, 15);
+            int[] xyRock = generateRandomCoordinates(20, 15);
+            int[] xyTree = generateRandomCoordinates(20, 15);
+
+            map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
+            map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
+            map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
         }
 
-
-//        for (Map<String, int[]> entry : map.entrySet()) {
-//
+//        Grass[] grasses = new Grass[numberOfGrasses];
+//        // Заполнение массива элементами и добавление их в коллекцию
+//        for (int i = 0; i < numberOfGrasses; i++) {
+//            // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
+//            int[] xy = generateRandomCoordinates(20, 15);
+//            grasses[i] = new Grass("grass" + (i + 1), xy[0], xy[1]);
+//            map.addEntity(grasses[i]);
 //        }
 
 

@@ -7,13 +7,18 @@ import java.util.Arrays;
 
 public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
-    int mapSizeX;
-    int mapSizeY;
+    int mapSizeX = 20;
+    int mapSizeY = 15;
     String[][] matrix;
 
-    public Renderer(int mapSizeX, int mapSizeY) {
-        this.mapSizeX = mapSizeX;
-        this.mapSizeY = mapSizeY;
+    // убрал динамический размер поля (карты) int mapSizeX, int mapSizeY
+    public Renderer() {
+//        this.mapSizeX = mapSizeX;
+//        this.mapSizeY = mapSizeY;
+
+        // сделать переменные либо константой, либо вынести в параметры конструктора
+
+
         this.matrix = new String[mapSizeY][mapSizeX];
     }
 
@@ -39,6 +44,7 @@ public class Renderer {
         return matrix;
     }
 
+    // Наверное, всё-таки, лучше перенести код из этой функциив createMap(), потому что здесь объекты именно добавляются на карту, а не рендерятся
     void renderMap() {
         map.howMuchEntriesInMap();
         // для примера вставляем H (Herbivore - травоядное) в матрицу
@@ -46,15 +52,19 @@ public class Renderer {
 
         System.out.println("size getAllEntities: " + map.getAllEntities().size());
 
+        // Заменить на получение значений непосредственно из map без дополнительных методов
+        // Добавляем элементы в матрицу
         for (int i = 0; i < map.getAllEntities().size(); i++) {
-            matrix[map.getEntityCoordinatesX(map.getAllEntities().get(i))][map.getEntityCoordinatesY(map.getAllEntities().get(i))] = " G ";
+            // Сделать отображение объекта вместо " G " имя из самого объекта
+            // Не ключ и не значение, а именно имя или иконка, которое задаётся в конструкторе класса или в классе
+            String currentEntityName = map.getAllEntities().get(i);
+
+            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = " G ";
+//            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).name;
+            System.out.println("currentEntityName: " + map.map.get(currentEntityName));
         }
 
-
-
-//        System.out.println("getAllEntities from Renderer: " + map.getAllEntities().get(0));
-
-        // в цикле мы только выводим матрицу на экран (ничего не вставляем в неё)
+        // В цикле мы только выводим матрицу на экран (ничего не вставляем в неё)
         StringBuilder line = new StringBuilder();
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[i].length; j++) {
@@ -65,5 +75,6 @@ public class Renderer {
         System.out.println(line);
 
         System.out.println("keySet from Renderer: " + map.map.keySet());
+        System.out.println("size from Renderer: " + map.map.size());
     }
 }

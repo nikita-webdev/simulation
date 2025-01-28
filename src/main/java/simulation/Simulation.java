@@ -16,15 +16,14 @@ public class Simulation {
 
         */
 
-        /*
-         * 1. Создаю список и добавляю объекты в список
-         * 2. Рендерер рендерит карту
-         */
+//        final int NUMBER_OF_OBJECTS = 10;
+//        final int MAX_X_MAP_SIZE = 9;
+//        final int MAX_Y_MAP_SIZE = 5;
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(25);
+        initObjects.initObjectsOnTheMap(10);
 
-        Renderer renderer = new Renderer(9,5);
+        Renderer renderer = new Renderer();
         renderer.createMap();
         renderer.renderMap();
     }

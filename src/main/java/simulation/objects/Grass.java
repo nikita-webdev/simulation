@@ -6,4 +6,8 @@ public class Grass extends Entity {
     public Grass(String name, int positionX, int positionY) {
         super(name, positionY, positionX);
     }
+
+    String getName() {
+        return name;
+    }
 }

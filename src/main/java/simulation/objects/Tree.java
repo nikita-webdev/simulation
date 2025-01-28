@@ -4,6 +4,6 @@ import simulation.Entity;
 
 public class Tree extends Entity {
     public Tree(String name, int positionX, int positionY) {
-        super(name, positionX, positionY);
+        super(name, positionY, positionX);
     }
 }

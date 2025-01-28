@@ -6,12 +6,9 @@ public abstract class Entity {
     * Может быть, лучше не массив, а два примитива int?
     * Типа horizontalLocation и verticalLocation
     * Или типа x, y
-    * Нужно ли объектам поле id?
-    * Но ведь цикл симуляции должен быть бесконечным - значит не хватит чисел для id
-    * Или хватит - если использовать BigInteger?
     */
 
-    String name;
+    public String name;
     int positionY;
     int positionX;
 
