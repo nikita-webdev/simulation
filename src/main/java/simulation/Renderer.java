@@ -62,6 +62,7 @@ public class Renderer {
             matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = " G ";
 //            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).name;
             System.out.println("currentEntityName: " + map.map.get(currentEntityName));
+            System.out.println("name from Renderer: " + map.map.get(currentEntityName).name);
         }
 
         // В цикле мы только выводим матрицу на экран (ничего не вставляем в неё)
