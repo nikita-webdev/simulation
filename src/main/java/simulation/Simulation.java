@@ -42,7 +42,7 @@ public class Simulation {
             i++;
             System.out.println("Ход: " + i);
 
-//            moveAllCreatures.makeMoveAllCreatures();
+            moveAllCreatures.makeMoveAllCreatures();
 
             if (i == 10) {
                 break;

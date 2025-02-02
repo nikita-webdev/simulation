@@ -11,9 +11,9 @@ public abstract class Creature extends Entity {
     }
 
     // Наверное, лучше получать значения через геттер и устанавливать через сеттер
-//    public void makeMove() {
-//        if (positionX < 12) {
-//            positionX += 1;
-//        }
-//    }
+    public void makeMove() {
+        if (positionX < 39) {
+            positionX += 1;
+        }
+    }
 }

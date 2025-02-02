@@ -24,6 +24,7 @@ public class Renderer {
     }
 
     void renderMap() {
+        createMap();
         updateMatrix();
         printMatrix();
     }
