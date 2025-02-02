@@ -10,12 +10,12 @@ public abstract class Entity {
 
     public String name;
     public String icon;
-    int positionY;
-    int positionX;
+    public int positionX;
+    public int positionY;
 
     public Entity(String name, int positionX, int positionY) {
         this.name = name;
-        this.positionY = positionY;
         this.positionX = positionX;
+        this.positionY = positionY;
     }
 }

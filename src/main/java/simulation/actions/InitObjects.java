@@ -7,23 +7,10 @@ import simulation.objects.Grass;
 import simulation.objects.Rock;
 import simulation.objects.Tree;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Random;
 
 public class InitObjects {
     private SimulationMap map = SimulationMap.getInstance();
-    // нужно указывать при вызове какого-нибудь метода или при создании объекта InitObjects - сколько и каких объектов создавать
-    // то есть, это значение должно быть можно откуда-то настраивать и регулировать, а уже эти методы, чтобы его принимали
-
-    // Сделать несколько пресетов (не уровней сложности) Симуляции
-    // Чтобы можно было их выбирать в конструкторе при инициализации
-    // И, чтобы количество существ в каждом варьировалось
-    // Храниться они могут, например, массивом здесь
-    // 1, 2, 3 - easy, medium, hard
-    // И потом эти массивы значений как должны передаваться в метод?
-
-    Integer[] one = {1, 2, 3};
 
     public InitObjects() {
 
@@ -42,15 +29,9 @@ public class InitObjects {
         return xy;
     }
 
-
-    // Может, в цикле добавлять названия объектов в массив?
-    // Пока что количество объктов задавать нельзя
-    // , int numberOfHerbivores, int numberOfPredators
-
     public void initObjectsOnTheMap(int numberOfGrasses, int numberOfRocksAndTrees, int numberOfHerbivores, int numberOfPredators) {
 
-        // Заменить на keySet()
-        // Выводим траву
+        // Добавляем траву в map
         for (int i = 0; i < numberOfGrasses; i++) {
             // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
             int[] xyGrass = generateRandomCoordinates(20, 15);
@@ -58,7 +39,7 @@ public class InitObjects {
             map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
         }
 
-        // Выводим камни и деревья
+        // Добавляем камни и деревья в map
         for (int i = 0; i < numberOfRocksAndTrees; i++) {
             int[] xyRock = generateRandomCoordinates(20, 15);
             int[] xyTree = generateRandomCoordinates(20, 15);
@@ -67,35 +48,19 @@ public class InitObjects {
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
         }
 
-        // Выводим травоядных
+        // Добавляем травоядных в map
         for (int i = 0; i < numberOfHerbivores; i++) {
             int[] xyHerbivore = generateRandomCoordinates(20, 15);
 
-            map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[1], xyHerbivore[0]));
+            map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[0], xyHerbivore[1]));
         }
 
-        // Выводим хищников
+        // Добавляем хищников в map
         for (int i = 0; i < numberOfPredators; i++) {
             int[] xyPredator = generateRandomCoordinates(20, 15);
 
-            map.addEntity(new Predator("predator" + (i + 1), xyPredator[1], xyPredator[0]));
+            map.addEntity(new Predator("predator" + (i + 1), xyPredator[0], xyPredator[1]));
         }
-
-//        Grass[] grasses = new Grass[numberOfGrasses];
-//        // Заполнение массива элементами и добавление их в коллекцию
-//        for (int i = 0; i < numberOfGrasses; i++) {
-//            // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
-//            int[] xy = generateRandomCoordinates(20, 15);
-//            grasses[i] = new Grass("grass" + (i + 1), xy[0], xy[1]);
-//            map.addEntity(grasses[i]);
-//        }
-
-
-//        Herbivore[] herbivores = new Herbivore[numberOfHerbivores];
-//
-//        for (int i = 0; i < numberOfHerbivores; i++) {
-//            herbivores[i] = new Herbivore("herbivore" + i, 1, 1, 2, 3);
-//        }
     }
 
     

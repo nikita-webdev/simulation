@@ -4,7 +4,7 @@ import simulation.Entity;
 
 public class Rock extends Entity {
     public Rock(String name, int positionX, int positionY) {
-        super(name, positionY, positionX);
+        super(name, positionX, positionY);
 
         icon = " \uD83C\uDFD4\uFE0F";
     }

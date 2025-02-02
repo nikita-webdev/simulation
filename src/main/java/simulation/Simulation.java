@@ -1,6 +1,7 @@
 package simulation;
 
 import simulation.actions.InitObjects;
+import simulation.actions.MoveAllCreatures;
 
 public class Simulation {
     public static void main(String[] args) {
@@ -25,7 +26,28 @@ public class Simulation {
 
         Renderer renderer = new Renderer();
         renderer.createMap();
-        renderer.renderMap();
+        int i = 0;
+
+
+        MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+
+        while (true) {
+            // makeMove();
+
+
+
+            renderer.renderMap();
+
+
+            i++;
+            System.out.println("Ход: " + i);
+
+//            moveAllCreatures.makeMoveAllCreatures();
+
+            if (i == 10) {
+                break;
+            }
+        }
     }
 
     void nextTurn() {

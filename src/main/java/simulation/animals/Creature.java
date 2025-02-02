@@ -7,10 +7,13 @@ public abstract class Creature extends Entity {
     int hp;
 
     public Creature(String name, int positionX, int positionY) {
-        super(name, positionY, positionX);
+        super(name, positionX, positionY);
     }
 
-//    void makeMove() {
-//
+    // Наверное, лучше получать значения через геттер и устанавливать через сеттер
+//    public void makeMove() {
+//        if (positionX < 12) {
+//            positionX += 1;
+//        }
 //    }
 }

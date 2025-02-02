@@ -1,70 +1,49 @@
 package simulation;
 
-import simulation.actions.InitObjects;
-import simulation.objects.Grass;
-
 import java.util.Arrays;
+import java.util.Map;
 
 public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
-    int mapSizeX = 20;
+    int mapSizeX = 40;
     int mapSizeY = 15;
     String[][] matrix;
 
-    // убрал динамический размер поля (карты) int mapSizeX, int mapSizeY
     public Renderer() {
 //        this.mapSizeX = mapSizeX;
 //        this.mapSizeY = mapSizeY;
 
-        // сделать переменные либо константой, либо вынести в параметры конструктора
-
-
         this.matrix = new String[mapSizeY][mapSizeX];
     }
 
-    /*
-    * Поле - многомерный массив с индексами a=[0][0], b=[0][1] и т.д.
-    * То есть, у объектов должно быть поле с их индексом на карте.
-    */
-
-    // сделать размер матрицы динамическим
-    // чтобы, когда задаёшь число - матрица сама генерировалась нужного размера
-
-
-    // Вот так создаём матрицу нужной размерности ТОЛЬКО ОДИН РАЗ - ПРИ СОЗДАНИИ ПОЛЯ
-    // и при создании поля (карты) вставляем в матрицу пустые элементы (пустые поля) - тоже циклом?
-    // и затем вставляем в неё элементы по мере изменения, когда будет необходимо
-    // matrix[1][1] = "H"; - вот так
-
-    // создаём массив с элементами, которые должны быть на карте (создаём один раз в начале симуляции - при вызове функции)
-    public String[][] createMap() {
+    // Создаём массив с элементами, которые должны быть на карте (создаём один раз в начале симуляции - при вызове функции)
+    void createMap() {
         for(int i = 0; i < matrix.length; i++) {
             Arrays.fill(matrix[i], ". .");
         }
-        return matrix;
     }
 
-    // Наверное, всё-таки, лучше перенести код из этой функциив createMap(), потому что здесь объекты именно добавляются на карту, а не рендерятся
     void renderMap() {
-        map.howMuchEntriesInMap();
+        updateMatrix();
+        printMatrix();
+    }
 
-        System.out.println("size getAllEntities: " + map.getAllEntities().size());
+    void updateMatrix() {
+        // Обновляем элементы в матрице
+        for (Map.Entry<String, Entity> entry : map.map.entrySet()) {
+            String currentEntityName = entry.getKey();
+            int x = map.getEntityCoordinatesX(currentEntityName);
+            int y = map.getEntityCoordinatesY(currentEntityName);
+            String entityIcon = map.getEntityIcon(currentEntityName);
 
-        // Заменить на получение значений непосредственно из map без дополнительных методов
-        // Добавляем элементы в матрицу
-        for (int i = 0; i < map.getAllEntities().size(); i++) {
-            // Сделать отображение объекта вместо " G " имя из самого объекта
-            // Не ключ и не значение, а именно имя или иконка, которое задаётся в конструкторе класса или в классе
-            String currentEntityName = map.getAllEntities().get(i);
-
-            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).icon;
-//            matrix[map.getEntityCoordinatesX(currentEntityName)][map.getEntityCoordinatesY(currentEntityName)] = map.map.get(currentEntityName).name;
-            System.out.println("currentEntityName: " + map.map.get(currentEntityName));
-            System.out.println("name from Renderer: " + map.map.get(currentEntityName).name);
+            matrix[y][x] = entityIcon;
         }
+    }
 
-        // В цикле мы только выводим матрицу на экран (ничего не вставляем в неё)
+    void printMatrix() {
+        // Выводим матрицу на экран
         StringBuilder line = new StringBuilder();
+
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[i].length; j++) {
                 line.append(matrix[i][j] + "  ");
@@ -72,8 +51,5 @@ public class Renderer {
             line.append("\n");
         }
         System.out.println(line);
-
-        System.out.println("keySet from Renderer: " + map.map.keySet());
-        System.out.println("size from Renderer: " + map.map.size());
     }
 }

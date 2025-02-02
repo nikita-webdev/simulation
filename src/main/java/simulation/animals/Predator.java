@@ -8,10 +8,14 @@ public class Predator extends Creature {
     */
 
     public Predator(String name, int positionX, int positionY) {
-        super(name, positionY, positionX);
+        super(name, positionX, positionY);
 //
 //        speed = 1;
 //        hp = 2;
         icon = " \uD83D\uDC06";
     }
+
+//    void makeMove() {
+//
+//    }
 }
