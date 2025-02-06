@@ -37,6 +37,7 @@ public class InitObjects {
             int[] xyGrass = generateRandomCoordinates(20, 15);
 
             map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
+            map.setAllGrassesCoordinates(new int[] {xyGrass[0], xyGrass[1]});
         }
 
         // Добавляем камни и деревья в map

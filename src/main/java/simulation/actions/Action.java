@@ -1,6 +1,6 @@
 package simulation.actions;
 
-public class Actions {
+public class Action {
     // реализовать интерфейс паттерна Command
     // здесь через execute() вызываются разные команды
 }

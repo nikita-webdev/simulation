@@ -6,7 +6,7 @@ public class Herbivore extends Creature {
     public Herbivore(String name, int positionX, int positionY) {
         super(name, positionX, positionY);
 //
-//        speed = 1;
+        speed = 1;
 //        hp = 2;
         icon = " \uD83D\uDC11";
     }

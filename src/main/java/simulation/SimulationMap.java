@@ -4,7 +4,6 @@ import java.util.*;
 
 public class SimulationMap {
     public Map<String, Entity> map = new HashMap<>();
-    // Здесь что-то вроде Singleton
     private static final SimulationMap instance = new SimulationMap();
 
     private SimulationMap() {
@@ -24,17 +23,31 @@ public class SimulationMap {
 //    }
 
     private List<String> allEntities = new ArrayList<>();
+    private List<int[]> allGrassesCoordinates = new ArrayList<>();
 
     public void howMuchEntriesInMap() {
         // Выводим ключ и значение для всех объектов в map
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
             String key = entry.getKey();
             allEntities.add(key);
-            int[] value = new int[2];
-            value[0] = entry.getValue().positionX;
-            value[1] = entry.getValue().positionY;
-//            System.out.println("howMuchEntriesInMap: " + key + " " + Arrays.toString(value));
         }
+    }
+
+    public void setAllGrassesCoordinates(int[] thisGrass) {
+        allGrassesCoordinates.add(thisGrass);
+    }
+
+    public List<int[]> getAllGrassesCoordinates() {
+        return allGrassesCoordinates;
+    }
+
+    public boolean isGrass(int[] thisPosition) {
+        for (int i = 0; i < allGrassesCoordinates.size(); i++) {
+            if (Arrays.equals(allGrassesCoordinates.get(i), thisPosition)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void getMapValues() {
@@ -47,7 +60,6 @@ public class SimulationMap {
 
         // Проверяем координаты наоборот - сначала Y, потом X
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
-            String key = entry.getKey();
             int[] existingCoordinates = new int[2];
             existingCoordinates[0] = entry.getValue().positionY;
             existingCoordinates[1] = entry.getValue().positionX;
@@ -63,6 +75,10 @@ public class SimulationMap {
 
     public List<String> getAllEntities() {
         return allEntities;
+    }
+
+    public String getEntityName(int[] entityCoordinates) {
+        return map.get(entityCoordinates).name;
     }
 
     public int getEntityCoordinatesX(String nameOfEntity) {

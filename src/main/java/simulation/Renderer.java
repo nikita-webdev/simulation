@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
-    int mapSizeX = 40;
+    int mapSizeX = 20;
     int mapSizeY = 15;
     String[][] matrix;
 

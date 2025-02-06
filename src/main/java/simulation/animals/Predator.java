@@ -10,7 +10,7 @@ public class Predator extends Creature {
     public Predator(String name, int positionX, int positionY) {
         super(name, positionX, positionY);
 //
-//        speed = 1;
+        speed = 2;
 //        hp = 2;
         icon = " \uD83D\uDC06";
     }

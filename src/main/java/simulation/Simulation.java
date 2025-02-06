@@ -4,7 +4,7 @@ import simulation.actions.InitObjects;
 import simulation.actions.MoveAllCreatures;
 
 public class Simulation {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         /*Главный класс приложения, включает в себя:
             Карту
             Счётчик ходов
@@ -22,7 +22,7 @@ public class Simulation {
 //        final int MAX_Y_MAP_SIZE = 5;
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(20, 10, 20, 10);
+        initObjects.initObjectsOnTheMap(40, 10, 20, 10);
 
         Renderer renderer = new Renderer();
         renderer.createMap();
@@ -34,8 +34,6 @@ public class Simulation {
         while (true) {
             // makeMove();
 
-
-
             renderer.renderMap();
 
 
@@ -44,9 +42,11 @@ public class Simulation {
 
             moveAllCreatures.makeMoveAllCreatures();
 
-            if (i == 10) {
+            if (i == 1) {
                 break;
             }
+
+//            Thread.sleep(1000);
         }
     }
 
