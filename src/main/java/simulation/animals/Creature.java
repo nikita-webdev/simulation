@@ -20,7 +20,6 @@ public abstract class Creature extends Entity {
         int finishX = goalNode[0];
         int finishY = goalNode[1];
 
-
         if (positionX != finishX) {
             if (positionX < finishX) {
                 positionX = positionX + speed;

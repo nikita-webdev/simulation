@@ -17,13 +17,13 @@ public class InitObjects {
     }
 
     // Генерируем случайные координаты для объекта
-    private int[] generateRandomCoordinates(int xLimit, int yLimit) {
+    private int[] generateRandomCoordinates() {
         int[] xy = new int[2];
         Random random = new Random();
 
         do {
-            xy[0] = random.nextInt((xLimit - 1));
-            xy[1] = random.nextInt((yLimit - 1));
+            xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X - 1));
+            xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y - 1));
         } while (map.isCoordinatesOccupied(xy));
 
         return xy;
@@ -34,7 +34,7 @@ public class InitObjects {
         // Добавляем траву в map
         for (int i = 0; i < numberOfGrasses; i++) {
             // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
-            int[] xyGrass = generateRandomCoordinates(20, 15);
+            int[] xyGrass = generateRandomCoordinates();
 
             map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
             map.setAllGrassesCoordinates(new int[] {xyGrass[0], xyGrass[1]});
@@ -43,8 +43,8 @@ public class InitObjects {
 
         // Добавляем камни и деревья в map
         for (int i = 0; i < numberOfRocksAndTrees; i++) {
-            int[] xyRock = generateRandomCoordinates(20, 15);
-            int[] xyTree = generateRandomCoordinates(20, 15);
+            int[] xyRock = generateRandomCoordinates();
+            int[] xyTree = generateRandomCoordinates();
 
             map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
@@ -55,7 +55,7 @@ public class InitObjects {
 
         // Добавляем травоядных в map
         for (int i = 0; i < numberOfHerbivores; i++) {
-            int[] xyHerbivore = generateRandomCoordinates(20, 15);
+            int[] xyHerbivore = generateRandomCoordinates();
 
             map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[0], xyHerbivore[1]));
             map.setAllEntityCoordinates(new int[] {xyHerbivore[0], xyHerbivore[1]});
@@ -63,7 +63,7 @@ public class InitObjects {
 
         // Добавляем хищников в map
         for (int i = 0; i < numberOfPredators; i++) {
-            int[] xyPredator = generateRandomCoordinates(20, 15);
+            int[] xyPredator = generateRandomCoordinates();
 
             map.addEntity(new Predator("predator" + (i + 1), xyPredator[0], xyPredator[1]));
             map.setAllEntityCoordinates(new int[] {xyPredator[0], xyPredator[1]});
