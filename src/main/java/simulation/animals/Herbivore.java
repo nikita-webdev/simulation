@@ -8,7 +8,7 @@ public class Herbivore extends Creature {
 //
         speed = 1;
 //        hp = 2;
-        icon = " \uD83D\uDC11";
+        icon = "\uD83D\uDC11";
     }
 
 //    void makeMove() {

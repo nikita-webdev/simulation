@@ -6,6 +6,9 @@ public class SimulationMap {
     public Map<String, Entity> map = new HashMap<>();
     private static final SimulationMap instance = new SimulationMap();
 
+    public static final int MAP_SIZE_X = 20;
+    public static final int MAP_SIZE_Y = 15;
+
     private SimulationMap() {
         this.map = map;
     }
@@ -24,6 +27,7 @@ public class SimulationMap {
 
     private List<String> allEntities = new ArrayList<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
+    private List<int[]> allEntityCoordinates = new ArrayList<>();
 
     public void howMuchEntriesInMap() {
         // Выводим ключ и значение для всех объектов в map
@@ -31,6 +35,14 @@ public class SimulationMap {
             String key = entry.getKey();
             allEntities.add(key);
         }
+    }
+
+    public void setAllEntityCoordinates(int[] thisEntity) {
+        allEntityCoordinates.add(thisEntity);
+    }
+
+    public List<int[]> getAllEntityCoordinates() {
+        return allEntityCoordinates;
     }
 
     public void setAllGrassesCoordinates(int[] thisGrass) {
@@ -55,7 +67,7 @@ public class SimulationMap {
     }
 
     // Проверяем содержит ли map координаты
-    public boolean containsCoordinates(int[] newCoordinates) {
+    public boolean isCoordinatesOccupied(int[] newCoordinates) {
         boolean isContain = false;
 
         // Проверяем координаты наоборот - сначала Y, потом X

@@ -12,7 +12,7 @@ public class Predator extends Creature {
 //
         speed = 2;
 //        hp = 2;
-        icon = " \uD83D\uDC06";
+        icon = "\uD83D\uDC06";
     }
 
 //    void makeMove() {

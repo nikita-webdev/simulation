@@ -22,17 +22,20 @@ public class Simulation {
 //        final int MAX_Y_MAP_SIZE = 5;
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(40, 10, 20, 10);
+        initObjects.initObjectsOnTheMap(1, 1, 1, 10);
 
         Renderer renderer = new Renderer();
         renderer.createMap();
         int i = 0;
 
-
         MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
         while (true) {
             // makeMove();
+
+            if(i>0) {
+                moveAllCreatures.makeMoveAllCreatures();
+            }
 
             renderer.renderMap();
 
@@ -40,13 +43,23 @@ public class Simulation {
             i++;
             System.out.println("Ход: " + i);
 
-            moveAllCreatures.makeMoveAllCreatures();
 
-            if (i == 1) {
+            if (i == 10) {
                 break;
             }
 
 //            Thread.sleep(1000);
+
+//            try {
+//                if (System.getProperty("os.name").contains("Windows")) {
+//                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+//                } else {
+//                    // Для Unix-подобных систем
+//                    new ProcessBuilder("clear").inheritIO().start().waitFor();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
     }
 

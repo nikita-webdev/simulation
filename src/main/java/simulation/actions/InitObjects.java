@@ -24,7 +24,7 @@ public class InitObjects {
         do {
             xy[0] = random.nextInt((xLimit - 1));
             xy[1] = random.nextInt((yLimit - 1));
-        } while (map.containsCoordinates(xy));
+        } while (map.isCoordinatesOccupied(xy));
 
         return xy;
     }
@@ -38,6 +38,7 @@ public class InitObjects {
 
             map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
             map.setAllGrassesCoordinates(new int[] {xyGrass[0], xyGrass[1]});
+            map.setAllEntityCoordinates(new int[] {xyGrass[0], xyGrass[1]});
         }
 
         // Добавляем камни и деревья в map
@@ -47,6 +48,9 @@ public class InitObjects {
 
             map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+            map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
+            map.setAllEntityCoordinates(new int[] {xyTree[0], xyTree[1]});
+
         }
 
         // Добавляем травоядных в map
@@ -54,6 +58,7 @@ public class InitObjects {
             int[] xyHerbivore = generateRandomCoordinates(20, 15);
 
             map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[0], xyHerbivore[1]));
+            map.setAllEntityCoordinates(new int[] {xyHerbivore[0], xyHerbivore[1]});
         }
 
         // Добавляем хищников в map
@@ -61,6 +66,7 @@ public class InitObjects {
             int[] xyPredator = generateRandomCoordinates(20, 15);
 
             map.addEntity(new Predator("predator" + (i + 1), xyPredator[0], xyPredator[1]));
+            map.setAllEntityCoordinates(new int[] {xyPredator[0], xyPredator[1]});
         }
     }
 

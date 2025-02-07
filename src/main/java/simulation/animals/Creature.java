@@ -10,35 +10,65 @@ public abstract class Creature extends Entity {
 
     int speed;
     int hp;
+    int[] goalEatCoordinates = new int[2];
 
     public Creature(String name, int positionX, int positionY) {
         super(name, positionX, positionY);
     }
 
-    // Наверное, лучше получать значения через геттер и устанавливать через сеттер
-    public void makeMove() {
-        int[] finish = new int[] {9, 9};
-        int finishX = finish[0];
-        int finishY = finish[1];
+    public void makeMove(int[] goalNode) {
+        int finishX = goalNode[0];
+        int finishY = goalNode[1];
+
 
         if (positionX != finishX) {
             if (positionX < finishX) {
-                positionX += speed;
+                positionX = positionX + speed;
             } else {
-                positionX -= speed;
+                positionX = positionX - speed;
             }
         }
 
         if (positionY != finishY) {
             if (positionY < finishY) {
-                positionY += speed;
+                positionY = positionY + speed;
             } else {
-                positionY -= speed;
+                positionY = positionY - speed;
             }
         }
+
+//        if(positionX != finishX || positionY != finishY) {
+//            int[] nextStep = new int[2];
+//
+//            if(!map.isCoordinatesOccupied(nextStep)) {
+//                if (positionX != finishX) {
+//                    if (positionX < finishX) {
+//                        nextStep[0] = positionX + speed;
+//                    } else {
+//                        nextStep[0] = positionX - speed;
+//                    }
+//                }
+//
+//                if (positionY != finishY) {
+//                    if (positionY < finishY) {
+//                        nextStep[1] = positionY + speed;
+//                    } else {
+//                        nextStep[1] = positionY - speed;
+//                    }
+//                }
+//
+//                if(!map.isCoordinatesOccupied(nextStep)){
+//                    positionX = nextStep[0];
+//                    positionY = nextStep[1];
+//                    System.out.println("Сделать шаг");
+//                }
+//            }
+//        }
     }
 
-    public void searchPath() {
+    public int[] searchPath() {
+        int[] goalNode = new int[2];
+
         Queue<int[]> graphsQueue = new ArrayDeque<>();
         Set<String> visited = new HashSet<>();
 
@@ -75,19 +105,38 @@ public abstract class Creature extends Entity {
             for (int[] child : childNodes) {
                 String childKey = Arrays.toString(child);
                 if (!visited.contains(childKey)) {
-                    if(map.isGrass(child)) {
+                    if((child[0] < SimulationMap.MAP_SIZE_X && child[0] >= 0) && (child[1] < SimulationMap.MAP_SIZE_Y && child[1] >= 0)) {
+                        if(map.isGrass(child)) {
                         System.out.println("Yes. This is Grass: " + Arrays.toString(child));
-                        graphsQueue.add(child);
-                        visited.add(childKey);
-                        grassIsFind = true;
-                        break;
-                    } else {
+                            graphsQueue.add(child);
+                            visited.add(childKey);
+                            goalNode = child;
+                            grassIsFind = true;
+                            break;
+                        } else {
                         System.out.println("No. This is not Grass: " + Arrays.toString(child));
-                        graphsQueue.add(child);
+                            graphsQueue.add(child);
+                            visited.add(childKey);
+                        }
+                    } else {
                         visited.add(childKey);
                     }
                 }
             }
         }
+        return goalNode;
+    }
+
+    public void eat() {
+
+    }
+
+    public int[] getGoalEatCoordinates() {
+        return goalEatCoordinates;
+    }
+
+    public void setGoalEatCoordinates(int[] newEatCoordinates) {
+        goalEatCoordinates[0] = newEatCoordinates[0];
+        goalEatCoordinates[1] = newEatCoordinates[1];
     }
 }

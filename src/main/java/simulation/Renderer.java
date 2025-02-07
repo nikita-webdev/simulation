@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
-    int mapSizeX = 20;
-    int mapSizeY = 15;
+    int mapSizeX = SimulationMap.MAP_SIZE_X;
+    int mapSizeY = SimulationMap.MAP_SIZE_Y;
     String[][] matrix;
 
     public Renderer() {
@@ -19,7 +19,7 @@ public class Renderer {
     // Создаём массив с элементами, которые должны быть на карте (создаём один раз в начале симуляции - при вызове функции)
     void createMap() {
         for(int i = 0; i < matrix.length; i++) {
-            Arrays.fill(matrix[i], ". .");
+            Arrays.fill(matrix[i], "⬛");
         }
     }
 
@@ -47,7 +47,7 @@ public class Renderer {
 
         for(int i = 0; i < matrix.length; i++) {
             for(int j = 0; j < matrix[i].length; j++) {
-                line.append(matrix[i][j] + "  ");
+                line.append(matrix[i][j] + " ");
             }
             line.append("\n");
         }
