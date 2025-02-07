@@ -70,11 +70,10 @@ public class SimulationMap {
     public boolean isCoordinatesOccupied(int[] newCoordinates) {
         boolean isContain = false;
 
-        // Проверяем координаты наоборот - сначала Y, потом X
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
             int[] existingCoordinates = new int[2];
-            existingCoordinates[0] = entry.getValue().positionY;
-            existingCoordinates[1] = entry.getValue().positionX;
+            existingCoordinates[0] = entry.getValue().positionX;
+            existingCoordinates[1] = entry.getValue().positionY;
 
             isContain = Arrays.equals(newCoordinates, existingCoordinates);
 
