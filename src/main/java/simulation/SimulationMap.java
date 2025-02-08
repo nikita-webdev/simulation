@@ -27,6 +27,7 @@ public class SimulationMap {
 
     private List<String> allEntities = new ArrayList<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
+    private List<int[]> allTreesAndRocksCoordinates = new ArrayList<>();
     private List<int[]> allEntityCoordinates = new ArrayList<>();
 
     public void howMuchEntriesInMap() {
@@ -56,6 +57,23 @@ public class SimulationMap {
     public boolean isGrass(int[] thisPosition) {
         for (int i = 0; i < allGrassesCoordinates.size(); i++) {
             if (Arrays.equals(allGrassesCoordinates.get(i), thisPosition)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setAllTreesAndRocksCoordinates(int[] thisGrass) {
+        allTreesAndRocksCoordinates.add(thisGrass);
+    }
+
+    public List<int[]> getAllTreesAndRocksCoordinates() {
+        return allTreesAndRocksCoordinates;
+    }
+
+    public boolean isTreeOrRock(int[] thisPosition) {
+        for (int i = 0; i < allTreesAndRocksCoordinates.size(); i++) {
+            if (Arrays.equals(allTreesAndRocksCoordinates.get(i), thisPosition)) {
                 return true;
             }
         }

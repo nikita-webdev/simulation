@@ -56,6 +56,8 @@ public class InitObjects {
 
             map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+            map.setAllTreesAndRocksCoordinates(new int[] {xyRock[0], xyRock[1]});
+            map.setAllTreesAndRocksCoordinates(new int[] {xyTree[0], xyTree[1]});
             map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
             map.setAllEntityCoordinates(new int[] {xyTree[0], xyTree[1]});
         }
