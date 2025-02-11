@@ -1,5 +1,8 @@
 package simulation;
 
+import simulation.animals.Herbivore;
+import simulation.objects.Grass;
+
 import java.util.*;
 
 public class SimulationMap {
@@ -26,16 +29,29 @@ public class SimulationMap {
 //    }
 
     private List<String> allEntities = new ArrayList<>();
+    private Map<String, Herbivore> allHerbivores = new HashMap<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
+    private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
     private List<int[]> allTreesAndRocksCoordinates = new ArrayList<>();
     private List<int[]> allEntityCoordinates = new ArrayList<>();
 
     public void howMuchEntriesInMap() {
-        // Выводим ключ и значение для всех объектов в map
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
             String key = entry.getKey();
             allEntities.add(key);
+
+            if (entry.getValue() instanceof Herbivore herbivore) {
+                allHerbivores.put(herbivore.name, herbivore);
+            }
+
+            if (entry.getValue() instanceof Grass grass) {
+                allGrassesCoordinatesForRemove.put(Arrays.toString(grass.coordinates), grass);
+            }
         }
+    }
+
+    public Map<String, Herbivore> getAllHerbivores() {
+        return allHerbivores;
     }
 
     public void setAllEntityCoordinates(int[] thisEntity) {
@@ -55,8 +71,10 @@ public class SimulationMap {
     }
 
     public boolean isGrass(int[] thisPosition) {
-        for (int i = 0; i < allGrassesCoordinates.size(); i++) {
-            if (Arrays.equals(allGrassesCoordinates.get(i), thisPosition)) {
+        for (Map.Entry<String, Grass> entry : allGrassesCoordinatesForRemove.entrySet()) {
+            String nameOfThisGrass = entry.getKey();
+
+            if (Arrays.equals(allGrassesCoordinatesForRemove.get(nameOfThisGrass).coordinates, thisPosition)) {
                 return true;
             }
         }
