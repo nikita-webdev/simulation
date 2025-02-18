@@ -24,6 +24,7 @@ public class Renderer {
     }
 
     void renderMap() {
+        map.howMuchEntriesInMap();
         createMap();
         updateMatrix();
         printMatrix();
