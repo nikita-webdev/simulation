@@ -44,6 +44,7 @@ public abstract class Creature extends Entity {
                         numberOfStep = pathToGoal.size() - 1;
                     }
                 } else if(goalNode[0] == nextStep[0] && goalNode[1] == nextStep[1]) {
+                    eat(goalNode);
                     numberOfStep = 0;
                     setGoalEatCoordinates(coordinates);
                 } else {
@@ -134,8 +135,10 @@ public abstract class Creature extends Entity {
         return path;
     }
 
-    public void eat() {
-
+    public void eat(int[] eatThis) {
+        if(map.isGrass(eatThis)) {
+            map.removeGrass(eatThis);
+        }
     }
 
     public int[] getGoalEatCoordinates() {
