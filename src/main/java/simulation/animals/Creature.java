@@ -25,9 +25,14 @@ public abstract class Creature extends Entity {
 
         if(positionX != finishX || positionY != finishY) {
             int[] nextStep = coordinates;
-            nextStep = pathToGoal.get(numberOfStep);
-            System.out.println(Arrays.toString(pathToGoal.get(numberOfStep)));
-            System.out.printf("numberOfStep: %s, pathToGoal.size(): %s%n", numberOfStep, pathToGoal.size());
+
+            if (Arrays.equals(getGoalEatCoordinates(), coordinates)) {
+                nextStep = pathToGoal.get(0);
+            } else if (getGoalEatCoordinates().length == 1) {
+                nextStep = pathToGoal.get(0);
+            } else if (pathToGoal.size() > numberOfStep){
+                nextStep = pathToGoal.get(numberOfStep);
+            }
 
                 if(!map.isCoordinatesOccupied(nextStep)){
                     positionX = nextStep[0];
@@ -35,9 +40,12 @@ public abstract class Creature extends Entity {
                     System.out.println("Take a step on: " + Arrays.toString(nextStep));
                     if(numberOfStep < pathToGoal.size() - 1) {
                         numberOfStep++;
+                    } else if (numberOfStep >= pathToGoal.size() - 1) {
+                        numberOfStep = pathToGoal.size() - 1;
                     }
                 } else if(goalNode[0] == nextStep[0] && goalNode[1] == nextStep[1]) {
-                    System.out.printf("Arrived at goal.%s, %s%n", Arrays.toString(goalNode), Arrays.toString(nextStep));
+                    numberOfStep = 0;
+                    setGoalEatCoordinates(coordinates);
                 } else {
                     System.out.println((Arrays.equals(goalNode, nextStep)));
                     System.out.printf("%s, %s%n", Arrays.toString(goalNode), Arrays.toString(nextStep));
