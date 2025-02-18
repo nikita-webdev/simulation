@@ -6,7 +6,6 @@ import simulation.animals.Creature;
 import simulation.animals.Herbivore;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class MoveAllCreatures {
     private SimulationMap map = SimulationMap.getInstance();
@@ -16,18 +15,15 @@ public class MoveAllCreatures {
         for (Map.Entry<String, Entity> entry : map.map.entrySet()) {
             if (entry.getValue() instanceof Creature) {
                 Creature creature = (Creature) entry.getValue();
-
-                if (entry.getValue() instanceof Herbivore herbivore) {
-                    if(Objects.equals(entry.getValue().name, "herbivore1")) {
-                        // Если координаты не содержат еду
-                        if(!map.isGrass(herbivore.getGoalEatCoordinates())) {
-                            herbivore.setGoalEatCoordinates(herbivore.searchPath());
-                        }
-
-                        herbivore.makeMove(herbivore.getGoalEatCoordinates());
-                    }
-                }
             }
+        }
+
+        for (Map.Entry<String, Herbivore> entry : map.getAllHerbivores().entrySet()) {
+            Herbivore herbivore = entry.getValue();
+            if(!map.isGrass(herbivore.getGoalEatCoordinates()) && !map.getAllGrassesCoordinatesForRemove().isEmpty()) {
+                herbivore.setGoalEatCoordinates(herbivore.searchPath());
+            }
+            herbivore.makeMove(herbivore.getGoalEatCoordinates());
         }
     }
 }

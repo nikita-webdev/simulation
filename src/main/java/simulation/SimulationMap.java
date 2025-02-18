@@ -70,6 +70,10 @@ public class SimulationMap {
         return allGrassesCoordinates;
     }
 
+    public Map<String, Grass> getAllGrassesCoordinatesForRemove() {
+        return allGrassesCoordinatesForRemove;
+    }
+
     public void removeGrass(int[] thisGrass) {
         String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
 
