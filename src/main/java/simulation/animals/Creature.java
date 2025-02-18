@@ -13,7 +13,7 @@ public abstract class Creature extends Entity {
 
     int speed;
     int hp;
-    int[] goalEatCoordinates = new int[2];
+    int[] goalEatCoordinates = {-1, -1};
 
     public Creature(String name, int positionX, int positionY) {
         super(name, positionX, positionY);
