@@ -61,8 +61,14 @@ public abstract class Creature extends Entity {
 
 
     public void eat(int[] eatThis) {
-        if(map.isGrass(eatThis)) {
-            map.removeGrass(eatThis);
+        if (groupName.equals("herbivore")) {
+            if(map.isGrass(eatThis)) {
+                map.removeGrass(eatThis);
+            }
+        } else if (groupName.equals("predator")) {
+            if(map.isHerbivore(eatThis)) {
+                map.removeHerbivore(eatThis);
+            }
         }
     }
 
