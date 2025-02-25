@@ -11,6 +11,7 @@ public abstract class Creature extends Entity {
     public List<int[]> pathToGoal;
     int numberOfStep = 0;
 
+    public String groupName;
     int speed;
     int hp;
     int[] goalEatCoordinates = {-1, -1};
