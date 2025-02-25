@@ -21,9 +21,9 @@ public class SearchPath {
         graphsQueue.add(startPosition);
         visited.add(Arrays.toString(startPosition));
 
-        boolean grassIsFind = false;
+        boolean eatIsFind = false;
 
-        while (!graphsQueue.isEmpty() && !grassIsFind) {
+        while (!graphsQueue.isEmpty() && !eatIsFind) {
             int[] currentPosition = graphsQueue.poll();
             int[][] childNodes = new int[8][];
 
@@ -49,13 +49,13 @@ public class SearchPath {
                 String childKey = Arrays.toString(child);
                 if (!visited.contains(childKey)) {
                     if ((child[0] < SimulationMap.MAP_SIZE_X && child[0] >= 0) && (child[1] < SimulationMap.MAP_SIZE_Y && child[1] >= 0)) {
-                        if (map.isGrass(child)) {
+                        if (isEat(creature, child)) {
 //                        System.out.println("Yes. This is Grass: " + Arrays.toString(child));
                             graphsQueue.add(child);
                             visited.add(childKey);
                             goalNode = child;
                             parentMap.put(Arrays.toString(goalNode), lastChild);
-                            grassIsFind = true;
+                            eatIsFind = true;
                             break;
                         } else if (map.isTreeOrRock(child)) {
                             visited.add(childKey);
@@ -86,5 +86,17 @@ public class SearchPath {
         Collections.reverse(path);
         path.remove(0);
         return path;
+    }
+
+    public boolean isEat(Creature creature, int[] node) {
+        boolean isEat = false;
+
+        if (creature.groupName.equals("herbivore")) {
+            isEat = map.isGrass(node);
+        } else if (creature.groupName.equals("predator")) {
+            isEat = map.isHerbivore(node);
+        }
+
+        return isEat;
     }
 }
