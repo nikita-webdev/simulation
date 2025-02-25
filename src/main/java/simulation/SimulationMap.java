@@ -32,6 +32,7 @@ public class SimulationMap {
     private Map<String, Herbivore> allHerbivores = new HashMap<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
     private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
+    private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
     private List<int[]> allTreesAndRocksCoordinates = new ArrayList<>();
     private List<int[]> allEntityCoordinates = new ArrayList<>();
 
@@ -42,6 +43,7 @@ public class SimulationMap {
 
             if (entry.getValue() instanceof Herbivore herbivore) {
                 allHerbivores.put(herbivore.name, herbivore);
+                allHerbivoresCoordinatesForRemove.put(Arrays.toString(herbivore.coordinates), herbivore);
             }
 
             if (entry.getValue() instanceof Grass grass) {
@@ -86,6 +88,17 @@ public class SimulationMap {
             String nameOfThisGrass = entry.getKey();
 
             if (Arrays.equals(allGrassesCoordinatesForRemove.get(nameOfThisGrass).coordinates, thisPosition)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isHerbivore(int[] thisPosition) {
+        for (Map.Entry<String, Herbivore> entry : allHerbivoresCoordinatesForRemove.entrySet()) {
+            String nameOfThisHerbivore = entry.getKey();
+
+            if (Arrays.equals(allHerbivoresCoordinatesForRemove.get(nameOfThisHerbivore).coordinates, thisPosition)) {
                 return true;
             }
         }
