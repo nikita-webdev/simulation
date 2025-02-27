@@ -16,14 +16,13 @@ public class Renderer {
         this.matrix = new String[mapSizeY][mapSizeX];
     }
 
-    // Создаём массив с элементами, которые должны быть на карте (создаём один раз в начале симуляции - при вызове функции)
     void createMap() {
         for(int i = 0; i < matrix.length; i++) {
             Arrays.fill(matrix[i], "⬛");
         }
     }
 
-    void renderMap() {
+    public void renderMap() {
         map.howMuchEntriesInMap();
         createMap();
         updateMatrix();
@@ -31,7 +30,7 @@ public class Renderer {
     }
 
     void updateMatrix() {
-        // Обновляем элементы в матрице
+        // Update elements in the matrix
         for (Map.Entry<String, Entity> entry : map.map.entrySet()) {
             String currentEntityName = entry.getKey();
             int x = map.getEntityCoordinatesX(currentEntityName);
@@ -43,7 +42,7 @@ public class Renderer {
     }
 
     void printMatrix() {
-        // Выводим матрицу на экран
+        // Display the matrix on the screen
         StringBuilder line = new StringBuilder();
 
         for(int i = 0; i < matrix.length; i++) {

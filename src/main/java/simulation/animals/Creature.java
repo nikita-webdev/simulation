@@ -24,6 +24,13 @@ public abstract class Creature extends Entity {
         int finishX = goalNode[0];
         int finishY = goalNode[1];
 
+        coordinates[0] = positionX;
+        coordinates[1] = positionY;
+
+        if (groupName.equals("predator")) {
+            System.out.println("goalEatCoordinates: " + Arrays.toString(goalEatCoordinates));
+        }
+
         if(positionX != finishX || positionY != finishY) {
             int[] nextStep = coordinates;
 
@@ -35,6 +42,8 @@ public abstract class Creature extends Entity {
                 nextStep = pathToGoal.get(numberOfStep);
             } else {
                 System.out.println("IndexOutOfBoundsException: " + "pathToGoal.size() " + pathToGoal.size() + ", numberOfStep " + numberOfStep );
+                nextStep[0] = goalEatCoordinates[0];
+                nextStep[1] = goalEatCoordinates[1];
             }
 
                 if(!map.isCoordinatesOccupied(nextStep)){
@@ -57,8 +66,6 @@ public abstract class Creature extends Entity {
                 }
         }
     }
-
-
 
     public void eat(int[] eatThis) {
         if (groupName.equals("herbivore")) {

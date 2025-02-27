@@ -1,6 +1,7 @@
 package simulation;
 
 import simulation.animals.Herbivore;
+import simulation.animals.Predator;
 import simulation.objects.Grass;
 
 import java.util.*;
@@ -30,6 +31,7 @@ public class SimulationMap {
 
     private List<String> allEntities = new ArrayList<>();
     private Map<String, Herbivore> allHerbivores = new HashMap<>();
+    private Map<String, Predator> allPredators = new HashMap<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
     private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
     private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
@@ -46,6 +48,10 @@ public class SimulationMap {
                 allHerbivoresCoordinatesForRemove.put(Arrays.toString(herbivore.coordinates), herbivore);
             }
 
+            if (entry.getValue() instanceof Predator predator) {
+                allPredators.put(predator.name, predator);
+            }
+
             if (entry.getValue() instanceof Grass grass) {
                 allGrassesCoordinatesForRemove.put(Arrays.toString(grass.coordinates), grass);
             }
@@ -54,6 +60,10 @@ public class SimulationMap {
 
     public Map<String, Herbivore> getAllHerbivores() {
         return allHerbivores;
+    }
+
+    public Map<String, Predator> getAllPredators() {
+        return allPredators;
     }
 
     public void setAllEntityCoordinates(int[] thisEntity) {
@@ -76,6 +86,18 @@ public class SimulationMap {
         return allGrassesCoordinatesForRemove;
     }
 
+    public Map<String, Herbivore> getAllHerbivoresCoordinatesForRemove() {
+        return allHerbivoresCoordinatesForRemove;
+    }
+
+    public void setAllHerbivoresCoordinatesForRemove(Herbivore herbivore) {
+        allHerbivoresCoordinatesForRemove.put(herbivore.name, herbivore);
+    }
+
+    public void clearAllHerbivoresCoordinatesForRemove() {
+        allHerbivoresCoordinatesForRemove.clear();
+    }
+
     public void removeGrass(int[] thisGrass) {
         String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
 
@@ -92,6 +114,13 @@ public class SimulationMap {
             }
         }
         return false;
+    }
+
+    public void removeHerbivore(int[] thisHerbivore) {
+        String nameOfThisHerbivore = allHerbivoresCoordinatesForRemove.get(Arrays.toString(thisHerbivore)).name;
+
+        allHerbivoresCoordinatesForRemove.remove(Arrays.toString(thisHerbivore));
+        map.remove(nameOfThisHerbivore);
     }
 
     public boolean isHerbivore(int[] thisPosition) {
