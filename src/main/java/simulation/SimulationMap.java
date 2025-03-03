@@ -120,6 +120,7 @@ public class SimulationMap {
         String nameOfThisHerbivore = allHerbivoresCoordinatesForRemove.get(Arrays.toString(thisHerbivore)).name;
 
         allHerbivoresCoordinatesForRemove.remove(Arrays.toString(thisHerbivore));
+        allHerbivores.remove(nameOfThisHerbivore);
         map.remove(nameOfThisHerbivore);
     }
 
