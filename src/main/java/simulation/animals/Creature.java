@@ -29,12 +29,15 @@ public abstract class Creature extends Entity {
 
             if(!map.isCoordinatesOccupied(nextStep)) {
                 makeStep(nextStep);
+                coordinates[0] = positionX;
+                coordinates[1] = positionY;
+
                 if(numberOfStep < pathToGoal.size() - 1) {
                     numberOfStep++;
                 }
             } else if(isFoodFound) {
                 eat(goalNode);
-                numberOfStep = 0;
+                clearNumberOfStep();
                 stopMovement();
             } else {
                 System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(nextStep));
@@ -74,5 +77,9 @@ public abstract class Creature extends Entity {
     private void makeStep(int[] coordinates) {
         positionX = coordinates[0];
         positionY = coordinates[1];
+    }
+
+    public void clearNumberOfStep() {
+        numberOfStep = 0;
     }
 }

@@ -1,6 +1,5 @@
 package simulation.actions;
 
-import simulation.Entity;
 import simulation.Renderer;
 import simulation.SimulationMap;
 import simulation.animals.Creature;
@@ -8,8 +7,6 @@ import simulation.animals.Herbivore;
 import simulation.animals.Predator;
 import simulation.utils.SearchPath;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 public class MoveAllCreatures {
@@ -17,34 +14,44 @@ public class MoveAllCreatures {
     SearchPath searchPath = new SearchPath();
     Renderer renderer = new Renderer();
 
-    public void makeMoveAllCreatures() throws InterruptedException {
-
+    public void makeMoveAllCreatures() {
         for (Map.Entry<String, Predator> entry : map.getAllPredators().entrySet()) {
             Predator predator = entry.getValue();
-            // Если координаты не содержат еду
-            if(!map.isHerbivore(predator.getGoalEatCoordinates()) && !map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
-                predator.setGoalEatCoordinates(searchPath.searchPath(predator));
+
+            if(checkFoodOnTheMap(predator)) {
+                predator.setGoalFoodCoordinates(searchPath.searchPath(predator));
+                predator.clearNumberOfStep();
             }
 
-            predator.makeMove(predator.getGoalEatCoordinates());
-
-            renderer.renderMap();
-            Thread.sleep(1000);
+            predator.makeMove(predator.getGoalFoodCoordinates());
         }
 
-        map.clearAllHerbivoresCoordinatesForRemove();
+        map.clearAllHerbivoresCoordinatesForRemove(); // NullPointerException
 
         for (Map.Entry<String, Herbivore> entry : map.getAllHerbivores().entrySet()) {
             Herbivore herbivore = entry.getValue();
-            // Если координаты не содержат еду
-            if(!map.isGrass(herbivore.getGoalEatCoordinates()) && !map.getAllGrassesCoordinatesForRemove().isEmpty()) {
-                herbivore.setGoalEatCoordinates(searchPath.searchPath(herbivore));
+
+            if(checkFoodOnTheMap(herbivore)) {
+                herbivore.setGoalFoodCoordinates(searchPath.searchPath(herbivore));
+                herbivore.clearNumberOfStep();
             }
 
-            herbivore.makeMove(herbivore.getGoalEatCoordinates());
+            herbivore.makeMove(herbivore.getGoalFoodCoordinates());
             map.setAllHerbivoresCoordinatesForRemove(herbivore);
-            renderer.renderMap();
-            Thread.sleep(1000);
         }
+    }
+
+    private boolean checkFoodOnTheMap(Creature creature) {
+        boolean isFood = false;
+
+        if (creature.groupName.equals("predator")) {
+            isFood = (!map.isHerbivore(creature.getGoalFoodCoordinates()) && !map.getAllHerbivoresCoordinatesForRemove().isEmpty());
+        }
+
+        if (creature.groupName.equals("herbivore")) {
+            isFood = (!map.isGrass(creature.getGoalFoodCoordinates()) && !map.getAllGrassesCoordinatesForRemove().isEmpty());
+        }
+
+        return isFood;
     }
 }
