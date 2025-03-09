@@ -2,11 +2,13 @@ package simulation.animals;
 
 import simulation.Entity;
 import simulation.SimulationMap;
+import simulation.utils.SearchPath;
 
 import java.util.*;
 
 public abstract class Creature extends Entity {
     private SimulationMap map = SimulationMap.getInstance();
+    SearchPath searchPath = new SearchPath();
 
     public List<int[]> pathToGoal;
     int numberOfStep = 0;
@@ -21,10 +23,12 @@ public abstract class Creature extends Entity {
     }
 
     public void makeMove(int[] goalNode) {
-        boolean isNotLastStep = (numberOfStep < pathToGoal.size());
+        updateFoodCoordinates(this);
+
+        boolean isNotLastStep = (getNumberOfStep() < pathToGoal.size());
 
         if (isNotLastStep) {
-            int[] nextStep = pathToGoal.get(numberOfStep);
+            int[] nextStep = pathToGoal.get(getNumberOfStep());
             boolean isFoodFound = (goalNode[0] == nextStep[0] && goalNode[1] == nextStep[1]);
 
             if(!map.isCoordinatesOccupied(nextStep)) {
@@ -32,8 +36,8 @@ public abstract class Creature extends Entity {
                 coordinates[0] = positionX;
                 coordinates[1] = positionY;
 
-                if(numberOfStep < pathToGoal.size() - 1) {
-                    numberOfStep++;
+                if(getNumberOfStep() < pathToGoal.size() - 1) {
+                    increaseNumberOfStep();
                 }
             } else if(isFoodFound) {
                 eat(goalNode);
@@ -49,7 +53,7 @@ public abstract class Creature extends Entity {
         }
     }
 
-    public void eat(int[] foodCoordinates) {
+    private void eat(int[] foodCoordinates) {
         if (groupName.equals("herbivore")) {
             if(map.isGrass(foodCoordinates)) {
                 map.removeGrass(foodCoordinates);
@@ -79,7 +83,40 @@ public abstract class Creature extends Entity {
         positionY = coordinates[1];
     }
 
-    public void clearNumberOfStep() {
+    public int getNumberOfStep() {
+        return numberOfStep;
+    }
+
+    public void increaseNumberOfStep() {
+        numberOfStep++;
+    }
+
+    private void clearNumberOfStep() {
         numberOfStep = 0;
+    }
+
+    private boolean shouldUpdateFoodCoordinates(Creature creature) {
+        boolean foodCoordinatesIncorrect = false;
+
+        if (creature.groupName.equals("predator")) {
+            boolean currentFoodIsCreature = map.isHerbivore(creature.getGoalFoodCoordinates());
+            boolean hasHerbivores = !map.getAllHerbivoresCoordinatesForRemove().isEmpty();
+
+            foodCoordinatesIncorrect = (!currentFoodIsCreature && hasHerbivores);
+        } else if (creature.groupName.equals("herbivore")) {
+            boolean currentFoodIsGrass = map.isGrass(creature.getGoalFoodCoordinates());
+            boolean hasGrass = !map.getAllGrassesCoordinatesForRemove().isEmpty();
+
+            foodCoordinatesIncorrect = (!currentFoodIsGrass && hasGrass);
+        }
+
+        return foodCoordinatesIncorrect;
+    }
+
+    private void updateFoodCoordinates(Creature creature) {
+        if(shouldUpdateFoodCoordinates(creature)) {
+            creature.setGoalFoodCoordinates(searchPath.searchPath(creature));
+            clearNumberOfStep();
+        }
     }
 }
