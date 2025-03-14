@@ -2,6 +2,7 @@ package simulation;
 
 import simulation.actions.InitObjects;
 import simulation.actions.MoveAllCreatures;
+import simulation.utils.GameLoop;
 
 public class Simulation {
     public static void main(String[] args) throws InterruptedException {
@@ -21,8 +22,10 @@ public class Simulation {
 //        final int MAX_X_MAP_SIZE = 9;
 //        final int MAX_Y_MAP_SIZE = 5;
 
+        GameLoop gameLoop = new GameLoop(2000);
+
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(1, 1, 1, 10);
+        initObjects.initObjectsOnTheMap(10, 0, 2, 1);
 
         Renderer renderer = new Renderer();
         renderer.createMap();
@@ -31,24 +34,7 @@ public class Simulation {
         MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
         while (true) {
-            // makeMove();
-
-            if(i>0) {
-                moveAllCreatures.makeMoveAllCreatures();
-            }
-
-            renderer.renderMap();
-
-
-            i++;
-            System.out.println("Ход: " + i);
-
-
-            if (i == 10) {
-                break;
-            }
-
-//            Thread.sleep(1000);
+            gameLoop.startGame();
 
 //            try {
 //                if (System.getProperty("os.name").contains("Windows")) {
