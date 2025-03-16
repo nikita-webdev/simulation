@@ -22,8 +22,8 @@ public class InitObjects {
         Random random = new Random();
 
         do {
-            xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X - 1));
-            xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y - 1));
+            xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X));
+            xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y));
         } while (map.isCoordinatesOccupied(xy));
 
         return xy;
