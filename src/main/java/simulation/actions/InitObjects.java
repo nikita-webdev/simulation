@@ -38,13 +38,21 @@ public class InitObjects {
 
     // Добавляем траву в map
     public void initGrass(int number) {
+        int numberGrasses = 0;
+        if (map.getAllGrassesCoordinates().isEmpty()) {
+            numberGrasses = 0;
+        } else if (!map.getAllGrassesCoordinates().isEmpty()) {
+            numberGrasses = map.getAllGrassesCoordinates().size();
+        }
+
         for (int i = 0; i < number; i++) {
             // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
             int[] xyGrass = generateRandomCoordinates();
 
-            map.addEntity(new Grass("grass" + (i + 1), xyGrass[0], xyGrass[1]));
+            map.addEntity(new Grass("grass" + (numberGrasses + 1), xyGrass[0], xyGrass[1]));
             map.setAllGrassesCoordinates(new int[] {xyGrass[0], xyGrass[1]});
             map.setAllEntityCoordinates(new int[] {xyGrass[0], xyGrass[1]});
+            numberGrasses = map.getAllGrassesCoordinates().size();
         }
     }
 

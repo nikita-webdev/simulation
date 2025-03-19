@@ -1,6 +1,7 @@
 package simulation.utils;
 
 import simulation.Renderer;
+import simulation.Simulation;
 import simulation.actions.MoveAllCreatures;
 
 public class GameLoop {
@@ -15,17 +16,22 @@ public class GameLoop {
     }
 
     public void startGame() throws InterruptedException {
-        while (turnCount > 0) {
-            if(turn>0) {
-                moveAllCreatures.makeMoveAllCreatures();
+        while (turn < turnCount) {
+            if (Simulation.runningThread == true) {
+                if (turn>0) {
+                    moveAllCreatures.makeMoveAllCreatures();
+                }
+
+                renderer.renderMap();
+
+                turn++;
+                System.out.println("Ход: " + turn);
+
+                Thread.sleep(1000);
+            } else if (Simulation.runningThread == false){
+                System.out.println("Поток остановлен.");
+                Thread.sleep(2000);
             }
-
-            renderer.renderMap();
-
-            turn++;
-            System.out.println("Ход: " + turn);
-
-            Thread.sleep(1000);
         }
     }
 }

@@ -1,10 +1,12 @@
 package simulation;
 
 import simulation.actions.InitObjects;
-import simulation.actions.MoveAllCreatures;
 import simulation.utils.GameLoop;
+import java.util.Scanner;
 
 public class Simulation {
+    public static boolean runningThread = true;
+
     public static void main(String[] args) throws InterruptedException {
         /*Главный класс приложения, включает в себя:
             Карту
@@ -29,12 +31,36 @@ public class Simulation {
 
         Renderer renderer = new Renderer();
         renderer.createMap();
-        int i = 0;
 
-        MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+        Thread gameThread = new Thread() {
+            public void run() {
+                try {
+                    gameLoop.startGame();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
 
-        while (true) {
-            gameLoop.startGame();
+        Thread userInputThread = new Thread() {
+            public void run() {
+                while (true) {
+                    Scanner scanner = new Scanner(System.in);
+                    String userInput = scanner.nextLine().trim().toLowerCase();
+
+                    if (userInput.equals("p")) {
+                        runningThread = false;
+                    } else if (userInput.equals("s")) {
+                        runningThread = true;
+                    } else if (userInput.equals("g")) {
+                        initObjects.initGrass(10);
+                    }
+                }
+            }
+        };
+
+        gameThread.start();
+        userInputThread.start();
 
 //            try {
 //                if (System.getProperty("os.name").contains("Windows")) {
@@ -46,7 +72,6 @@ public class Simulation {
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
-        }
     }
 
     void nextTurn() {
