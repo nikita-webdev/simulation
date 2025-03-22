@@ -73,11 +73,19 @@ public class InitObjects {
 
     // Добавляем травоядных в map
     public void initHerbivore(int number) {
+        int numberHerbivores = 0;
+        if (map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
+            numberHerbivores = 0;
+        } else if (!map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
+            numberHerbivores = map.getAllHerbivoresCoordinatesForRemove().size();
+        }
+
         for (int i = 0; i < number; i++) {
             int[] xyHerbivore = generateRandomCoordinates();
 
-            map.addEntity(new Herbivore("herbivore" + (i + 1), xyHerbivore[0], xyHerbivore[1]));
+            map.addEntity(new Herbivore("herbivore" + (numberHerbivores + 1), xyHerbivore[0], xyHerbivore[1]));
             map.setAllEntityCoordinates(new int[] {xyHerbivore[0], xyHerbivore[1]});
+            numberHerbivores = map.getAllHerbivoresCoordinatesForRemove().size();
         }
     }
 

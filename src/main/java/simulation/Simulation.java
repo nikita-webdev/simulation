@@ -54,6 +54,8 @@ public class Simulation {
                         runningThread = true;
                     } else if (userInput.equals("g")) {
                         initObjects.initGrass(10);
+                    } else if (userInput.equals("h")) {
+                        initObjects.initHerbivore(1);
                     }
                 }
             }
