@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Simulation {
     public static boolean runningThread = true;
+    public static boolean nextTurn = false;
 
     public static void main(String[] args) throws InterruptedException {
         /*Главный класс приложения, включает в себя:
@@ -49,9 +50,11 @@ public class Simulation {
                     String userInput = scanner.nextLine().trim().toLowerCase();
 
                     if (userInput.equals("p")) {
-                        runningThread = false;
+                        pauseSimulation();
                     } else if (userInput.equals("s")) {
-                        runningThread = true;
+                        startSimulation();
+                    } else if (userInput.equals("n")) {
+                        nextTurn();
                     } else if (userInput.equals("g")) {
                         initObjects.initGrass(10);
                     } else if (userInput.equals("h")) {
@@ -76,18 +79,18 @@ public class Simulation {
 //            }
     }
 
-    void nextTurn() {
+    static void nextTurn() {
         // просимулировать и отрендерить один ход
-
+        nextTurn = true;
     }
 
-    void startSimulation() {
+    static void startSimulation() {
         // запустить бесконечный цикл симуляции и рендеринга
-
+        runningThread = true;
     }
 
-    void pauseSimulation() {
+    static void pauseSimulation() {
         // приостановить бесконечный цикл симуляции и рендеринга
-
+        runningThread = false;
     }
 }

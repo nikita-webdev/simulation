@@ -32,6 +32,20 @@ public class GameLoop {
                 System.out.println("Поток остановлен.");
                 Thread.sleep(2000);
             }
+
+            if (Simulation.runningThread == false && Simulation.nextTurn == true) {
+                if (turn>0) {
+                    moveAllCreatures.makeMoveAllCreatures();
+                }
+
+                renderer.renderMap();
+
+                turn++;
+                System.out.println("Ход: " + turn);
+
+                Thread.sleep(1000);
+                Simulation.nextTurn = false;
+            }
         }
     }
 }
