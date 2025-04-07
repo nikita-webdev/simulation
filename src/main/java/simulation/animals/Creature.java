@@ -1,6 +1,8 @@
 package simulation.animals;
 
 import simulation.Entity;
+import simulation.Game;
+import simulation.Renderer;
 import simulation.SimulationMap;
 import simulation.utils.SearchPath;
 
@@ -10,11 +12,15 @@ public abstract class Creature extends Entity {
     private SimulationMap map = SimulationMap.getInstance();
     SearchPath searchPath = new SearchPath();
 
+    Game game = new Game();
+
+    Renderer renderer = new Renderer();
+
     public List<int[]> pathToGoal;
-    int numberOfStep = 0;
+    private int numberOfStep = 0;
 
     public String groupName;
-    int speed;
+    int speed = 1;
     int hp;
     int[] goalFoodCoordinates = {-1, -1};
 
@@ -22,7 +28,7 @@ public abstract class Creature extends Entity {
         super(name, positionX, positionY);
     }
 
-    public void makeMove(int[] goalNode) {
+    public void makeMove(int[] goalNode) throws InterruptedException {
         updateFoodCoordinates(this);
 
         boolean isNotLastStep = (getNumberOfStep() < pathToGoal.size());
@@ -51,6 +57,8 @@ public abstract class Creature extends Entity {
 //            numberOfStep = 0;
 //            stopMovement();
         }
+
+        game.updateMap();
     }
 
     private void eat(int[] foodCoordinates) {
@@ -87,7 +95,7 @@ public abstract class Creature extends Entity {
         return numberOfStep;
     }
 
-    public void increaseNumberOfStep() {
+    private void increaseNumberOfStep() {
         numberOfStep++;
     }
 

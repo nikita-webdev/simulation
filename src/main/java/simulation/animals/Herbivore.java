@@ -7,7 +7,6 @@ public class Herbivore extends Creature {
         super(name, positionX, positionY);
 
         this.groupName = "herbivore";
-                speed = 1;
 //        hp = 2;
         icon = "\uD83D\uDC11";
     }

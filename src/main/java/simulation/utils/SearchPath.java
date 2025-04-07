@@ -9,7 +9,7 @@ public class SearchPath {
     private SimulationMap map = SimulationMap.getInstance();
 
     public int[] searchPath(Creature creature) {
-        int[] goalNode = new int[2];
+        int[] foodNode = new int[2];
 
         Queue<int[]> graphsQueue = new ArrayDeque<>();
         Set<String> visited = new HashSet<>();
@@ -28,33 +28,36 @@ public class SearchPath {
             int[][] childNodes = new int[8][];
 
             int[][] offsets = {
-                    {0, -1},
-                    {1, -1},
-                    {1, 0},
-                    {1, 1},
-                    {0, 1},
-                    {-1, 1},
-                    {-1, 0},
-                    {-1, -1}
+                {0, -1},
+                {1, -1},
+                {1, 0},
+                {1, 1},
+                {0, 1},
+                {-1, 1},
+                {-1, 0},
+                {-1, -1}
             };
 
             for (int i = 0; i < offsets.length; i++) {
                 childNodes[i] = new int[] {
-                        currentPosition[0] + offsets[i][0],
-                        currentPosition[1] + offsets[i][1]
+                    currentPosition[0] + offsets[i][0],
+                    currentPosition[1] + offsets[i][1]
                 };
             }
 
             for (int[] child : childNodes) {
                 String childKey = Arrays.toString(child);
+
                 if (!visited.contains(childKey)) {
-                    if ((child[0] < SimulationMap.MAP_SIZE_X && child[0] >= 0) && (child[1] < SimulationMap.MAP_SIZE_Y && child[1] >= 0)) {
-                        if (isEat(creature, child)) {
+                    boolean childCoordinatesValidation = (child[0] < SimulationMap.MAP_SIZE_X && child[0] >= 0) && (child[1] < SimulationMap.MAP_SIZE_Y && child[1] >= 0);
+
+                    if (childCoordinatesValidation) {
+                        if (isFood(creature, child)) {
 //                        System.out.println("Yes. This is Grass: " + Arrays.toString(child));
                             graphsQueue.add(child);
                             visited.add(childKey);
-                            goalNode = child;
-                            parentMap.put(Arrays.toString(goalNode), lastChild);
+                            foodNode = child;
+                            parentMap.put(Arrays.toString(foodNode), lastChild);
                             eatIsFind = true;
                             break;
                         } else if (map.isTreeOrRock(child)) {
@@ -74,29 +77,31 @@ public class SearchPath {
                 }
             }
         }
-        creature.pathToGoal = reconstructPath(parentMap, goalNode);
-        return goalNode;
+        creature.pathToGoal = reconstructPath(parentMap, foodNode);
+        return foodNode;
     }
 
     public List<int[]> reconstructPath(Map<String, int[]> parentMap, int[] goalCoordinates) {
         List<int[]> path = new LinkedList<>();
+
         for (int[] i = goalCoordinates; i != null; i = parentMap.get(Arrays.toString(i))) {
             path.add(i);
         }
+
         Collections.reverse(path);
         path.remove(0);
         return path;
     }
 
-    public boolean isEat(Creature creature, int[] node) {
-        boolean isEat = false;
+    public boolean isFood(Creature creature, int[] node) {
+        boolean isFood = false;
 
         if (creature.groupName.equals("herbivore")) {
-            isEat = map.isGrass(node);
+            isFood = map.isGrass(node);
         } else if (creature.groupName.equals("predator")) {
-            isEat = map.isHerbivore(node);
+            isFood = map.isHerbivore(node);
         }
 
-        return isEat;
+        return isFood;
     }
 }

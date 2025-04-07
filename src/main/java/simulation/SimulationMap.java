@@ -1,5 +1,6 @@
 package simulation;
 
+import simulation.animals.Creature;
 import simulation.animals.Herbivore;
 import simulation.animals.Predator;
 import simulation.objects.Grass;
@@ -32,6 +33,7 @@ public class SimulationMap {
     private List<String> allEntities = new ArrayList<>();
     private Map<String, Herbivore> allHerbivores = new HashMap<>();
     private Map<String, Predator> allPredators = new HashMap<>();
+    private Map<String, Creature> allCreatures = new HashMap<>();
     private List<int[]> allGrassesCoordinates = new ArrayList<>();
     private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
     private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
@@ -46,10 +48,12 @@ public class SimulationMap {
             if (entry.getValue() instanceof Herbivore herbivore) {
                 allHerbivores.put(herbivore.name, herbivore);
                 allHerbivoresCoordinatesForRemove.put(Arrays.toString(herbivore.coordinates), herbivore);
+                allCreatures.put(herbivore.name, herbivore);
             }
 
             if (entry.getValue() instanceof Predator predator) {
                 allPredators.put(predator.name, predator);
+                allCreatures.put(predator.name, predator);
             }
 
             if (entry.getValue() instanceof Grass grass) {
@@ -121,6 +125,7 @@ public class SimulationMap {
 
         allHerbivoresCoordinatesForRemove.remove(Arrays.toString(thisHerbivore));
         allHerbivores.remove(nameOfThisHerbivore);
+//        allCreatures.remove(nameOfThisHerbivore);
         map.remove(nameOfThisHerbivore);
     }
 
@@ -194,5 +199,9 @@ public class SimulationMap {
 
     public String getEntityIcon(String nameOfEntity) {
         return map.get(nameOfEntity).icon;
+    }
+
+    public Map<String, Creature> getAllCreatures() {
+        return allCreatures;
     }
 }

@@ -11,7 +11,6 @@ public class Predator extends Creature {
         super(name, positionX, positionY);
 
         this.groupName = "predator";
-        speed = 2;
 //        hp = 2;
         icon = "\uD83D\uDC06";
     }

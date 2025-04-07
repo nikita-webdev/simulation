@@ -1,11 +1,11 @@
 package simulation;
 
 import simulation.actions.InitObjects;
-import simulation.utils.GameLoop;
+
 import java.util.Scanner;
 
 public class Simulation {
-    public static boolean runningThread = true;
+    public static boolean runningThread = true; // Thread with game is running
     public static boolean nextTurn = false;
 
     public static void main(String[] args) throws InterruptedException {
@@ -25,7 +25,7 @@ public class Simulation {
 //        final int MAX_X_MAP_SIZE = 9;
 //        final int MAX_Y_MAP_SIZE = 5;
 
-        GameLoop gameLoop = new GameLoop(2000);
+        Game game = new Game(2000);
 
         InitObjects initObjects = new InitObjects();
         initObjects.initObjectsOnTheMap(10, 0, 2, 1);
@@ -36,7 +36,7 @@ public class Simulation {
         Thread gameThread = new Thread() {
             public void run() {
                 try {
-                    gameLoop.startGame();
+                    game.gameLoop();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -81,6 +81,7 @@ public class Simulation {
 
     static void nextTurn() {
         // просимулировать и отрендерить один ход
+        // for each creature
         nextTurn = true;
     }
 
@@ -89,7 +90,7 @@ public class Simulation {
         runningThread = true;
     }
 
-    static void pauseSimulation() {
+    private static void pauseSimulation() {
         // приостановить бесконечный цикл симуляции и рендеринга
         runningThread = false;
     }
