@@ -26,24 +26,29 @@ public class SimulationMap {
         map.put(entity.name, entity);
     }
 
-//    public int[] getEntity(String nameOfEntity) {
-//        return map.get(nameOfEntity);
-//    }
+    public Entity getEntity(String nameOfEntity) {
+        return map.get(nameOfEntity);
+    }
 
-    private List<String> allEntities = new ArrayList<>();
+    public Map<String, Entity> getAllEntities() {
+        return map;
+    }
+
+    private Map<String, Creature> allCreatures = new HashMap<>();
     private Map<String, Herbivore> allHerbivores = new HashMap<>();
     private Map<String, Predator> allPredators = new HashMap<>();
-    private Map<String, Creature> allCreatures = new HashMap<>();
-    private List<int[]> allGrassesCoordinates = new ArrayList<>();
+    private List<int[]> allTreesCoordinates = new ArrayList<>();
+    private List<int[]> allRocksCoordinates = new ArrayList<>();
+    private List<int[]> allEntityCoordinates = new ArrayList<>();
+
     private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
     private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
-    private List<int[]> allTreesAndRocksCoordinates = new ArrayList<>();
-    private List<int[]> allEntityCoordinates = new ArrayList<>();
 
     public void howMuchEntriesInMap() {
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
+            // Перебираем коллекцию и рассортировываем объекты по отдельным коллекциям
             String key = entry.getKey();
-            allEntities.add(key);
+//            allEntities.add(key);
 
             if (entry.getValue() instanceof Herbivore herbivore) {
                 allHerbivores.put(herbivore.name, herbivore);
@@ -76,14 +81,6 @@ public class SimulationMap {
 
     public List<int[]> getAllEntityCoordinates() {
         return allEntityCoordinates;
-    }
-
-    public void setAllGrassesCoordinates(int[] thisGrass) {
-        allGrassesCoordinates.add(thisGrass);
-    }
-
-    public List<int[]> getAllGrassesCoordinates() {
-        return allGrassesCoordinates;
     }
 
     public Map<String, Grass> getAllGrassesCoordinatesForRemove() {
@@ -140,17 +137,27 @@ public class SimulationMap {
         return false;
     }
 
-    public void setAllTreesAndRocksCoordinates(int[] thisGrass) {
-        allTreesAndRocksCoordinates.add(thisGrass);
+    public void addAllTreesCoordinates(int[] thisGrass) {
+        allTreesCoordinates.add(thisGrass);
     }
 
-    public List<int[]> getAllTreesAndRocksCoordinates() {
-        return allTreesAndRocksCoordinates;
+    public List<int[]> getAllTreesCoordinates() {
+        return allTreesCoordinates;
+    }
+
+    public void addAllRocksCoordinates(int[] thisGrass) {
+        allRocksCoordinates.add(thisGrass);
+    }
+
+    public List<int[]> getAllRocksCoordinates() {
+        return allRocksCoordinates;
     }
 
     public boolean isTreeOrRock(int[] thisPosition) {
-        for (int i = 0; i < allTreesAndRocksCoordinates.size(); i++) {
-            if (Arrays.equals(allTreesAndRocksCoordinates.get(i), thisPosition)) {
+        int amountTreesAndRocks = (allTreesCoordinates.size() + allRocksCoordinates.size());
+
+        for (int i = 0; i < amountTreesAndRocks; i++) {
+            if (Arrays.equals(allTreesCoordinates.get(i), thisPosition) || Arrays.equals(allRocksCoordinates.get(i), thisPosition)) {
                 return true;
             }
         }
@@ -177,10 +184,6 @@ public class SimulationMap {
             }
         }
         return isContain;
-    }
-
-    public List<String> getAllEntities() {
-        return allEntities;
     }
 
     public String getEntityName(int[] entityCoordinates) {

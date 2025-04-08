@@ -28,7 +28,7 @@ public class Simulation {
         Game game = new Game(2000);
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(10, 0, 2, 1);
+        initObjects.initObjectsOnTheMap(2, 1, 10, 0, 0);
 
         Renderer renderer = new Renderer();
         renderer.createMap();

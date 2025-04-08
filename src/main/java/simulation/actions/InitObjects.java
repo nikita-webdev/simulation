@@ -16,7 +16,7 @@ public class InitObjects {
 
     }
 
-    // Генерируем случайные координаты для объекта
+    // Generate random coordinates for an object
     private int[] generateRandomCoordinates() {
         int[] xy = new int[2];
         Random random = new Random();
@@ -29,49 +29,52 @@ public class InitObjects {
         return xy;
     }
 
-    public void initObjectsOnTheMap(int numberOfGrasses, int numberOfRocksAndTrees, int numberOfHerbivores, int numberOfPredators) {
+    public void initObjectsOnTheMap(int numberOfHerbivores, int numberOfPredators, int numberOfGrasses, int numberOfTrees, int numberOfRocks) {
         initGrass(numberOfGrasses);
-        initRocksAndTrees(numberOfRocksAndTrees);
+        initTrees(numberOfTrees);
+        initRocks(numberOfRocks);
         initHerbivore(numberOfHerbivores);
         initPredator(numberOfPredators);
     }
 
-    // Добавляем траву в map
+    // Add grass to map
     public void initGrass(int number) {
-        int numberGrasses = 0;
-        if (map.getAllGrassesCoordinates().isEmpty()) {
-            numberGrasses = 0;
-        } else if (!map.getAllGrassesCoordinates().isEmpty()) {
-            numberGrasses = map.getAllGrassesCoordinates().size();
-        }
+        // Quantity counter for assigning a number
+        int amountOfGrasses = map.getAllGrassesCoordinatesForRemove().size();
 
         for (int i = 0; i < number; i++) {
-            // Рандомные координаты проверяются на совпадение в map и, если совпадений нет, то объект добавляется на эти координаты
+            // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyGrass = generateRandomCoordinates();
 
-            map.addEntity(new Grass("grass" + (numberGrasses + 1), xyGrass[0], xyGrass[1]));
-            map.setAllGrassesCoordinates(new int[] {xyGrass[0], xyGrass[1]});
+            map.addEntity(new Grass("grass" + (amountOfGrasses + 1), xyGrass[0], xyGrass[1]));
             map.setAllEntityCoordinates(new int[] {xyGrass[0], xyGrass[1]});
-            numberGrasses = map.getAllGrassesCoordinates().size();
+            amountOfGrasses++;
         }
     }
 
-    // Добавляем камни и деревья в map
-    public void initRocksAndTrees(int number) {
+    // Add trees to the map
+    public void initTrees(int number) {
         for (int i = 0; i < number; i++) {
-            int[] xyRock = generateRandomCoordinates();
             int[] xyTree = generateRandomCoordinates();
 
-            map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
-            map.setAllTreesAndRocksCoordinates(new int[] {xyRock[0], xyRock[1]});
-            map.setAllTreesAndRocksCoordinates(new int[] {xyTree[0], xyTree[1]});
-            map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
+            map.addAllTreesCoordinates(new int[] {xyTree[0], xyTree[1]});
             map.setAllEntityCoordinates(new int[] {xyTree[0], xyTree[1]});
         }
     }
 
-    // Добавляем травоядных в map
+    // Add rocks to the map
+    public void initRocks(int number) {
+        for (int i = 0; i < number; i++) {
+            int[] xyRock = generateRandomCoordinates();
+
+            map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
+            map.addAllRocksCoordinates(new int[] {xyRock[0], xyRock[1]});
+            map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
+        }
+    }
+
+    // Add herbivores to the map
     public void initHerbivore(int number) {
         int numberHerbivores = 0;
         if (map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
@@ -89,7 +92,7 @@ public class InitObjects {
         }
     }
 
-    // Добавляем хищников в map
+    // Add predators to the map
     public void initPredator(int number) {
         for (int i = 0; i < number; i++) {
             int[] xyPredator = generateRandomCoordinates();
@@ -98,37 +101,4 @@ public class InitObjects {
             map.setAllEntityCoordinates(new int[] {xyPredator[0], xyPredator[1]});
         }
     }
-
-    
-    /*
-    void simulationSettings
-
-    void createObjects(int numberOfGrass, int numberOfTree, int numberOfRock, int numberOfHerbivore, int numberOfPredator) {
-        // здесь в цикле создаём объекты до заданного количества quantity
-        // и записываем их в список Map
-        // это 2 действия или 1? Создать статичные объекты, травоядных и хищников
-    }
-
-    int generatePosition(objectName) {
-        // случайно генерирует координаты для объекта и возвращает их
-        return x, y;
-    }
-
-    boolean checkPosition(objectName) {
-        // проверяет заняты ли координаты на карте
-    }
-
-    // и надо ещё отдельное действие для установки не 1, а всех объектов на карте
-    int setPosition(objectName) {
-        // устанавливает координаты для объекта
-        // то есть, устанавливаем объект на карту
-        objectName.positionX = x;
-        objectName.positionY = y;
-    }
-
-     */
-
-//    public SimulationMap createObjects() {
-//        return map;
-//    }
 }

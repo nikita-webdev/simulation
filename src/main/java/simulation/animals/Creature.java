@@ -2,7 +2,6 @@ package simulation.animals;
 
 import simulation.Entity;
 import simulation.Game;
-import simulation.Renderer;
 import simulation.SimulationMap;
 import simulation.utils.SearchPath;
 
@@ -13,8 +12,6 @@ public abstract class Creature extends Entity {
     SearchPath searchPath = new SearchPath();
 
     Game game = new Game();
-
-    Renderer renderer = new Renderer();
 
     public List<int[]> pathToGoal;
     private int numberOfStep = 0;

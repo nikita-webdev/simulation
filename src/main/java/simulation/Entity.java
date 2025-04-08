@@ -2,6 +2,7 @@ package simulation;
 
 public abstract class Entity {
     public String name;
+    public String groupName;
     public String icon;
     public int positionX;
     public int positionY;
