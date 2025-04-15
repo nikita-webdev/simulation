@@ -1,6 +1,7 @@
 package simulation;
 
 import simulation.actions.InitObjects;
+import simulation.field.Renderer;
 
 import java.util.Scanner;
 

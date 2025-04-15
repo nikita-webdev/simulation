@@ -1,6 +1,6 @@
-package simulation.animals;
+package simulation.entities.animals;
 
-import simulation.Entity;
+import simulation.entities.Entity;
 import simulation.Game;
 import simulation.SimulationMap;
 import simulation.utils.SearchPath;

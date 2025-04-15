@@ -1,4 +1,7 @@
-package simulation;
+package simulation.field;
+
+import simulation.SimulationMap;
+import simulation.entities.Entity;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -16,7 +19,7 @@ public class Renderer {
         this.matrix = new String[mapSizeY][mapSizeX];
     }
 
-    void createMap() {
+    public void createMap() {
         for(int i = 0; i < matrix.length; i++) {
             Arrays.fill(matrix[i], "⬛");
         }

@@ -1,4 +1,4 @@
-package simulation;
+package simulation.entities;
 
 public abstract class Entity {
     public String name;

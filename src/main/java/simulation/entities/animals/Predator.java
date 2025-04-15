@@ -1,4 +1,4 @@
-package simulation.animals;
+package simulation.entities.animals;
 
 public class Predator extends Creature {
     // имеет силу атаки

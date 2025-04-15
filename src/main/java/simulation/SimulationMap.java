@@ -1,9 +1,10 @@
 package simulation;
 
-import simulation.animals.Creature;
-import simulation.animals.Herbivore;
-import simulation.animals.Predator;
-import simulation.objects.Grass;
+import simulation.entities.Entity;
+import simulation.entities.animals.Creature;
+import simulation.entities.animals.Herbivore;
+import simulation.entities.animals.Predator;
+import simulation.entities.objects.Grass;
 
 import java.util.*;
 
@@ -47,8 +48,7 @@ public class SimulationMap {
     public void howMuchEntriesInMap() {
         for (Map.Entry<String, Entity> entry : map.entrySet()) {
             // Перебираем коллекцию и рассортировываем объекты по отдельным коллекциям
-            String key = entry.getKey();
-//            allEntities.add(key);
+            // Делаем это каждый ход, вызывая howMuchEntriesInMap() в классе Render
 
             if (entry.getValue() instanceof Herbivore herbivore) {
                 allHerbivores.put(herbivore.name, herbivore);

@@ -1,11 +1,11 @@
 package simulation.actions;
 
 import simulation.SimulationMap;
-import simulation.animals.Herbivore;
-import simulation.animals.Predator;
-import simulation.objects.Grass;
-import simulation.objects.Rock;
-import simulation.objects.Tree;
+import simulation.entities.animals.Herbivore;
+import simulation.entities.animals.Predator;
+import simulation.entities.objects.Grass;
+import simulation.entities.objects.Rock;
+import simulation.entities.objects.Tree;
 
 import java.util.Random;
 

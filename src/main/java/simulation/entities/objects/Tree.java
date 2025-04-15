@@ -1,6 +1,6 @@
-package simulation.objects;
+package simulation.entities.objects;
 
-import simulation.Entity;
+import simulation.entities.Entity;
 
 public class Tree extends Entity {
     public Tree(String name, int positionX, int positionY) {
