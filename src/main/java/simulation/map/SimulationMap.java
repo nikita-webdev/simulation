@@ -40,7 +40,7 @@ public class SimulationMap {
     private Map<String, Predator> allPredators = new HashMap<>();
     private List<int[]> allTreesCoordinates = new ArrayList<>();
     private List<int[]> allRocksCoordinates = new ArrayList<>();
-    private List<int[]> allEntityCoordinates = new ArrayList<>();
+//    private List<int[]> allEntityCoordinates = new ArrayList<>();
 
     private Map<String, Grass> allGrassesCoordinatesForRemove = new HashMap<>();
     private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
@@ -75,13 +75,13 @@ public class SimulationMap {
         return allPredators;
     }
 
-    public void setAllEntityCoordinates(int[] thisEntity) {
-        allEntityCoordinates.add(thisEntity);
-    }
-
-    public List<int[]> getAllEntityCoordinates() {
-        return allEntityCoordinates;
-    }
+//    public void setAllEntityCoordinates(int[] thisEntity) {
+//        allEntityCoordinates.add(thisEntity);
+//    }
+//
+//    public List<int[]> getAllEntityCoordinates() {
+//        return allEntityCoordinates;
+//    }
 
     public Map<String, Grass> getAllGrassesCoordinatesForRemove() {
         return allGrassesCoordinatesForRemove;
@@ -99,10 +99,19 @@ public class SimulationMap {
         allHerbivoresCoordinatesForRemove.clear();
     }
 
-    public void removeGrass(int[] thisGrass) {
-        String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
+//    public void removeGrass(int[] thisGrass) {
+//        String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
+//
+//        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
+//        map.remove(nameOfThisGrass);
+//    }
 
-        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
+    public void removeGrass(int[] thisGrass) {
+        // 1. Перебрать всю траву по имени группы
+        // 2. Найти траву по координатам
+        String nameOfThisGrass = map;
+
+//        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
         map.remove(nameOfThisGrass);
     }
 
