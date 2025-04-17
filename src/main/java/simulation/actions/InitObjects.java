@@ -1,6 +1,7 @@
 package simulation.actions;
 
-import simulation.SimulationMap;
+import simulation.map.Cell;
+import simulation.map.SimulationMap;
 import simulation.entities.animals.Herbivore;
 import simulation.entities.animals.Predator;
 import simulation.entities.objects.Grass;
@@ -46,8 +47,8 @@ public class InitObjects {
             // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyGrass = generateRandomCoordinates();
 
-            map.addEntity(new Grass("grass" + (amountOfGrasses + 1), xyGrass[0], xyGrass[1]));
-            map.setAllEntityCoordinates(new int[] {xyGrass[0], xyGrass[1]});
+            map.addEntity(new Cell(xyGrass[0], xyGrass[1]), new Grass("grass" + (amountOfGrasses + 1), xyGrass[0], xyGrass[1]));
+//            map.setAllEntityCoordinates(new int[] {xyGrass[0], xyGrass[1]});
             amountOfGrasses++;
         }
     }
@@ -57,9 +58,9 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyTree = generateRandomCoordinates();
 
-            map.addEntity(new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+            map.addEntity(new Cell(xyTree[0], xyTree[1]), new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
             map.addAllTreesCoordinates(new int[] {xyTree[0], xyTree[1]});
-            map.setAllEntityCoordinates(new int[] {xyTree[0], xyTree[1]});
+//            map.setAllEntityCoordinates(new int[] {xyTree[0], xyTree[1]});
         }
     }
 
@@ -68,9 +69,9 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyRock = generateRandomCoordinates();
 
-            map.addEntity(new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
+            map.addEntity(new Cell(xyRock[0], xyRock[1]), new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
             map.addAllRocksCoordinates(new int[] {xyRock[0], xyRock[1]});
-            map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
+//            map.setAllEntityCoordinates(new int[] {xyRock[0], xyRock[1]});
         }
     }
 
@@ -86,8 +87,8 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyHerbivore = generateRandomCoordinates();
 
-            map.addEntity(new Herbivore("herbivore" + (numberHerbivores + 1), xyHerbivore[0], xyHerbivore[1]));
-            map.setAllEntityCoordinates(new int[] {xyHerbivore[0], xyHerbivore[1]});
+            map.addEntity(new Cell(xyHerbivore[0], xyHerbivore[1]), new Herbivore("herbivore" + (numberHerbivores + 1), xyHerbivore[0], xyHerbivore[1]));
+//            map.setAllEntityCoordinates(new int[] {xyHerbivore[0], xyHerbivore[1]});
             numberHerbivores = map.getAllHerbivoresCoordinatesForRemove().size();
         }
     }
@@ -97,8 +98,8 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyPredator = generateRandomCoordinates();
 
-            map.addEntity(new Predator("predator" + (i + 1), xyPredator[0], xyPredator[1]));
-            map.setAllEntityCoordinates(new int[] {xyPredator[0], xyPredator[1]});
+            map.addEntity(new Cell(xyPredator[0], xyPredator[1]), new Predator("predator" + (i + 1), xyPredator[0], xyPredator[1]));
+//            map.setAllEntityCoordinates(new int[] {xyPredator[0], xyPredator[1]});
         }
     }
 }

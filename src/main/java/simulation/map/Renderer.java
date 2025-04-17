@@ -1,6 +1,5 @@
-package simulation.field;
+package simulation.map;
 
-import simulation.SimulationMap;
 import simulation.entities.Entity;
 
 import java.util.Arrays;
@@ -32,19 +31,21 @@ public class Renderer {
         printMatrix();
     }
 
-    void updateMatrix() {
+    public void updateMatrix() {
         // Update elements in the matrix
-        for (Map.Entry<String, Entity> entry : map.map.entrySet()) {
-            String currentEntityName = entry.getKey();
-            int x = map.getEntityCoordinatesX(currentEntityName);
-            int y = map.getEntityCoordinatesY(currentEntityName);
-            String entityIcon = map.getEntityIcon(currentEntityName);
+        for (Map.Entry<Cell, Entity> entry : map.map.entrySet()) {
+            Cell currentCell = entry.getKey();
+            Entity entity = entry.getValue();
+
+            int x = currentCell.getX();
+            int y = currentCell.getY();
+            String entityIcon = entity.icon;
 
             matrix[y][x] = entityIcon;
         }
     }
 
-    void printMatrix() {
+    public void printMatrix() {
         // Display the matrix on the screen
         StringBuilder line = new StringBuilder();
 

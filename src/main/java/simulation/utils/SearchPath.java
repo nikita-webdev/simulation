@@ -1,6 +1,6 @@
 package simulation.utils;
 
-import simulation.SimulationMap;
+import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;
 
 import java.util.*;

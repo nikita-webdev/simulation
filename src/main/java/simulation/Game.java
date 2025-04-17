@@ -1,7 +1,7 @@
 package simulation;
 
 import simulation.actions.MoveAllCreatures;
-import simulation.field.Renderer;
+import simulation.map.Renderer;
 
 public class Game {
     Renderer renderer = new Renderer();

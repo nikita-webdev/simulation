@@ -1,4 +1,4 @@
-package simulation;
+package simulation.map;
 
 import simulation.entities.Entity;
 import simulation.entities.animals.Creature;
@@ -9,8 +9,10 @@ import simulation.entities.objects.Grass;
 import java.util.*;
 
 public class SimulationMap {
-    public Map<String, Entity> map = new HashMap<>();
+//    public Map<String, Entity> map = new HashMap<>();
+    public Map<Cell, Entity> map = new HashMap<>();
     private static final SimulationMap instance = new SimulationMap();
+    Cell cell = new Cell();
 
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
@@ -23,15 +25,15 @@ public class SimulationMap {
         return instance;
     }
 
-    public void addEntity(Entity entity) {
-        map.put(entity.name, entity);
+    public void addEntity(Cell cell, Entity entity) {
+        map.put(cell, entity);
     }
 
     public Entity getEntity(String nameOfEntity) {
         return map.get(nameOfEntity);
     }
 
-    public Map<String, Entity> getAllEntities() {
+    public Map<Cell, Entity> getAllEntities() {
         return map;
     }
 
@@ -46,7 +48,7 @@ public class SimulationMap {
     private Map<String, Herbivore> allHerbivoresCoordinatesForRemove = new HashMap<>();
 
     public void howMuchEntriesInMap() {
-        for (Map.Entry<String, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
             // Перебираем коллекцию и рассортировываем объекты по отдельным коллекциям
             // Делаем это каждый ход, вызывая howMuchEntriesInMap() в классе Render
 
@@ -64,6 +66,10 @@ public class SimulationMap {
             if (entry.getValue() instanceof Grass grass) {
                 allGrassesCoordinatesForRemove.put(Arrays.toString(grass.coordinates), grass);
             }
+
+            Cell cell = entry.getKey();
+            Entity entity = entry.getValue();
+            cell.setCoordinates(entity.positionX, entity.positionY);
         }
     }
 
@@ -74,14 +80,6 @@ public class SimulationMap {
     public Map<String, Predator> getAllPredators() {
         return allPredators;
     }
-
-//    public void setAllEntityCoordinates(int[] thisEntity) {
-//        allEntityCoordinates.add(thisEntity);
-//    }
-//
-//    public List<int[]> getAllEntityCoordinates() {
-//        return allEntityCoordinates;
-//    }
 
     public Map<String, Grass> getAllGrassesCoordinatesForRemove() {
         return allGrassesCoordinatesForRemove;
@@ -99,19 +97,10 @@ public class SimulationMap {
         allHerbivoresCoordinatesForRemove.clear();
     }
 
-//    public void removeGrass(int[] thisGrass) {
-//        String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
-//
-//        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
-//        map.remove(nameOfThisGrass);
-//    }
-
     public void removeGrass(int[] thisGrass) {
-        // 1. Перебрать всю траву по имени группы
-        // 2. Найти траву по координатам
-        String nameOfThisGrass = map;
+        String nameOfThisGrass = allGrassesCoordinatesForRemove.get(Arrays.toString(thisGrass)).name;
 
-//        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
+        allGrassesCoordinatesForRemove.remove(Arrays.toString(thisGrass));
         map.remove(nameOfThisGrass);
     }
 
@@ -181,7 +170,7 @@ public class SimulationMap {
     public boolean isCoordinatesOccupied(int[] newCoordinates) {
         boolean isContain = false;
 
-        for (Map.Entry<String, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
             int[] existingCoordinates = new int[2];
             existingCoordinates[0] = entry.getValue().positionX;
             existingCoordinates[1] = entry.getValue().positionY;
@@ -215,5 +204,15 @@ public class SimulationMap {
 
     public Map<String, Creature> getAllCreatures() {
         return allCreatures;
+    }
+
+    public void removeCell(int x, int y) {
+        Cell targetCell = cell.findCellInMap(map, x, y);
+
+        if (targetCell != null) {
+            map.remove(targetCell);
+        } else {
+            System.out.println("Клетка не найдена.");
+        }
     }
 }

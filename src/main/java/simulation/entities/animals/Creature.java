@@ -2,7 +2,7 @@ package simulation.entities.animals;
 
 import simulation.entities.Entity;
 import simulation.Game;
-import simulation.SimulationMap;
+import simulation.map.SimulationMap;
 import simulation.utils.SearchPath;
 
 import java.util.*;
@@ -61,11 +61,11 @@ public abstract class Creature extends Entity {
     private void eat(int[] foodCoordinates) {
         if (groupName.equals("herbivore")) {
             if(map.isGrass(foodCoordinates)) {
-                map.removeGrass(foodCoordinates);
+                map.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
         } else if (groupName.equals("predator")) {
             if(map.isHerbivore(foodCoordinates)) {
-                map.removeHerbivore(foodCoordinates);
+                map.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
         }
     }
