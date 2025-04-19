@@ -5,6 +5,8 @@ import simulation.entities.Entity;
 import java.util.Arrays;
 import java.util.Map;
 
+import static simulation.config.Icons.EMPTY_ICON;
+
 public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
     int mapSizeX = SimulationMap.MAP_SIZE_X;
@@ -20,7 +22,7 @@ public class Renderer {
 
     public void createMap() {
         for(int i = 0; i < matrix.length; i++) {
-            Arrays.fill(matrix[i], "⬛");
+            Arrays.fill(matrix[i], EMPTY_ICON);
         }
     }
 
