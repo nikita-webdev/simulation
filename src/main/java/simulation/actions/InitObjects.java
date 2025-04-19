@@ -41,14 +41,14 @@ public class InitObjects {
     // Add grass to map
     public void initGrass(int number) {
         // Quantity counter for assigning a number
-        int amountOfGrasses = map.getAllGrassesCoordinatesForRemove().size();
+        int numberOfGrasses = map.getCountOfGrasses();
 
         for (int i = 0; i < number; i++) {
             // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyGrass = generateRandomCoordinates();
 
-            map.addEntity(new Cell(xyGrass[0], xyGrass[1]), new Grass("grass" + (amountOfGrasses + 1), xyGrass[0], xyGrass[1]));
-            amountOfGrasses++;
+            map.addEntity(new Cell(xyGrass[0], xyGrass[1]), new Grass("grass" + (numberOfGrasses + 1), xyGrass[0], xyGrass[1]));
+            numberOfGrasses++;
         }
     }
 
@@ -72,20 +72,15 @@ public class InitObjects {
 
     // Add herbivores to the map
     public void initHerbivore(int number) {
-        int numberHerbivores = 0;
-        if (map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
-            numberHerbivores = 0;
-        } else if (!map.getAllHerbivoresCoordinatesForRemove().isEmpty()) {
-            numberHerbivores = map.getAllHerbivoresCoordinatesForRemove().size();
-        }
+        int numberOfHerbivores = map.getCountOfHerbivores();
 
         for (int i = 0; i < number; i++) {
             int[] xyHerbivore = generateRandomCoordinates();
 
             Cell cell = new Cell(xyHerbivore[0], xyHerbivore[1]);
 
-            map.addEntity(cell, new Herbivore(cell, "herbivore" + (numberHerbivores + 1)));
-            numberHerbivores = map.getAllHerbivoresCoordinatesForRemove().size();
+            map.addEntity(cell, new Herbivore(cell, "herbivore" + (numberOfHerbivores + 1)));
+            numberOfHerbivores = map.getCountOfHerbivores();
         }
     }
 

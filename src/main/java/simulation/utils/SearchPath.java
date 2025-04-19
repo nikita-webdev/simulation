@@ -9,7 +9,7 @@ public class SearchPath {
     private SimulationMap map = SimulationMap.getInstance();
 
     public int[] searchPath(Creature creature) {
-        int[] foodNode = new int[2];
+        int[] foodNode = creature.coordinates;
 
         Queue<int[]> graphsQueue = new ArrayDeque<>();
         Set<String> visited = new HashSet<>();

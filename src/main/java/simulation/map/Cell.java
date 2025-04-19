@@ -43,13 +43,13 @@ public class Cell {
         return null;
     }
 
-    public void removeCell(HashMap<Cell, Entity> targetMap, int x, int y) {
-        Cell targetCell = findCellInMap(targetMap, x, y);
-
-        if (targetCell != null) {
-            targetMap.remove(targetCell);
-        }
-    }
+//    public void removeCell(HashMap<Cell, Entity> targetMap, int x, int y) {
+//        Cell targetCell = findCellInMap(targetMap, x, y);
+//
+//        if (targetCell != null) {
+//            targetMap.remove(targetCell);
+//        }
+//    }
 
     @Override
     public boolean equals(Object o) {

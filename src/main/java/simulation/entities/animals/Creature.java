@@ -47,6 +47,8 @@ public abstract class Creature extends Entity {
                 coordinates[0] = positionX;
                 coordinates[1] = positionY;
 
+                cell.setCoordinates(coordinates[0], coordinates[1]);
+
                 if(getNumberOfStep() < pathToGoal.size() - 1) {
                     increaseNumberOfStep();
                 }
@@ -109,18 +111,17 @@ public abstract class Creature extends Entity {
     }
 
     private boolean shouldUpdateFoodCoordinates(Creature creature) {
+        // If the getGoalFoodCoordinates() are not food - should update food coordinates
         boolean foodCoordinatesIncorrect = false;
 
-        if (creature.groupName.equals("predator")) {
-            boolean currentFoodIsCreature = map.isHerbivore(creature.getGoalFoodCoordinates());
-            boolean hasHerbivores = !map.getAllHerbivoresCoordinatesForRemove().isEmpty();
+        if (creature instanceof Predator) {
+            boolean currentGoalCoordinatesIsHerbivore = map.isHerbivore(creature.getGoalFoodCoordinates());
 
-            foodCoordinatesIncorrect = (!currentFoodIsCreature && hasHerbivores);
-        } else if (creature.groupName.equals("herbivore")) {
-            boolean currentFoodIsGrass = map.isGrass(creature.getGoalFoodCoordinates());
-            boolean hasGrass = !map.getAllGrassesCoordinatesForRemove().isEmpty();
+            foodCoordinatesIncorrect = !currentGoalCoordinatesIsHerbivore;
+        } else if (creature instanceof Herbivore) {
+            boolean currentGoalCoordinatesIsGrass = map.isGrass(creature.getGoalFoodCoordinates());
 
-            foodCoordinatesIncorrect = (!currentFoodIsGrass && hasGrass);
+            foodCoordinatesIncorrect = !currentGoalCoordinatesIsGrass;
         }
 
         return foodCoordinatesIncorrect;

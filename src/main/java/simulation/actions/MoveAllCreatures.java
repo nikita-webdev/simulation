@@ -1,5 +1,7 @@
 package simulation.actions;
 
+import simulation.entities.Entity;
+import simulation.map.Cell;
 import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;
 
@@ -12,7 +14,7 @@ public class MoveAllCreatures {
     private final Queue<Creature> creatures = new LinkedList<>();
 
     public void makeMoveAllCreatures() throws InterruptedException {
-        for (Map.Entry<String, Creature> entry : map.getAllCreatures().entrySet()) {
+        for (Map.Entry<Cell, Creature> entry : map.getAllCreatures().entrySet()) {
             Creature creature = entry.getValue();
 
             creatures.add(creature);
