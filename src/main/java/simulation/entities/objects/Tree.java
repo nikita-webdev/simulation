@@ -7,5 +7,6 @@ public class Tree extends Entity {
         super(name, positionX, positionY);
 
         icon = "\uD83C\uDF33";
+        groupName = "tree";
     }
 }

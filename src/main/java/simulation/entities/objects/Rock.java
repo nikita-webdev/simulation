@@ -7,5 +7,6 @@ public class Rock extends Entity {
         super(name, positionX, positionY);
 
         icon = "\uD83C\uDFD4️";
+        groupName = "rock";
     }
 }
