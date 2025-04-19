@@ -2,6 +2,7 @@ package simulation.entities.animals;
 
 import simulation.entities.Entity;
 import simulation.Game;
+import simulation.map.Cell;
 import simulation.map.SimulationMap;
 import simulation.utils.SearchPath;
 
@@ -10,6 +11,8 @@ import java.util.*;
 public abstract class Creature extends Entity {
     private SimulationMap map = SimulationMap.getInstance();
     SearchPath searchPath = new SearchPath();
+
+    private Cell cell;
 
     Game game = new Game();
 
@@ -21,8 +24,13 @@ public abstract class Creature extends Entity {
     int hp;
     int[] goalFoodCoordinates = {-1, -1};
 
-    public Creature(String name, int positionX, int positionY) {
-        super(name, positionX, positionY);
+    public Creature(Cell cell, String name) {
+        super(name);
+        this.cell = cell;
+        this.positionX = cell.getX();
+        this.positionY = cell.getY();
+        this.coordinates[0] = cell.getX();
+        this.coordinates[1] = cell.getY();
     }
 
     public void makeMove(int[] goalNode) throws InterruptedException {
