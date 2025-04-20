@@ -16,10 +16,11 @@ public abstract class Creature extends Entity {
 
     Game game = new Game();
 
-    public List<int[]> pathToGoal;
-    private int numberOfStep = 0;
+    public int[] coordinates = new int[2];
 
-    public String groupName;
+    public List<int[]> pathToFood;
+    private int currentStepNumber = 0;
+
     int speed = 1;
     int hp;
     int[] goalFoodCoordinates = {-1, -1};
@@ -27,40 +28,34 @@ public abstract class Creature extends Entity {
     public Creature(Cell cell, String name) {
         super(name);
         this.cell = cell;
-        this.positionX = cell.getX();
-        this.positionY = cell.getY();
         this.coordinates[0] = cell.getX();
         this.coordinates[1] = cell.getY();
     }
 
-    public void makeMove(int[] goalNode) throws InterruptedException {
+    public void makeMove(int[] foodTargetNode) throws InterruptedException {
         updateFoodCoordinates(this);
 
-        boolean isNotLastStep = (getNumberOfStep() < pathToGoal.size());
+        boolean isNotLastStep = getCurrentStepNumber() < pathToFood.size();
 
         if (isNotLastStep) {
-            int[] nextStep = pathToGoal.get(getNumberOfStep());
-            boolean isFoodFound = (goalNode[0] == nextStep[0] && goalNode[1] == nextStep[1]);
+            int[] nextStepCoordinates = pathToFood.get(getCurrentStepNumber());
+            boolean isFoodAtNextStep = (foodTargetNode[0] == nextStepCoordinates[0] && foodTargetNode[1] == nextStepCoordinates[1]);
 
-            if(!map.isCoordinatesOccupied(nextStep)) {
-                makeStep(nextStep);
-                coordinates[0] = positionX;
-                coordinates[1] = positionY;
-
-                cell.setCoordinates(coordinates[0], coordinates[1]);
-
-                if(getNumberOfStep() < pathToGoal.size() - 1) {
-                    increaseNumberOfStep();
-                }
-            } else if(isFoodFound) {
-                eat(goalNode);
+            if(isFoodAtNextStep) {
+                eat(foodTargetNode);
                 clearNumberOfStep();
                 stopMovement();
+            } else if (!map.isCoordinatesOccupied(nextStepCoordinates)) {
+                makeStep(nextStepCoordinates);
+
+                if(getCurrentStepNumber() < pathToFood.size() - 1) {
+                    increaseCurrentStepNumber();
+                }
             } else {
-                System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(nextStep));
+                System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(nextStepCoordinates));
             }
         } else {
-//            eat(goalNode);
+//            eat(foodTargetNode);
 //            numberOfStep = 0;
 //            stopMovement();
         }
@@ -69,11 +64,11 @@ public abstract class Creature extends Entity {
     }
 
     private void eat(int[] foodCoordinates) {
-        if (groupName.equals("herbivore")) {
+        if (this instanceof Herbivore) {
             if(map.isGrass(foodCoordinates)) {
                 map.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
-        } else if (groupName.equals("predator")) {
+        } else if (this instanceof Predator) {
             if(map.isHerbivore(foodCoordinates)) {
                 map.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
@@ -93,38 +88,34 @@ public abstract class Creature extends Entity {
         setGoalFoodCoordinates(coordinates);
     }
 
-    private void makeStep(int[] coordinates) {
-        positionX = coordinates[0];
-        positionY = coordinates[1];
+    private void makeStep(int[] stepCoordinates) {
+        cell.setCoordinates(stepCoordinates[0], stepCoordinates[1]);
+        coordinates = cell.getCoordinates();
     }
 
-    public int getNumberOfStep() {
-        return numberOfStep;
+    public int getCurrentStepNumber() {
+        return currentStepNumber;
     }
 
-    private void increaseNumberOfStep() {
-        numberOfStep++;
+    private void increaseCurrentStepNumber() {
+        currentStepNumber++;
     }
 
     private void clearNumberOfStep() {
-        numberOfStep = 0;
+        currentStepNumber = 0;
     }
 
     private boolean shouldUpdateFoodCoordinates(Creature creature) {
-        // If the getGoalFoodCoordinates() are not food - should update food coordinates
-        boolean foodCoordinatesIncorrect = false;
+        // If isFoodCoordinatesInvalid is true, the food coordinates of creature should be updated
+        boolean isFoodCoordinatesInvalid = false;
 
         if (creature instanceof Predator) {
-            boolean currentGoalCoordinatesIsHerbivore = map.isHerbivore(creature.getGoalFoodCoordinates());
-
-            foodCoordinatesIncorrect = !currentGoalCoordinatesIsHerbivore;
+            isFoodCoordinatesInvalid = !map.isHerbivore(creature.getGoalFoodCoordinates());
         } else if (creature instanceof Herbivore) {
-            boolean currentGoalCoordinatesIsGrass = map.isGrass(creature.getGoalFoodCoordinates());
-
-            foodCoordinatesIncorrect = !currentGoalCoordinatesIsGrass;
+            isFoodCoordinatesInvalid = !map.isGrass(creature.getGoalFoodCoordinates());
         }
 
-        return foodCoordinatesIncorrect;
+        return isFoodCoordinatesInvalid;
     }
 
     private void updateFoodCoordinates(Creature creature) {

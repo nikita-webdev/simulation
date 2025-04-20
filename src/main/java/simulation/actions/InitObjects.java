@@ -47,7 +47,9 @@ public class InitObjects {
             // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyGrass = generateRandomCoordinates();
 
-            map.addEntity(new Cell(xyGrass[0], xyGrass[1]), new Grass("grass" + (numberOfGrasses + 1), xyGrass[0], xyGrass[1]));
+            Cell cell = new Cell(xyGrass[0], xyGrass[1]);
+
+            map.addEntity(cell, new Grass("grass" + (numberOfGrasses + 1)));
             numberOfGrasses++;
         }
     }
@@ -57,7 +59,9 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyTree = generateRandomCoordinates();
 
-            map.addEntity(new Cell(xyTree[0], xyTree[1]), new Tree("tree" + (i + 1), xyTree[0], xyTree[1]));
+            Cell cell = new Cell(xyTree[0], xyTree[1]);
+
+            map.addEntity(cell, new Tree("tree" + (i + 1)));
         }
     }
 
@@ -66,7 +70,9 @@ public class InitObjects {
         for (int i = 0; i < number; i++) {
             int[] xyRock = generateRandomCoordinates();
 
-            map.addEntity(new Cell(xyRock[0], xyRock[1]), new Rock("rock" + (i + 1), xyRock[0], xyRock[1]));
+            Cell cell = new Cell(xyRock[0], xyRock[1]);
+
+            map.addEntity(cell, new Rock("rock" + (i + 1)));
         }
     }
 

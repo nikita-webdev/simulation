@@ -108,20 +108,25 @@ public class SimulationMap {
         return false;
     }
 
-    public boolean isCoordinatesOccupied(int[] newCoordinates) {
+    public boolean isCoordinatesOccupied(int[] targetCoordinates) {
         boolean isContain = false;
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
-            int[] existingCoordinates = new int[2];
-            existingCoordinates[0] = entry.getValue().positionX;
-            existingCoordinates[1] = entry.getValue().positionY;
+//        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
+//            int[] existingCoordinates = new int[2];
+//            existingCoordinates[0] = entry.getValue().positionX;
+//            existingCoordinates[1] = entry.getValue().positionY;
+//
+//            isContain = Arrays.equals(targetCoordinates, existingCoordinates);
+//
+//            if (isContain) {
+//                break;
+//            }
+//        }
 
-            isContain = Arrays.equals(newCoordinates, existingCoordinates);
-
-            if (isContain) {
-                break;
-            }
+        if (cell.findCellInMap(map, targetCoordinates[0], targetCoordinates[1]) != null) {
+            isContain = true;
         }
+
         return isContain;
     }
 

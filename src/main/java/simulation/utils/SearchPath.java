@@ -1,5 +1,7 @@
 package simulation.utils;
 
+import simulation.entities.animals.Herbivore;
+import simulation.entities.animals.Predator;
 import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;
 
@@ -17,7 +19,7 @@ public class SearchPath {
 
         int[] lastChild = new int[2];
 
-        int[] startPosition = new int[] {creature.positionX, creature.positionY};
+        int[] startPosition = new int[] {creature.coordinates[0], creature.coordinates[1]};
         graphsQueue.add(startPosition);
         visited.add(Arrays.toString(startPosition));
 
@@ -77,7 +79,7 @@ public class SearchPath {
                 }
             }
         }
-        creature.pathToGoal = reconstructPath(parentMap, foodNode);
+        creature.pathToFood = reconstructPath(parentMap, foodNode);
         return foodNode;
     }
 
@@ -96,9 +98,9 @@ public class SearchPath {
     public boolean isFood(Creature creature, int[] node) {
         boolean isFood = false;
 
-        if (creature.groupName.equals("herbivore")) {
+        if (creature instanceof Herbivore) {
             isFood = map.isGrass(node);
-        } else if (creature.groupName.equals("predator")) {
+        } else if (creature instanceof Predator) {
             isFood = map.isHerbivore(node);
         }
 
