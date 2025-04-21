@@ -11,28 +11,28 @@ public class Renderer {
     private SimulationMap map = SimulationMap.getInstance();
     int mapSizeX = SimulationMap.MAP_SIZE_X;
     int mapSizeY = SimulationMap.MAP_SIZE_Y;
-    String[][] matrix;
+    String[][] field;
 
     public Renderer() {
 //        this.mapSizeX = mapSizeX;
 //        this.mapSizeY = mapSizeY;
 
-        this.matrix = new String[mapSizeY][mapSizeX];
+        this.field = new String[mapSizeY][mapSizeX];
     }
 
     public void createMap() {
-        for(int i = 0; i < matrix.length; i++) {
-            Arrays.fill(matrix[i], EMPTY_ICON);
+        for(int i = 0; i < field.length; i++) {
+            Arrays.fill(field[i], EMPTY_ICON);
         }
     }
 
     public void renderMap() {
         createMap();
-        updateMatrix();
-        printMatrix();
+        updateField();
+        printField();
     }
 
-    public void updateMatrix() {
+    public void updateField() {
         // Update elements in the matrix
         for (Map.Entry<Cell, Entity> entry : map.map.entrySet()) {
             Cell currentCell = entry.getKey();
@@ -42,17 +42,17 @@ public class Renderer {
             int y = currentCell.getY();
             String entityIcon = entity.icon;
 
-            matrix[y][x] = entityIcon;
+            field[y][x] = entityIcon;
         }
     }
 
-    public void printMatrix() {
+    public void printField() {
         // Display the matrix on the screen
         StringBuilder line = new StringBuilder();
 
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[i].length; j++) {
-                line.append(matrix[i][j] + " ");
+        for(int i = 0; i < field.length; i++) {
+            for(int j = 0; j < field[i].length; j++) {
+                line.append(field[i][j] + " ");
             }
             line.append("\n");
         }
