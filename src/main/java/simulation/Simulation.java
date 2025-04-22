@@ -1,7 +1,10 @@
 package simulation;
 
-import simulation.actions.InitObjects;
+import simulation.actions.initActions.InitObjects;
+import simulation.actions.turnActions.RespawnGrassAction;
+import simulation.actions.turnActions.RespawnHerbivoreAction;
 import simulation.map.Renderer;
+import simulation.map.SimulationMap;
 
 import java.util.Scanner;
 
@@ -14,13 +17,18 @@ public class Simulation {
 //        final int MAX_X_MAP_SIZE = 9;
 //        final int MAX_Y_MAP_SIZE = 5;
 
+        SimulationMap map = SimulationMap.getInstance();
+
         Game game = new Game(2000);
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(1, 0, 20, 0, 0);
+        initObjects.initObjectsOnTheMap();
 
         Renderer renderer = new Renderer();
         renderer.createMap();
+
+        RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
+        RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
 
         Thread gameThread = new Thread() {
             public void run() {
@@ -45,9 +53,11 @@ public class Simulation {
                     } else if (userInput.equals("n")) {
                         nextTurn();
                     } else if (userInput.equals("g")) {
-                        initObjects.initGrass(10);
+//                        initObjects.initGrass(10);
+                        respawnGrassAction.execute(map);
                     } else if (userInput.equals("h")) {
-                        initObjects.initHerbivore(1);
+//                        initObjects.initHerbivore(1);
+                        respawnHerbivoreAction.execute(map);
                     }
                 }
             }

@@ -1,6 +1,6 @@
 package simulation;
 
-import simulation.actions.MoveAllCreatures;
+import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.map.Renderer;
 
 public class Game {

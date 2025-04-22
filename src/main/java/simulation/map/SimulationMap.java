@@ -29,6 +29,18 @@ public class SimulationMap {
         map.put(cell, entity);
     }
 
+    public int[] generateRandomCoordinates() {
+        int[] xy = new int[2];
+        Random random = new Random();
+
+        do {
+            xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X));
+            xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y));
+        } while (isCoordinatesOccupied(xy));
+
+        return xy;
+    }
+
     public int getCountOfGrasses() {
         int countOfGrasses = 0;
 
