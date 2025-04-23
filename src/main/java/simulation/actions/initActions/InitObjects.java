@@ -5,11 +5,11 @@ import simulation.map.SimulationMap;
 public class InitObjects {
     private SimulationMap simulationMap = SimulationMap.getInstance();
 
-    private final SpawnGrassAction spawnGrassAction = new SpawnGrassAction();
-    private final SpawnRockAction spawnRockAction = new SpawnRockAction();
-    private final SpawnTreeAction spawnTreeAction = new SpawnTreeAction();
-    private final SpawnHerbivoreAction spawnHerbivoreAction = new SpawnHerbivoreAction();
-    private final SpawnPredatorAction spawnPredatorAction = new SpawnPredatorAction();
+    private final SpawnGrassAction spawnGrassAction = new SpawnGrassAction(20);
+    private final SpawnRockAction spawnRockAction = new SpawnRockAction(0);
+    private final SpawnTreeAction spawnTreeAction = new SpawnTreeAction(0);
+    private final SpawnPredatorAction spawnPredatorAction = new SpawnPredatorAction(0);
+    private final SpawnHerbivoreAction spawnHerbivoreAction = new SpawnHerbivoreAction(1);
 
     public InitObjects() {
 

@@ -6,11 +6,15 @@ import simulation.map.Cell;
 import simulation.map.SimulationMap;
 
 public class SpawnPredatorAction implements Action {
-    private static final int initialGrassAmount = 1;
+    private final int initialPredatorAmount;
+
+    public SpawnPredatorAction(int initialPredatorAmount) {
+        this.initialPredatorAmount = initialPredatorAmount;
+    }
 
     @Override
     public void execute(SimulationMap simulationMap) {
-        for (int i = 0; i < initialGrassAmount; i++) {
+        for (int i = 0; i < initialPredatorAmount; i++) {
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
             Cell cell = new Cell(xyCoordinates[0], xyCoordinates[1]);

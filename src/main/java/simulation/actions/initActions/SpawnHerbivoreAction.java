@@ -6,7 +6,11 @@ import simulation.map.Cell;
 import simulation.map.SimulationMap;
 
 public class SpawnHerbivoreAction implements Action {
-    private static final int initialHerbivoreAmount = 20;
+    private final int initialHerbivoreAmount;
+
+    public SpawnHerbivoreAction(int initialHerbivoreAmount) {
+        this.initialHerbivoreAmount = initialHerbivoreAmount;
+    }
 
     @Override
     public void execute(SimulationMap simulationMap) {

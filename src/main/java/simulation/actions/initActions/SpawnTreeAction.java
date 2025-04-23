@@ -6,7 +6,11 @@ import simulation.map.Cell;
 import simulation.map.SimulationMap;
 
 public class SpawnTreeAction implements Action {
-    private static final int initialTreeAmount = 10;
+    private final int initialTreeAmount;
+
+    public SpawnTreeAction(int initialTreeAmount) {
+        this.initialTreeAmount = initialTreeAmount;
+    }
 
     @Override
     public void execute(SimulationMap simulationMap) {

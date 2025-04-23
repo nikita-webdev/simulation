@@ -6,7 +6,11 @@ import simulation.map.Cell;
 import simulation.map.SimulationMap;
 
 public class SpawnRockAction implements Action {
-    private static final int initialRockAmount = 10;
+    private final int initialRockAmount;
+
+    public SpawnRockAction(int initialRockAmount) {
+        this.initialRockAmount = initialRockAmount;
+    }
 
     @Override
     public void execute(SimulationMap simulationMap) {
