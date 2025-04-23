@@ -69,71 +69,35 @@ public class SimulationMap {
         return countOfHerbivores;
     }
 
-    public boolean isGrass(int[] thisPosition) {
-        Cell targetCell = cell.findCellInMap(map, thisPosition[0], thisPosition[1]);
+    public Entity checkEntity(int[] currentPosition) {
+        Cell targetCell = cell.findCellInMap(map, currentPosition[0], currentPosition[1]);
 
         for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
             Cell entryCell = entry.getKey();
             Entity entity = entry.getValue();
 
             if (entryCell == targetCell) {
-                if (entity instanceof Grass) {
-                    return true;
-                }
+                return entity;
             }
         }
 
-        return false;
+        return null;
     }
 
-    public boolean isHerbivore(int[] thisPosition) {
-        Cell targetCell = cell.findCellInMap(map, thisPosition[0], thisPosition[1]);
-
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
-            Cell entryCell = entry.getKey();
-            Entity entity = entry.getValue();
-
-            if (entryCell == targetCell) {
-                if (entity instanceof Herbivore) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    public boolean isGrass(int[] currentPosition) {
+        return checkEntity(currentPosition) instanceof Grass;
     }
 
-    public boolean isTreeOrRock(int[] thisPosition) {
-        Cell targetCell = cell.findCellInMap(map, thisPosition[0], thisPosition[1]);
+    public boolean isHerbivore(int[] currentPosition) {
+        return checkEntity(currentPosition) instanceof Herbivore;
+    }
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
-            Cell entryCell = entry.getKey();
-            Entity entity = entry.getValue();
-
-            if (entryCell == targetCell) {
-                if (entity instanceof Tree || entity instanceof Rock) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    public boolean isTreeOrRock(int[] currentPosition) {
+        return (checkEntity(currentPosition) instanceof Tree || checkEntity(currentPosition) instanceof Rock);
     }
 
     public boolean isCoordinatesOccupied(int[] targetCoordinates) {
         boolean isContain = false;
-
-//        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
-//            int[] existingCoordinates = new int[2];
-//            existingCoordinates[0] = entry.getValue().positionX;
-//            existingCoordinates[1] = entry.getValue().positionY;
-//
-//            isContain = Arrays.equals(targetCoordinates, existingCoordinates);
-//
-//            if (isContain) {
-//                break;
-//            }
-//        }
 
         if (cell.findCellInMap(map, targetCoordinates[0], targetCoordinates[1]) != null) {
             isContain = true;
