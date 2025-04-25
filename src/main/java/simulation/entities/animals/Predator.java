@@ -8,6 +8,7 @@ public class Predator extends Creature {
     public Predator(Cell cell, String name) {
         super(cell, name);
 
+        speed = 2;
 //        hp = 2;
         icon = PREDATOR_ICON;
     }

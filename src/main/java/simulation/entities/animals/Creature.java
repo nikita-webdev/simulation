@@ -21,9 +21,9 @@ public abstract class Creature extends Entity {
     public List<int[]> pathToFood;
     private int currentStepNumber = 0;
 
-    int speed = 1;
+    public int speed = 1;
     int hp;
-    int[] goalFoodCoordinates = {-1, -1};
+    int[] foodCoordinates = {-1, -1};
 
     public Creature(Cell cell, String name) {
         super(name);
@@ -75,17 +75,17 @@ public abstract class Creature extends Entity {
         }
     }
 
-    public int[] getGoalFoodCoordinates() {
-        return goalFoodCoordinates;
+    public int[] getFoodCoordinates() {
+        return foodCoordinates;
     }
 
-    public void setGoalFoodCoordinates(int[] newEatCoordinates) {
-        goalFoodCoordinates[0] = newEatCoordinates[0];
-        goalFoodCoordinates[1] = newEatCoordinates[1];
+    public void setFoodCoordinates(int[] newFoodCoordinates) {
+        foodCoordinates[0] = newFoodCoordinates[0];
+        foodCoordinates[1] = newFoodCoordinates[1];
     }
 
     private void stopMovement() {
-        setGoalFoodCoordinates(coordinates);
+        setFoodCoordinates(coordinates);
     }
 
     private void makeStep(int[] stepCoordinates) {
@@ -110,9 +110,9 @@ public abstract class Creature extends Entity {
         boolean isFoodCoordinatesInvalid = false;
 
         if (creature instanceof Predator) {
-            isFoodCoordinatesInvalid = !map.isHerbivore(creature.getGoalFoodCoordinates());
+            isFoodCoordinatesInvalid = !map.isHerbivore(creature.getFoodCoordinates());
         } else if (creature instanceof Herbivore) {
-            isFoodCoordinatesInvalid = !map.isGrass(creature.getGoalFoodCoordinates());
+            isFoodCoordinatesInvalid = !map.isGrass(creature.getFoodCoordinates());
         }
 
         return isFoodCoordinatesInvalid;
@@ -120,7 +120,9 @@ public abstract class Creature extends Entity {
 
     private void updateFoodCoordinates(Creature creature) {
         if(shouldUpdateFoodCoordinates(creature)) {
-            creature.setGoalFoodCoordinates(searchPath.searchPath(creature));
+            pathToFood = searchPath.searchPath(creature);
+
+            creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();
         }
     }

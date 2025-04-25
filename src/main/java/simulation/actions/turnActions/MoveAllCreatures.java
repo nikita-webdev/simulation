@@ -18,7 +18,9 @@ public class MoveAllCreatures {
         while (!creatures.isEmpty()) {
             Creature creature = creatures.poll();
 
-            creature.makeMove(creature.getGoalFoodCoordinates());
+            for (int i = 0; i < creature.speed; i++) {
+                creature.makeMove(creature.getFoodCoordinates());
+            }
         }
     }
 
