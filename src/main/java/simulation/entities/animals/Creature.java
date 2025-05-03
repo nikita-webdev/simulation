@@ -32,7 +32,9 @@ public abstract class Creature extends Entity {
     }
 
     public void makeMove(SimulationMap simulationMap, int[] foodTargetNode) throws InterruptedException {
-        updateFoodCoordinates(simulationMap, this);
+        if(shouldUpdateFoodCoordinates(simulationMap, this)) {
+            updateFoodCoordinates(simulationMap, this);
+        }
 
         boolean isNotLastStep = getCurrentStepNumber() < pathToFood.size();
 
@@ -52,6 +54,7 @@ public abstract class Creature extends Entity {
                 }
             } else {
                 System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(nextStepCoordinates));
+                updateFoodCoordinates(simulationMap, this);
             }
         } else {
 //            eat(foodTargetNode);
@@ -118,11 +121,9 @@ public abstract class Creature extends Entity {
     }
 
     private void updateFoodCoordinates(SimulationMap simulationMap, Creature creature) {
-        if(shouldUpdateFoodCoordinates(simulationMap, creature)) {
             pathToFood = searchPath.searchPath(simulationMap, creature);
 
             creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();
-        }
     }
 }

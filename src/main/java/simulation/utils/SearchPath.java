@@ -52,6 +52,8 @@ public class SearchPath {
                             return pathToFood;
                         } else if (simulationMap.isTreeOrRock(child)) {
                             visited.add(childCoordinatesIdentifier);
+                        } else if (creature instanceof Predator && simulationMap.isGrass(child)) {
+                            visited.add(childCoordinatesIdentifier);
                         } else {
                             if (!parentMap.containsKey(Arrays.toString(child))) {
                                 parentMap.put(Arrays.toString(child), currentPosition);
