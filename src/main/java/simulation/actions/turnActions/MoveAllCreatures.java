@@ -9,23 +9,22 @@ import java.util.Map;
 import java.util.Queue;
 
 public class MoveAllCreatures {
-    private SimulationMap map = SimulationMap.getInstance();
     private final Queue<Creature> creatures = new LinkedList<>();
 
-    public void makeMoveAllCreatures() throws InterruptedException {
-        collectAllCreatures();
+    public void makeMoveAllCreatures(SimulationMap simulationMap) throws InterruptedException {
+        collectAllCreatures(simulationMap);
 
         while (!creatures.isEmpty()) {
             Creature creature = creatures.poll();
 
             for (int i = 0; i < creature.speed; i++) {
-                creature.makeMove(creature.getFoodCoordinates());
+                creature.makeMove(simulationMap, creature.getFoodCoordinates());
             }
         }
     }
 
-    private void collectAllCreatures() {
-        for (Map.Entry<Cell, Creature> entry : map.getAllCreatures().entrySet()) {
+    private void collectAllCreatures(SimulationMap simulationMap) {
+        for (Map.Entry<Cell, Creature> entry : simulationMap.getAllCreatures().entrySet()) {
             Creature creature = entry.getValue();
 
             creatures.add(creature);

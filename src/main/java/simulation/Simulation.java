@@ -3,7 +3,6 @@ package simulation;
 import simulation.actions.initActions.InitObjects;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
-import simulation.map.Renderer;
 import simulation.map.SimulationMap;
 
 import java.util.Scanner;
@@ -11,21 +10,19 @@ import java.util.Scanner;
 public class Simulation {
     public static boolean runningThread = true; // Thread with game is running
     public static boolean nextTurn = false;
+    public static int turn = 0;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 //        final int NUMBER_OF_OBJECTS = 10;
 //        final int MAX_X_MAP_SIZE = 9;
 //        final int MAX_Y_MAP_SIZE = 5;
 
-        SimulationMap map = SimulationMap.getInstance();
+        SimulationMap simulationMap = new SimulationMap();
 
         Game game = new Game(2000);
 
         InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap();
-
-        Renderer renderer = new Renderer();
-        renderer.createMap();
+        initObjects.initObjectsOnTheMap(simulationMap);
 
         RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
         RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
@@ -33,7 +30,7 @@ public class Simulation {
         Thread gameThread = new Thread() {
             public void run() {
                 try {
-                    game.gameLoop();
+                    game.gameLoop(simulationMap);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -54,10 +51,10 @@ public class Simulation {
                         nextTurn();
                     } else if (userInput.equals("g")) {
 //                        initObjects.initGrass(10);
-                        respawnGrassAction.execute(map);
+                        respawnGrassAction.execute(simulationMap);
                     } else if (userInput.equals("h")) {
 //                        initObjects.initHerbivore(1);
-                        respawnHerbivoreAction.execute(map);
+                        respawnHerbivoreAction.execute(simulationMap);
                     }
                 }
             }

@@ -10,23 +10,21 @@ import simulation.entities.objects.Tree;
 import java.util.*;
 
 public class SimulationMap {
-    public Map<Cell, Entity> map = new HashMap<>();
-    private static final SimulationMap instance = new SimulationMap();
-    private Cell cell = new Cell();
+    private final Map<Cell, Entity> entities = new HashMap<>();
+    private final Cell cell = new Cell();
 
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
 
-    private SimulationMap() {
-
-    }
-
-    public static SimulationMap getInstance() {
-        return instance;
-    }
-
     public void addEntity(Cell cell, Entity entity) {
-        map.put(cell, entity);
+        int x = cell.getX();
+        int y = cell.getY();
+
+        entities.put(cell, entity);
+    }
+
+    public Map<Cell, Entity> getEntities() {
+        return Collections.unmodifiableMap(entities);
     }
 
     public int[] generateRandomCoordinates() {
@@ -44,7 +42,7 @@ public class SimulationMap {
     public int getCountOfGrasses() {
         int countOfGrasses = 0;
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Grass) {
@@ -58,7 +56,7 @@ public class SimulationMap {
     public int getCountOfHerbivores() {
         int countOfHerbivores = 0;
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Herbivore) {
@@ -70,9 +68,9 @@ public class SimulationMap {
     }
 
     public Entity checkEntity(int[] currentPosition) {
-        Cell targetCell = cell.findCellInMap(map, currentPosition[0], currentPosition[1]);
+        Cell targetCell = cell.findCellInMap(entities, currentPosition[0], currentPosition[1]);
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
             Cell entryCell = entry.getKey();
             Entity entity = entry.getValue();
 
@@ -99,7 +97,7 @@ public class SimulationMap {
     public boolean isCoordinatesOccupied(int[] targetCoordinates) {
         boolean isContain = false;
 
-        if (cell.findCellInMap(map, targetCoordinates[0], targetCoordinates[1]) != null) {
+        if (cell.findCellInMap(entities, targetCoordinates[0], targetCoordinates[1]) != null) {
             isContain = true;
         }
 
@@ -109,7 +107,7 @@ public class SimulationMap {
     public Map<Cell, Creature> getAllCreatures() {
         Map<Cell, Creature> creatures = new HashMap<>();
 
-        for (Map.Entry<Cell, Entity> entry : map.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
             Entity entity = entry.getValue();
             Cell cell = entry.getKey();
 
@@ -122,12 +120,19 @@ public class SimulationMap {
     }
 
     public void removeCell(int x, int y) {
-        Cell targetCell = cell.findCellInMap(map, x, y);
+        Cell targetCell = cell.findCellInMap(entities, x, y);
 
         if (targetCell != null) {
-            map.remove(targetCell);
+            entities.remove(targetCell);
         } else {
-            System.out.println("Клетка не найдена.");
+            System.out.println("Cell not found");
         }
+    }
+
+    public boolean isCoordinatesWithinMapBounds(int[] targetCoordinates) {
+        int x = targetCoordinates[0];
+        int y = targetCoordinates[1];
+
+        return (x < SimulationMap.MAP_SIZE_X && x >= 0) && (y < SimulationMap.MAP_SIZE_Y && y >= 0);
     }
 }

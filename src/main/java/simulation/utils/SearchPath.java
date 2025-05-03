@@ -8,8 +8,6 @@ import simulation.entities.animals.Creature;
 import java.util.*;
 
 public class SearchPath {
-    private SimulationMap map = SimulationMap.getInstance();
-
     int[][] offsets = {
             {0, -1},
             {1, -1},
@@ -21,7 +19,8 @@ public class SearchPath {
             {-1, -1}
     };
 
-    public int[] searchPath(Creature creature) {
+    public List<int[]> searchPath(SimulationMap simulationMap, Creature creature) {
+        List<int[]> pathToFood = new LinkedList<>();
         int[] foodNode = new int[] {creature.coordinates[0], creature.coordinates[1]};
 
         Queue<int[]> graphsQueue = new ArrayDeque<>();
@@ -30,33 +29,29 @@ public class SearchPath {
 
         int[] previousChildCoordinates = new int[2];
 
-        int[] startPosition = new int[] {creature.coordinates[0], creature.coordinates[1]};
-        graphsQueue.add(startPosition);
-        visited.add(Arrays.toString(startPosition));
+        graphsQueue.add(foodNode);
+        visited.add(Arrays.toString(foodNode));
 
-        boolean foodIsFind = false;
-
-        while (!graphsQueue.isEmpty() && !foodIsFind) {
+        while (!graphsQueue.isEmpty()) {
             int[] currentPosition = graphsQueue.poll();
             int[][] childNodes = generateChildNodes(currentPosition);
 
             for (int[] child : childNodes) {
-                String childCoordinatesKey = Arrays.toString(child);
+                String childCoordinatesIdentifier = Arrays.toString(child);
 
-                if (!visited.contains(childCoordinatesKey)) {
-                    boolean childCoordinatesValidation = isCoordinatesWithinMapBounds(child);
+                if (!visited.contains(childCoordinatesIdentifier)) {
+                    boolean childCoordinatesValidation = simulationMap.isCoordinatesWithinMapBounds(child);
 
                     if (childCoordinatesValidation) {
-                        if (isFood(creature, child)) {
-//                        System.out.println("Yes. This is Grass: " + Arrays.toString(child));
+                        if (isFood(simulationMap, creature, child)) {
                             graphsQueue.add(child);
-                            visited.add(childCoordinatesKey);
+                            visited.add(childCoordinatesIdentifier);
                             foodNode = child;
                             parentMap.put(Arrays.toString(foodNode), previousChildCoordinates);
-                            foodIsFind = true;
-                            break;
-                        } else if (map.isTreeOrRock(child)) {
-                            visited.add(childCoordinatesKey);
+                            pathToFood = reconstructPath(parentMap, foodNode);
+                            return pathToFood;
+                        } else if (simulationMap.isTreeOrRock(child)) {
+                            visited.add(childCoordinatesIdentifier);
                         } else {
                             if (!parentMap.containsKey(Arrays.toString(child))) {
                                 parentMap.put(Arrays.toString(child), currentPosition);
@@ -64,16 +59,17 @@ public class SearchPath {
                             }
 
                             graphsQueue.add(child);
-                            visited.add(childCoordinatesKey);
+                            visited.add(childCoordinatesIdentifier);
                         }
                     } else {
-                        visited.add(childCoordinatesKey);
+                        visited.add(childCoordinatesIdentifier);
                     }
                 }
             }
         }
-        creature.pathToFood = reconstructPath(parentMap, foodNode);
-        return foodNode;
+
+        pathToFood.add(new int[] {creature.coordinates[0], creature.coordinates[1]});
+        return pathToFood;
     }
 
     public List<int[]> reconstructPath(Map<String, int[]> parentMap, int[] goalCoordinates) {
@@ -101,20 +97,13 @@ public class SearchPath {
         return childNodes;
     }
 
-    private boolean isCoordinatesWithinMapBounds(int[] targetCoordinates) {
-        int x = targetCoordinates[0];
-        int y = targetCoordinates[1];
-
-        return (x < SimulationMap.MAP_SIZE_X && x >= 0) && (y < SimulationMap.MAP_SIZE_Y && y >= 0);
-    }
-
-    public boolean isFood(Creature creature, int[] node) {
+    public boolean isFood(SimulationMap simulationMap, Creature creature, int[] node) {
         boolean isFood = false;
 
         if (creature instanceof Herbivore) {
-            isFood = map.isGrass(node);
+            isFood = simulationMap.isGrass(node);
         } else if (creature instanceof Predator) {
-            isFood = map.isHerbivore(node);
+            isFood = simulationMap.isHerbivore(node);
         }
 
         return isFood;

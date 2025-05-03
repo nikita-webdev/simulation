@@ -1,7 +1,8 @@
 package simulation.entities.animals;
 
-import simulation.entities.Entity;
 import simulation.Game;
+import simulation.Simulation;
+import simulation.entities.Entity;
 import simulation.map.Cell;
 import simulation.map.SimulationMap;
 import simulation.utils.SearchPath;
@@ -9,12 +10,10 @@ import simulation.utils.SearchPath;
 import java.util.*;
 
 public abstract class Creature extends Entity {
-    private SimulationMap map = SimulationMap.getInstance();
+    Game game = new Game();
     SearchPath searchPath = new SearchPath();
 
     private Cell cell;
-
-    Game game = new Game();
 
     public int[] coordinates = new int[2];
 
@@ -32,8 +31,8 @@ public abstract class Creature extends Entity {
         this.coordinates[1] = cell.getY();
     }
 
-    public void makeMove(int[] foodTargetNode) throws InterruptedException {
-        updateFoodCoordinates(this);
+    public void makeMove(SimulationMap simulationMap, int[] foodTargetNode) throws InterruptedException {
+        updateFoodCoordinates(simulationMap, this);
 
         boolean isNotLastStep = getCurrentStepNumber() < pathToFood.size();
 
@@ -42,10 +41,10 @@ public abstract class Creature extends Entity {
             boolean isFoodAtNextStep = (foodTargetNode[0] == nextStepCoordinates[0] && foodTargetNode[1] == nextStepCoordinates[1]);
 
             if(isFoodAtNextStep) {
-                eat(foodTargetNode);
+                eat(simulationMap, foodTargetNode);
                 clearNumberOfStep();
                 stopMovement();
-            } else if (!map.isCoordinatesOccupied(nextStepCoordinates)) {
+            } else if (!simulationMap.isCoordinatesOccupied(nextStepCoordinates)) {
                 makeStep(nextStepCoordinates);
 
                 if(getCurrentStepNumber() < pathToFood.size() - 1) {
@@ -60,17 +59,17 @@ public abstract class Creature extends Entity {
 //            stopMovement();
         }
 
-        game.updateMap();
+        game.updateMap(simulationMap);
     }
 
-    private void eat(int[] foodCoordinates) {
+    private void eat(SimulationMap simulationMap, int[] foodCoordinates) {
         if (this instanceof Herbivore) {
-            if(map.isGrass(foodCoordinates)) {
-                map.removeCell(foodCoordinates[0], foodCoordinates[1]);
+            if(simulationMap.isGrass(foodCoordinates)) {
+                simulationMap.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
         } else if (this instanceof Predator) {
-            if(map.isHerbivore(foodCoordinates)) {
-                map.removeCell(foodCoordinates[0], foodCoordinates[1]);
+            if(simulationMap.isHerbivore(foodCoordinates)) {
+                simulationMap.removeCell(foodCoordinates[0], foodCoordinates[1]);
             }
         }
     }
@@ -105,22 +104,22 @@ public abstract class Creature extends Entity {
         currentStepNumber = 0;
     }
 
-    private boolean shouldUpdateFoodCoordinates(Creature creature) {
+    private boolean shouldUpdateFoodCoordinates(SimulationMap simulationMap, Creature creature) {
         // If isFoodCoordinatesInvalid is true, the food coordinates of creature should be updated
         boolean isFoodCoordinatesInvalid = false;
 
         if (creature instanceof Predator) {
-            isFoodCoordinatesInvalid = !map.isHerbivore(creature.getFoodCoordinates());
+            isFoodCoordinatesInvalid = !simulationMap.isHerbivore(creature.getFoodCoordinates());
         } else if (creature instanceof Herbivore) {
-            isFoodCoordinatesInvalid = !map.isGrass(creature.getFoodCoordinates());
+            isFoodCoordinatesInvalid = !simulationMap.isGrass(creature.getFoodCoordinates());
         }
 
         return isFoodCoordinatesInvalid;
     }
 
-    private void updateFoodCoordinates(Creature creature) {
-        if(shouldUpdateFoodCoordinates(creature)) {
-            pathToFood = searchPath.searchPath(creature);
+    private void updateFoodCoordinates(SimulationMap simulationMap, Creature creature) {
+        if(shouldUpdateFoodCoordinates(simulationMap, creature)) {
+            pathToFood = searchPath.searchPath(simulationMap, creature);
 
             creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();

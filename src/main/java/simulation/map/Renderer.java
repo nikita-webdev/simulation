@@ -8,7 +8,6 @@ import java.util.Map;
 import static simulation.config.Icons.EMPTY_ICON;
 
 public class Renderer {
-    private SimulationMap map = SimulationMap.getInstance();
     int mapSizeX = SimulationMap.MAP_SIZE_X;
     int mapSizeY = SimulationMap.MAP_SIZE_Y;
     String[][] field;
@@ -26,15 +25,14 @@ public class Renderer {
         }
     }
 
-    public void renderMap() {
+    public void renderMap(SimulationMap simulationMap) {
         createMap();
-        updateField();
-        printField();
+        updateMap(simulationMap);
+        printMap();
     }
 
-    public void updateField() {
-        // Update elements in the matrix
-        for (Map.Entry<Cell, Entity> entry : map.map.entrySet()) {
+    public void updateMap(SimulationMap simulationMap) {
+        for (Map.Entry<Cell, Entity> entry : simulationMap.getEntities().entrySet()) {
             Cell currentCell = entry.getKey();
             Entity entity = entry.getValue();
 
@@ -46,8 +44,7 @@ public class Renderer {
         }
     }
 
-    public void printField() {
-        // Display the matrix on the screen
+    public void printMap() {
         StringBuilder line = new StringBuilder();
 
         for(int i = 0; i < field.length; i++) {

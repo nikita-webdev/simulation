@@ -2,13 +2,17 @@ package simulation;
 
 import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.map.Renderer;
+import simulation.map.SimulationMap;
+
+import static simulation.Simulation.turn;
 
 public class Game {
-    Renderer renderer = new Renderer();
-    MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+    private final Renderer renderer = new Renderer();
+    private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+    private int turnCount;
 
-    public static int turn = 0;
-    int turnCount;
+    private static final int SLEEP_TIME = 1000;
+    private static final int THREAD_STOP_DELAY = 2000;
 
     public Game(int turnCount) {
         this.turnCount = turnCount;
@@ -18,24 +22,23 @@ public class Game {
 
     }
 
-    public void gameLoop() throws InterruptedException {
+    public void gameLoop(SimulationMap simulationMap) throws InterruptedException {
         while (turn < turnCount) {
             if (turn == 0) {
-                updateMap();
+                updateMap(simulationMap);
             }
 
             if (Simulation.runningThread) {
                 if (turn>0) {
-                    moveAllCreatures.makeMoveAllCreatures();
+                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
                 }
-            } else if (!Simulation.runningThread){
-                System.out.println("Поток остановлен.");
-                Thread.sleep(2000);
+            } else {
+                handleStoppedThread();
             }
 
             if (!Simulation.runningThread && Simulation.nextTurn) {
                 if (turn>0) {
-                    moveAllCreatures.makeMoveAllCreatures();
+                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
                 }
 
                 Simulation.nextTurn = false;
@@ -43,10 +46,23 @@ public class Game {
         }
     }
 
-    public void updateMap() throws InterruptedException {
-        renderer.renderMap();
+    private void handleStoppedThread() {
+        System.out.println("Поток остановлен.");
+        try {
+            Thread.sleep(THREAD_STOP_DELAY);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void updateMap(SimulationMap simulationMap) {
+        renderer.renderMap(simulationMap);
         turn++;
         System.out.println("Ход: " + turn);
-        Thread.sleep(1000);
+        try {
+            Thread.sleep(SLEEP_TIME);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
