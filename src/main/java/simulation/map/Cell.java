@@ -1,6 +1,7 @@
 package simulation.map;
 
 import simulation.entities.Entity;
+import simulation.entities.animals.Creature;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,14 +43,6 @@ public class Cell {
         }
         return null;
     }
-
-//    public void removeCell(HashMap<Cell, Entity> targetMap, int x, int y) {
-//        Cell targetCell = findCellInMap(targetMap, x, y);
-//
-//        if (targetCell != null) {
-//            targetMap.remove(targetCell);
-//        }
-//    }
 
     @Override
     public boolean equals(Object o) {

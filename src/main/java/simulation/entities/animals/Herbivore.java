@@ -8,7 +8,7 @@ public class Herbivore extends Creature {
     public Herbivore(Cell cell, String name) {
         super(cell, name);
 
-//        hp = 2;
+        hp = 1;
         icon = HERBIVORE_ICON;
     }
 

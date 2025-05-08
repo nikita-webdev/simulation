@@ -42,7 +42,7 @@ public class SimulationMap {
     public int getCountOfGrasses() {
         int countOfGrasses = 0;
 
-        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Grass) {
@@ -56,7 +56,7 @@ public class SimulationMap {
     public int getCountOfHerbivores() {
         int countOfHerbivores = 0;
 
-        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Herbivore) {
@@ -68,13 +68,13 @@ public class SimulationMap {
     }
 
     public Entity checkEntity(int[] currentPosition) {
-        Cell targetCell = cell.findCellInMap(entities, currentPosition[0], currentPosition[1]);
+        Cell targetCell = cell.findCellInMap(getEntities(), currentPosition[0], currentPosition[1]);
 
-        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
             Cell entryCell = entry.getKey();
             Entity entity = entry.getValue();
 
-            if (entryCell == targetCell) {
+            if (entryCell.equals(targetCell)) {
                 return entity;
             }
         }
@@ -97,7 +97,7 @@ public class SimulationMap {
     public boolean isCoordinatesOccupied(int[] targetCoordinates) {
         boolean isContain = false;
 
-        if (cell.findCellInMap(entities, targetCoordinates[0], targetCoordinates[1]) != null) {
+        if (cell.findCellInMap(getEntities(), targetCoordinates[0], targetCoordinates[1]) != null) {
             isContain = true;
         }
 
@@ -107,7 +107,7 @@ public class SimulationMap {
     public Map<Cell, Creature> getAllCreatures() {
         Map<Cell, Creature> creatures = new HashMap<>();
 
-        for (Map.Entry<Cell, Entity> entry : entities.entrySet()) {
+        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
             Cell cell = entry.getKey();
 
@@ -124,8 +124,6 @@ public class SimulationMap {
 
         if (targetCell != null) {
             entities.remove(targetCell);
-        } else {
-            System.out.println("Cell not found");
         }
     }
 
