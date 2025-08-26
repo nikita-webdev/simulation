@@ -119,12 +119,34 @@ public class SimulationMap {
         return creatures;
     }
 
-    public void removeCell(int x, int y) {
+    public void removeCellByCoordinates(int x, int y) {
         Cell targetCell = cell.findCellInMap(entities, x, y);
 
         if (targetCell != null) {
-            entities.remove(targetCell);
+            System.out.println("entities contains targetCell: " + entities.containsKey(targetCell));
+            System.out.println(targetCell);
+            System.out.println(Arrays.toString(targetCell.getCoordinates()));
         }
+
+        if (targetCell != null) {
+//            Entity cellObject = entities.remove(targetCell);
+            entities.remove(targetCell);
+//            if (entities.remove(targetCell) == null) {
+//            if (cellObject == null) {
+//                System.out.println("target coordinates: " + Arrays.toString(targetCell.getCoordinates()));
+////                System.out.println("cellObject: " + cellObject);
+//                System.out.println("remove null");
+//            } else {
+//                System.out.println("cellObject: " + cellObject);
+//                System.out.println("remove " + Arrays.toString(targetCell.getCoordinates()));
+//            }
+        } else {
+            System.out.println("Cell not found");
+        }
+    }
+
+    public void removeCell(Cell cellForRemove) {
+        entities.remove(cellForRemove);
     }
 
     public boolean isCoordinatesWithinMapBounds(int[] targetCoordinates) {

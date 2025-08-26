@@ -1,7 +1,6 @@
 package simulation.entities.animals;
 
 import simulation.Game;
-import simulation.Simulation;
 import simulation.entities.Entity;
 import simulation.map.Cell;
 import simulation.map.SimulationMap;
@@ -47,7 +46,7 @@ public abstract class Creature extends Entity {
                 clearNumberOfStep();
                 stopMovement();
             } else if (!simulationMap.isCoordinatesOccupied(nextStepCoordinates)) {
-                makeStep(nextStepCoordinates);
+                makeStep(simulationMap, nextStepCoordinates);
 
                 if(getCurrentStepNumber() < pathToFood.size() - 1) {
                     increaseCurrentStepNumber();
@@ -56,10 +55,6 @@ public abstract class Creature extends Entity {
                 System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(nextStepCoordinates));
                 updateFoodCoordinates(simulationMap, this);
             }
-        } else {
-//            eat(foodTargetNode);
-//            numberOfStep = 0;
-//            stopMovement();
         }
 
         game.updateMap(simulationMap);
@@ -68,11 +63,11 @@ public abstract class Creature extends Entity {
     private void eat(SimulationMap simulationMap, int[] foodCoordinates) {
         if (this instanceof Herbivore) {
             if(simulationMap.isGrass(foodCoordinates)) {
-                simulationMap.removeCell(foodCoordinates[0], foodCoordinates[1]);
+                simulationMap.removeCellByCoordinates(foodCoordinates[0], foodCoordinates[1]);
             }
         } else if (this instanceof Predator) {
             if(simulationMap.isHerbivore(foodCoordinates)) {
-                simulationMap.removeCell(foodCoordinates[0], foodCoordinates[1]);
+                simulationMap.removeCellByCoordinates(foodCoordinates[0], foodCoordinates[1]);
             }
         }
     }
@@ -90,9 +85,8 @@ public abstract class Creature extends Entity {
         setFoodCoordinates(coordinates);
     }
 
-    private void makeStep(int[] stepCoordinates) {
-        cell.setCoordinates(stepCoordinates[0], stepCoordinates[1]);
-        coordinates = cell.getCoordinates();
+    private void makeStep(SimulationMap simulationMap, int[] stepCoordinates) {
+        updateCreatureCoordinates(simulationMap, stepCoordinates);
     }
 
     public int getCurrentStepNumber() {
@@ -125,5 +119,23 @@ public abstract class Creature extends Entity {
 
             creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();
+    }
+
+    private void updateCreatureCoordinates(SimulationMap simulationMap, int[] newCoordinates) {
+        Cell oldCell = getCell();
+        Entity oldEntity = this;
+
+        if (oldCell != null) {
+            simulationMap.removeCell(oldCell);
+
+            oldCell.setCoordinates(newCoordinates[0], newCoordinates[1]);
+            simulationMap.addEntity(oldCell, oldEntity);
+            coordinates[0] = newCoordinates[0];
+            coordinates[1] = newCoordinates[1];
+        }
+    }
+
+    private Cell getCell() {
+        return cell;
     }
 }

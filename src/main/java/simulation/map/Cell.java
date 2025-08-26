@@ -1,10 +1,8 @@
 package simulation.map;
 
 import simulation.entities.Entity;
-import simulation.entities.animals.Creature;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Cell {
