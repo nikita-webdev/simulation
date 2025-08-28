@@ -4,13 +4,13 @@ import simulation.Game;
 import simulation.entities.Entity;
 import simulation.map.Cell;
 import simulation.map.SimulationMap;
-import simulation.utils.SearchPath;
+import simulation.pathfinder.PathFinder;
 
 import java.util.*;
 
 public abstract class Creature extends Entity {
     Game game = new Game();
-    SearchPath searchPath = new SearchPath();
+    PathFinder pathFinder = new PathFinder();
 
     private Cell cell;
 
@@ -115,7 +115,7 @@ public abstract class Creature extends Entity {
     }
 
     private void updateFoodCoordinates(SimulationMap simulationMap, Creature creature) {
-            pathToFood = searchPath.searchPath(simulationMap, creature);
+            pathToFood = pathFinder.searchPath(simulationMap, creature);
 
             creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();
@@ -135,7 +135,7 @@ public abstract class Creature extends Entity {
         }
     }
 
-    private Cell getCell() {
+    public Cell getCell() {
         return cell;
     }
 }
