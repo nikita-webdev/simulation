@@ -2,6 +2,7 @@ package simulation.pathfinder;
 
 import simulation.entities.animals.Herbivore;
 import simulation.entities.animals.Predator;
+import simulation.map.Cell;
 import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;
 
@@ -19,7 +20,7 @@ public class PathFinder {
             {-1, -1}
     };
 
-    public List<int[]> searchPath(SimulationMap simulationMap, Creature creature) {
+    public List<int[]> searchPath(SimulationMap simulationMap, Creature creature, Cell cell) {
         int[] initialNode = new int[] {creature.getCell().getX(), creature.getCell().getY()};
         Queue<int[]> queue = new ArrayDeque<>();
         Set<String> visitedNodes = new HashSet<>();
@@ -35,21 +36,20 @@ public class PathFinder {
 
             for (int[] currentExploringNode : neighboringNodes) {
                 String nodeIdentifier = Arrays.toString(currentExploringNode);
-                boolean nodeCoordinatesValidation = simulationMap.isCoordinatesWithinMapBounds(currentExploringNode);
+                boolean isWithinBounds = simulationMap.isCoordinatesWithinMapBounds(currentExploringNode);
+                boolean isObstacle = simulationMap.isTreeOrRock(currentExploringNode) || (creature instanceof Predator && simulationMap.isGrass(currentExploringNode));
 
-                if(!nodeCoordinatesValidation || visitedNodes.contains(nodeIdentifier)) {
+                if(!isWithinBounds || visitedNodes.contains(nodeIdentifier)) {
                     continue;
                 }
 
-                if (isFood(simulationMap, creature, currentExploringNode)) {
+                if (cell.isFood(simulationMap, creature, currentExploringNode)) {
                     path.put(Arrays.toString(currentExploringNode), currentPosition);
                     pathToFood = reconstructPath(path, currentExploringNode);
                     return pathToFood;
                 }
 
-                if (simulationMap.isTreeOrRock(currentExploringNode)) {
-                    visitedNodes.add(nodeIdentifier);
-                } else if (creature instanceof Predator && simulationMap.isGrass(currentExploringNode)) {
+                if (isObstacle) {
                     visitedNodes.add(nodeIdentifier);
                 } else {
                     if (!path.containsKey(Arrays.toString(currentExploringNode))) {
@@ -89,17 +89,5 @@ public class PathFinder {
         }
 
         return childNodes;
-    }
-
-    public boolean isFood(SimulationMap simulationMap, Creature creature, int[] node) {
-        boolean isFood = false;
-
-        if (creature instanceof Herbivore) {
-            isFood = simulationMap.isGrass(node);
-        } else if (creature instanceof Predator) {
-            isFood = simulationMap.isHerbivore(node);
-        }
-
-        return isFood;
     }
 }

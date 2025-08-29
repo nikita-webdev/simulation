@@ -61,14 +61,8 @@ public abstract class Creature extends Entity {
     }
 
     private void eat(SimulationMap simulationMap, int[] foodCoordinates) {
-        if (this instanceof Herbivore) {
-            if(simulationMap.isGrass(foodCoordinates)) {
-                simulationMap.removeCellByCoordinates(foodCoordinates[0], foodCoordinates[1]);
-            }
-        } else if (this instanceof Predator) {
-            if(simulationMap.isHerbivore(foodCoordinates)) {
-                simulationMap.removeCellByCoordinates(foodCoordinates[0], foodCoordinates[1]);
-            }
+        if (cell.isFood(simulationMap, this, foodCoordinates)) {
+            simulationMap.removeCellByCoordinates(foodCoordinates[0], foodCoordinates[1]);
         }
     }
 
@@ -115,7 +109,7 @@ public abstract class Creature extends Entity {
     }
 
     private void updateFoodCoordinates(SimulationMap simulationMap, Creature creature) {
-            pathToFood = pathFinder.searchPath(simulationMap, creature);
+            pathToFood = pathFinder.searchPath(simulationMap, creature, cell);
 
             creature.setFoodCoordinates(pathToFood.get(pathToFood.size() - 1));
             clearNumberOfStep();

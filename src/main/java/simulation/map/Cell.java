@@ -1,6 +1,9 @@
 package simulation.map;
 
 import simulation.entities.Entity;
+import simulation.entities.animals.Creature;
+import simulation.entities.animals.Herbivore;
+import simulation.entities.animals.Predator;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -40,6 +43,18 @@ public class Cell {
             }
         }
         return null;
+    }
+
+    public boolean isFood(SimulationMap simulationMap, Creature creature, int[] node) {
+        boolean isFood = false;
+
+        if (creature instanceof Herbivore) {
+            isFood = simulationMap.isGrass(node);
+        } else if (creature instanceof Predator) {
+            isFood = simulationMap.isHerbivore(node);
+        }
+
+        return isFood;
     }
 
     @Override
