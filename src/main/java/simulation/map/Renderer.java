@@ -32,8 +32,8 @@ public class Renderer {
     }
 
     public void updateMap(SimulationMap simulationMap) {
-        for (Map.Entry<Cell, Entity> entry : simulationMap.getEntities().entrySet()) {
-            Cell currentCell = entry.getKey();
+        for (Map.Entry<Coordinate, Entity> entry : simulationMap.getEntities().entrySet()) {
+            Coordinate currentCell = entry.getKey();
             Entity entity = entry.getValue();
 
             int x = currentCell.getX();

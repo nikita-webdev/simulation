@@ -10,20 +10,20 @@ import simulation.entities.objects.Tree;
 import java.util.*;
 
 public class SimulationMap {
-    private final Map<Cell, Entity> entities = new HashMap<>();
-    private final Cell cell = new Cell();
+    private final Map<Coordinate, Entity> entities = new HashMap<>();
+    private final Coordinate cell = new Coordinate();
 
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
 
-    public void addEntity(Cell cell, Entity entity) {
+    public void addEntity(Coordinate cell, Entity entity) {
         int x = cell.getX();
         int y = cell.getY();
 
         entities.put(cell, entity);
     }
 
-    public Map<Cell, Entity> getEntities() {
+    public Map<Coordinate, Entity> getEntities() {
         return Collections.unmodifiableMap(entities);
     }
 
@@ -34,7 +34,7 @@ public class SimulationMap {
         do {
             xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X));
             xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y));
-        } while (isCoordinatesOccupied(xy));
+        } while (isCoordinatesOccupied(new Coordinate(xy[0], xy[1])));
 
         return xy;
     }
@@ -42,7 +42,7 @@ public class SimulationMap {
     public int getCountOfGrasses() {
         int countOfGrasses = 0;
 
-        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
+        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Grass) {
@@ -56,7 +56,7 @@ public class SimulationMap {
     public int getCountOfHerbivores() {
         int countOfHerbivores = 0;
 
-        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
+        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Herbivore) {
@@ -68,10 +68,10 @@ public class SimulationMap {
     }
 
     public Entity checkEntity(int[] currentPosition) {
-        Cell targetCell = cell.findCellInMap(getEntities(), currentPosition[0], currentPosition[1]);
+        Coordinate targetCell = cell.findCellInMap(getEntities(), currentPosition[0], currentPosition[1]);
 
-        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
-            Cell entryCell = entry.getKey();
+        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
+            Coordinate entryCell = entry.getKey();
             Entity entity = entry.getValue();
 
             if (entryCell.equals(targetCell)) {
@@ -94,22 +94,22 @@ public class SimulationMap {
         return (checkEntity(currentPosition) instanceof Tree || checkEntity(currentPosition) instanceof Rock);
     }
 
-    public boolean isCoordinatesOccupied(int[] targetCoordinates) {
+    public boolean isCoordinatesOccupied(Coordinate targetCoordinates) {
         boolean isContain = false;
 
-        if (cell.findCellInMap(getEntities(), targetCoordinates[0], targetCoordinates[1]) != null) {
+        if (cell.findCellInMap(getEntities(), targetCoordinates.getX(), targetCoordinates.getY()) != null) {
             isContain = true;
         }
 
         return isContain;
     }
 
-    public Map<Cell, Creature> getAllCreatures() {
-        Map<Cell, Creature> creatures = new HashMap<>();
+    public Map<Coordinate, Creature> getAllCreatures() {
+        Map<Coordinate, Creature> creatures = new HashMap<>();
 
-        for (Map.Entry<Cell, Entity> entry : getEntities().entrySet()) {
+        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
-            Cell cell = entry.getKey();
+            Coordinate cell = entry.getKey();
 
             if (entity instanceof Creature creature) {
                 creatures.put(cell, creature);
@@ -119,33 +119,7 @@ public class SimulationMap {
         return creatures;
     }
 
-    public void removeCellByCoordinates(int x, int y) {
-        Cell targetCell = cell.findCellInMap(entities, x, y);
-
-        if (targetCell != null) {
-            System.out.println("entities contains targetCell: " + entities.containsKey(targetCell));
-            System.out.println(targetCell);
-            System.out.println(Arrays.toString(targetCell.getCoordinates()));
-        }
-
-        if (targetCell != null) {
-//            Entity cellObject = entities.remove(targetCell);
-            entities.remove(targetCell);
-//            if (entities.remove(targetCell) == null) {
-//            if (cellObject == null) {
-//                System.out.println("target coordinates: " + Arrays.toString(targetCell.getCoordinates()));
-////                System.out.println("cellObject: " + cellObject);
-//                System.out.println("remove null");
-//            } else {
-//                System.out.println("cellObject: " + cellObject);
-//                System.out.println("remove " + Arrays.toString(targetCell.getCoordinates()));
-//            }
-        } else {
-            System.out.println("Cell not found");
-        }
-    }
-
-    public void removeCell(Cell cellForRemove) {
+    public void removeCell(Coordinate cellForRemove) {
         entities.remove(cellForRemove);
     }
 

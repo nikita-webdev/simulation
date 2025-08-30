@@ -2,7 +2,7 @@ package simulation.actions.initActions;
 
 import simulation.actions.Action;
 import simulation.entities.objects.Tree;
-import simulation.map.Cell;
+import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 public class SpawnTreeAction implements Action {
@@ -17,7 +17,7 @@ public class SpawnTreeAction implements Action {
         for (int i = 0; i < initialTreeAmount; i++) {
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Cell cell = new Cell(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
             simulationMap.addEntity(cell, new Tree("tree" + (i + 1)));
         }

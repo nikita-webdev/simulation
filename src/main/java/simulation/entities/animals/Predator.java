@@ -1,11 +1,11 @@
 package simulation.entities.animals;
 
-import simulation.map.Cell;
+import simulation.map.Coordinate;
 
 import static simulation.config.Icons.PREDATOR_ICON;
 
 public class Predator extends Creature {
-    public Predator(Cell cell, String name) {
+    public Predator(Coordinate cell, String name) {
         super(cell, name);
 
         speed = 2;

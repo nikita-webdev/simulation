@@ -2,7 +2,7 @@ package simulation.actions.turnActions;
 
 import simulation.actions.Action;
 import simulation.entities.objects.Grass;
-import simulation.map.Cell;
+import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 public class RespawnGrassAction implements Action {
@@ -17,7 +17,7 @@ public class RespawnGrassAction implements Action {
             // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Cell cell = new Cell(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
             simulationMap.addEntity(cell, new Grass("grass" + (grassesCount + 1)));
             grassesCount++;

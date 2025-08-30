@@ -2,7 +2,7 @@ package simulation.actions.initActions;
 
 import simulation.actions.Action;
 import simulation.entities.animals.Predator;
-import simulation.map.Cell;
+import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 public class SpawnPredatorAction implements Action {
@@ -17,7 +17,7 @@ public class SpawnPredatorAction implements Action {
         for (int i = 0; i < initialPredatorAmount; i++) {
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Cell cell = new Cell(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
             simulationMap.addEntity(cell, new Predator(cell,"predator" + (i + 1)));
         }

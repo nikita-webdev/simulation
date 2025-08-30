@@ -1,7 +1,7 @@
 package simulation.pathfinder;
 
 import simulation.entities.animals.Predator;
-import simulation.map.Cell;
+import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;
 
@@ -19,12 +19,12 @@ public class PathFinder {
             {-1, -1}
     };
 
-    public List<int[]> searchPath(SimulationMap simulationMap, Creature creature, Cell cell) {
+    public List<Coordinate> searchPath(SimulationMap simulationMap, Creature creature) {
         int[] initialNode = new int[] {creature.getCell().getX(), creature.getCell().getY()};
         Queue<int[]> queue = new ArrayDeque<>();
         Set<String> visitedNodes = new HashSet<>();
         Map<String, int[]> path = new HashMap<>();
-        List<int[]> pathToFood = new LinkedList<>();
+        List<Coordinate> pathToFood = new LinkedList<>();
 
         queue.add(initialNode);
         visitedNodes.add(Arrays.toString(initialNode));
@@ -42,7 +42,9 @@ public class PathFinder {
                     continue;
                 }
 
-                if (cell.isFood(simulationMap, creature, currentExploringNode)) {
+                Coordinate cEN = new Coordinate(currentExploringNode[0], currentExploringNode[1]);
+
+                if (creature.getCell().isFood(simulationMap, creature, cEN)) {
                     path.put(Arrays.toString(currentExploringNode), currentPosition);
                     pathToFood = reconstructPath(path, currentExploringNode);
                     return pathToFood;
@@ -61,15 +63,16 @@ public class PathFinder {
             }
         }
 
-        pathToFood.add(new int[] {creature.getCell().getX(), creature.getCell().getY()});
+        pathToFood.add(new Coordinate(creature.getCell().getX(), creature.getCell().getY()));
         return pathToFood;
     }
 
-    public List<int[]> reconstructPath(Map<String, int[]> parentMap, int[] goalCoordinates) {
-        List<int[]> path = new LinkedList<>();
+    public List<Coordinate> reconstructPath(Map<String, int[]> parentMap, int[] goalCoordinates) {
+        List<Coordinate> path = new LinkedList<>();
 
         for (int[] i = goalCoordinates; i != null; i = parentMap.get(Arrays.toString(i))) {
-            path.add(i);
+            Coordinate coordinate = new Coordinate(i[0], i[1]);
+            path.add(coordinate);
         }
 
         Collections.reverse(path);
