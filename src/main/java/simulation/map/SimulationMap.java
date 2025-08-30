@@ -11,16 +11,13 @@ import java.util.*;
 
 public class SimulationMap {
     private final Map<Coordinate, Entity> entities = new HashMap<>();
-    private final Coordinate cell = new Coordinate();
+    private final Coordinate coordinate = new Coordinate();
 
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
 
-    public void addEntity(Coordinate cell, Entity entity) {
-        int x = cell.getX();
-        int y = cell.getY();
-
-        entities.put(cell, entity);
+    public void addEntity(Coordinate coordinate, Entity entity) {
+        entities.put(coordinate, entity);
     }
 
     public Map<Coordinate, Entity> getEntities() {
@@ -67,37 +64,47 @@ public class SimulationMap {
         return countOfHerbivores;
     }
 
-    public Entity checkEntity(int[] currentPosition) {
-        Coordinate targetCell = cell.findCellInMap(getEntities(), currentPosition[0], currentPosition[1]);
+    public Entity checkEntityByCoordinate(Coordinate coordinate) {
+        Coordinate targetCoordinate = coordinate.findCellInMap(getEntities(), coordinate);
 
         for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Coordinate entryCell = entry.getKey();
             Entity entity = entry.getValue();
 
-            if (entryCell.equals(targetCell)) {
+            if (entryCell.equals(targetCoordinate)) {
                 return entity;
             }
         }
 
+//        return getEntities().get(coordinate);
+
         return null;
     }
 
-    public boolean isGrass(int[] currentPosition) {
-        return checkEntity(currentPosition) instanceof Grass;
+//    public Entity getEntity(Coordinate coordinate) {
+//        return getEntities().get(coordinate);
+//    }
+//
+//    public boolean isGrass(Coordinate currentPosition) {
+//        return getEntity(currentPosition) instanceof Grass;
+//    }
+
+    public boolean isGrass(Coordinate currentPosition) {
+        return checkEntityByCoordinate(currentPosition) instanceof Grass;
     }
 
-    public boolean isHerbivore(int[] currentPosition) {
-        return checkEntity(currentPosition) instanceof Herbivore;
+    public boolean isHerbivore(Coordinate currentPosition) {
+        return checkEntityByCoordinate(currentPosition) instanceof Herbivore;
     }
 
-    public boolean isTreeOrRock(int[] currentPosition) {
-        return (checkEntity(currentPosition) instanceof Tree || checkEntity(currentPosition) instanceof Rock);
+    public boolean isTreeOrRock(Coordinate currentPosition) {
+        return (checkEntityByCoordinate(currentPosition) instanceof Tree || checkEntityByCoordinate(currentPosition) instanceof Rock);
     }
 
     public boolean isCoordinatesOccupied(Coordinate targetCoordinates) {
         boolean isContain = false;
 
-        if (cell.findCellInMap(getEntities(), targetCoordinates.getX(), targetCoordinates.getY()) != null) {
+        if (targetCoordinates.findCellInMap(getEntities(), targetCoordinates.getX(), targetCoordinates.getY()) != null) {
             isContain = true;
         }
 
@@ -109,23 +116,23 @@ public class SimulationMap {
 
         for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
-            Coordinate cell = entry.getKey();
+            Coordinate entityCoordinate = entry.getKey();
 
             if (entity instanceof Creature creature) {
-                creatures.put(cell, creature);
+                creatures.put(entityCoordinate, creature);
             }
         }
 
         return creatures;
     }
 
-    public void removeCell(Coordinate cellForRemove) {
-        entities.remove(cellForRemove);
+    public void removeEntity(Coordinate coordinate) {
+        entities.remove(coordinate);
     }
 
-    public boolean isCoordinatesWithinMapBounds(int[] targetCoordinates) {
-        int x = targetCoordinates[0];
-        int y = targetCoordinates[1];
+    public boolean isCoordinatesWithinMapBounds(Coordinate targetCoordinate) {
+        int x = targetCoordinate.getX();
+        int y = targetCoordinate.getY();
 
         return (x < SimulationMap.MAP_SIZE_X && x >= 0) && (y < SimulationMap.MAP_SIZE_Y && y >= 0);
     }

@@ -42,16 +42,22 @@ public class Coordinate {
         return null;
     }
 
+    public Coordinate findCellInMap(Map<Coordinate, Entity> targetMap, Coordinate coordinate) {
+        for (Coordinate cell : targetMap.keySet()) {
+            if (cell.getX() == coordinate.getX() && cell.getY() == coordinate.getY()) {
+                return cell;
+            }
+        }
+        return null;
+    }
+
     public boolean isFood(SimulationMap simulationMap, Creature creature, Coordinate coordinate) {
-        int[] checkFood = new int[] {coordinate.getX(), coordinate.getY()};
-
-
         boolean isFood = false;
 
         if (creature instanceof Herbivore) {
-            isFood = simulationMap.isGrass(checkFood);
+            isFood = simulationMap.isGrass(coordinate);
         } else if (creature instanceof Predator) {
-            isFood = simulationMap.isHerbivore(checkFood);
+            isFood = simulationMap.isHerbivore(coordinate);
         }
 
         return isFood;

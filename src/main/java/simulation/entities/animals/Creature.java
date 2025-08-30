@@ -10,25 +10,25 @@ import java.util.*;
 public abstract class Creature extends Entity {
     Game game = new Game();
 
-    private Coordinate cell;
+    private Coordinate coordinate;
 
     public int speed = 1;
     int hp;
 
     public Creature(Coordinate coordinate, String name) {
         super(name);
-        this.cell = coordinate;
+        this.coordinate = coordinate;
     }
 
     public void makeMove(SimulationMap simulationMap, List<Coordinate> path) {
-        Coordinate nextStep = path.get(0);
+        Coordinate nextStep = new Coordinate(path.get(0).getX(), path.get(0).getY());
 
-        if(cell.isFood(simulationMap, this, nextStep)) {
+        if(coordinate.isFood(simulationMap, this, nextStep)) {
             eat(simulationMap, nextStep);
         } else if (!simulationMap.isCoordinatesOccupied(nextStep)) {
             makeStep(simulationMap, nextStep);
 
-            path.remove(0);
+//            path.remove(0);
         } else {
             System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(new int[] {nextStep.getX(), nextStep.getY()}));
         }
@@ -37,8 +37,8 @@ public abstract class Creature extends Entity {
     }
 
     private void eat(SimulationMap simulationMap, Coordinate food) {
-        if (cell.isFood(simulationMap, this, food)) {
-            simulationMap.removeCell(food);
+        if (coordinate.isFood(simulationMap, this, food)) {
+            simulationMap.removeEntity(food);
         }
     }
 
@@ -47,18 +47,18 @@ public abstract class Creature extends Entity {
     }
 
     private void updateCreatureCoordinates(SimulationMap simulationMap, Coordinate newCoordinates) {
-        Coordinate oldCell = getCell();
+        Coordinate oldCell = getCoordinate();
         Entity oldEntity = this;
 
         if (oldCell != null) {
-            simulationMap.removeCell(oldCell);
+            simulationMap.removeEntity(oldCell);
 
             oldCell.setCoordinates(newCoordinates.getX(), newCoordinates.getY());
             simulationMap.addEntity(oldCell, oldEntity);
         }
     }
 
-    public Coordinate getCell() {
-        return cell;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 }

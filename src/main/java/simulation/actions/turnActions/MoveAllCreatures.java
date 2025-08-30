@@ -20,7 +20,7 @@ public class MoveAllCreatures {
         while (!creatures.isEmpty()) {
             Creature creature = creatures.poll();
 
-            boolean isCreatureAlive = creature.getCell().findCellInMap(simulationMap.getEntities(), creature.getCell().getX(), creature.getCell().getY()) != null;
+            boolean isCreatureAlive = creature.getCoordinate().findCellInMap(simulationMap.getEntities(), creature.getCoordinate().getX(), creature.getCoordinate().getY()) != null;
 
             if (isCreatureAlive) {
                 for (int i = 0; i < creature.speed; i++) {

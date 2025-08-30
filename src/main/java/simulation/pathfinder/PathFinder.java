@@ -20,21 +20,21 @@ public class PathFinder {
     };
 
     public List<Coordinate> searchPath(SimulationMap simulationMap, Creature creature) {
-        int[] initialNode = new int[] {creature.getCell().getX(), creature.getCell().getY()};
-        Queue<int[]> queue = new ArrayDeque<>();
+        Coordinate initialNode = new Coordinate(creature.getCoordinate().getX(), creature.getCoordinate().getY());
+        Queue<Coordinate> queue = new ArrayDeque<>();
         Set<String> visitedNodes = new HashSet<>();
-        Map<String, int[]> path = new HashMap<>();
+        Map<String, Coordinate> path = new HashMap<>();
         List<Coordinate> pathToFood = new LinkedList<>();
 
         queue.add(initialNode);
-        visitedNodes.add(Arrays.toString(initialNode));
+        visitedNodes.add(Arrays.toString(new int[] {initialNode.getX(), initialNode.getY()}));
 
         while (!queue.isEmpty()) {
-            int[] currentPosition = queue.poll();
-            int[][] neighboringNodes = generateNeighboringNodes(currentPosition);
+            Coordinate currentPosition = queue.poll();
+            List<Coordinate> neighboringNodes = generateNeighboringNodes(currentPosition);
 
-            for (int[] currentExploringNode : neighboringNodes) {
-                String nodeIdentifier = Arrays.toString(currentExploringNode);
+            for (Coordinate currentExploringNode : neighboringNodes) {
+                String nodeIdentifier = Arrays.toString(new int[] {currentExploringNode.getX(), currentExploringNode.getY()});
                 boolean isWithinBounds = simulationMap.isCoordinatesWithinMapBounds(currentExploringNode);
                 boolean isObstacle = simulationMap.isTreeOrRock(currentExploringNode) || (creature instanceof Predator && simulationMap.isGrass(currentExploringNode));
 
@@ -42,10 +42,8 @@ public class PathFinder {
                     continue;
                 }
 
-                Coordinate cEN = new Coordinate(currentExploringNode[0], currentExploringNode[1]);
-
-                if (creature.getCell().isFood(simulationMap, creature, cEN)) {
-                    path.put(Arrays.toString(currentExploringNode), currentPosition);
+                if (creature.getCoordinate().isFood(simulationMap, creature, currentExploringNode)) {
+                    path.put(Arrays.toString(new int[] {currentExploringNode.getX(), currentExploringNode.getY()}), currentPosition);
                     pathToFood = reconstructPath(path, currentExploringNode);
                     return pathToFood;
                 }
@@ -53,8 +51,8 @@ public class PathFinder {
                 if (isObstacle) {
                     visitedNodes.add(nodeIdentifier);
                 } else {
-                    if (!path.containsKey(Arrays.toString(currentExploringNode))) {
-                        path.put(Arrays.toString(currentExploringNode), currentPosition);
+                    if (!path.containsKey(Arrays.toString(new int[] {currentExploringNode.getX(), currentExploringNode.getY()}))) {
+                        path.put(Arrays.toString(new int[] {currentExploringNode.getX(), currentExploringNode.getY()}), currentPosition);
                     }
 
                     queue.add(currentExploringNode);
@@ -63,15 +61,15 @@ public class PathFinder {
             }
         }
 
-        pathToFood.add(new Coordinate(creature.getCell().getX(), creature.getCell().getY()));
+        pathToFood.add(new Coordinate(creature.getCoordinate().getX(), creature.getCoordinate().getY()));
         return pathToFood;
     }
 
-    public List<Coordinate> reconstructPath(Map<String, int[]> parentMap, int[] goalCoordinates) {
+    public List<Coordinate> reconstructPath(Map<String, Coordinate> parentMap, Coordinate goalCoordinate) {
         List<Coordinate> path = new LinkedList<>();
 
-        for (int[] i = goalCoordinates; i != null; i = parentMap.get(Arrays.toString(i))) {
-            Coordinate coordinate = new Coordinate(i[0], i[1]);
+        for (Coordinate i = new Coordinate(goalCoordinate.getX(), goalCoordinate.getY()); i != null; i = parentMap.get(Arrays.toString(new int[] {i.getX(), i.getY()}))) {
+            Coordinate coordinate = new Coordinate(i.getX(), i.getY());
             path.add(coordinate);
         }
 
@@ -80,14 +78,11 @@ public class PathFinder {
         return path;
     }
 
-    private int[][] generateNeighboringNodes(int[] currentPosition) {
-        int[][] childNodes = new int[offsets.length][];
+    private List<Coordinate> generateNeighboringNodes(Coordinate currentPosition) {
+        List<Coordinate> childNodes = new LinkedList<>();
 
         for (int i = 0; i < offsets.length; i++) {
-            childNodes[i] = new int[] {
-                currentPosition[0] + offsets[i][0],
-                currentPosition[1] + offsets[i][1]
-            };
+            childNodes.add(new Coordinate(currentPosition.getX() + offsets[i][0], currentPosition.getY() + offsets[i][1]));
         }
 
         return childNodes;
