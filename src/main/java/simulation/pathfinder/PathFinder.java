@@ -1,6 +1,5 @@
 package simulation.pathfinder;
 
-import simulation.entities.animals.Herbivore;
 import simulation.entities.animals.Predator;
 import simulation.map.Cell;
 import simulation.map.SimulationMap;

@@ -10,7 +10,6 @@ import java.util.Queue;
 
 public class MoveAllCreatures {
     private final Queue<Creature> creatures = new LinkedList<>();
-    Cell cell = new Cell();
 
     public void makeMoveAllCreatures(SimulationMap simulationMap) throws InterruptedException {
         collectAllCreatures(simulationMap);
@@ -18,9 +17,7 @@ public class MoveAllCreatures {
         while (!creatures.isEmpty()) {
             Creature creature = creatures.poll();
 
-            boolean isCreatureAlive = cell.findCellInMap(simulationMap.getEntities(), creature.coordinates[0], creature.coordinates[1]) != null;
-
-            if (isCreatureAlive) {
+            if (creature.isCreatureAlive(simulationMap, creature)) {
                 for (int i = 0; i < creature.speed; i++) {
                     creature.makeMove(simulationMap, creature.getFoodCoordinates());
                 }
