@@ -15,7 +15,6 @@ public class MoveAllCreatures {
 
     public void makeMoveAllCreatures(SimulationMap simulationMap) {
         PathFinder pathFinder = new PathFinder();
-        Game game = new Game();
 
         collectAllCreatures(simulationMap, coordinates);
 
@@ -26,13 +25,8 @@ public class MoveAllCreatures {
 
             if (isCreatureAlive) {
                 List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
-                int countOfSteps = Math.min(creature.speed, path.size() -1);
 
-                for (int i = 0; i < countOfSteps; i++) {
-                    creature.makeMove(simulationMap, coordinate, path);
-                    coordinate = new Coordinate(path.get(0).getX(), path.get(0).getY());
-                    game.updateMap(simulationMap);
-                }
+                creature.makeMove(simulationMap, coordinate, path);
             }
         }
     }

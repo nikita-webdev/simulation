@@ -80,13 +80,13 @@ public class SimulationMap {
         return getEntities().containsKey(targetCoordinates);
     }
 
-    public boolean isFood(SimulationMap simulationMap, Creature creature, Coordinate coordinate) {
+    public boolean isFood(Creature creature, Coordinate coordinate) {
         boolean isFood = false;
 
         if (creature instanceof Herbivore) {
-            isFood = simulationMap.isGrass(coordinate);
+            isFood = isGrass(coordinate);
         } else if (creature instanceof Predator) {
-            isFood = simulationMap.isHerbivore(coordinate);
+            isFood = isHerbivore(coordinate);
         }
 
         return isFood;

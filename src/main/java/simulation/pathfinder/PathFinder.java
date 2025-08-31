@@ -38,7 +38,7 @@ public class PathFinder {
                     continue;
                 }
 
-                if (simulationMap.isFood(simulationMap, creature, currentNeighbor)) {
+                if (simulationMap.isFood(creature, currentNeighbor)) {
                     path.put(Arrays.toString(new int[] {currentNeighbor.getX(), currentNeighbor.getY()}), currentPosition);
                     pathToFood = reconstructPath(path, currentNeighbor);
                     return pathToFood;
