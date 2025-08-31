@@ -19,7 +19,7 @@ public class SpawnHerbivoreAction implements Action {
 
             Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
-            simulationMap.addEntity(cell, new Herbivore(cell, "herbivore" + (i + 1)));
+            simulationMap.addEntity(cell, new Herbivore("herbivore" + (i + 1)));
         }
     }
 }

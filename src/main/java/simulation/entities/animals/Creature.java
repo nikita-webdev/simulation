@@ -1,6 +1,5 @@
 package simulation.entities.animals;
 
-import simulation.Game;
 import simulation.entities.Entity;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
@@ -8,57 +7,41 @@ import simulation.map.SimulationMap;
 import java.util.*;
 
 public abstract class Creature extends Entity {
-    Game game = new Game();
-
-    private Coordinate coordinate;
-
     public int speed = 1;
     int hp;
 
-    public Creature(Coordinate coordinate, String name) {
+    public Creature(String name) {
         super(name);
-        this.coordinate = coordinate;
     }
 
-    public void makeMove(SimulationMap simulationMap, List<Coordinate> path) {
-        Coordinate nextStep = new Coordinate(path.get(0).getX(), path.get(0).getY());
+    public void makeMove(SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
+        Coordinate nextStep = path.get(0);
 
-        if(coordinate.isFood(simulationMap, this, nextStep)) {
+        if(simulationMap.isFood(simulationMap, this, nextStep)) {
             eat(simulationMap, nextStep);
         } else if (!simulationMap.isCoordinatesOccupied(nextStep)) {
-            makeStep(simulationMap, nextStep);
+            moveCreature(simulationMap, from, nextStep);
 
-//            path.remove(0);
         } else {
             System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(new int[] {nextStep.getX(), nextStep.getY()}));
         }
-
-        game.updateMap(simulationMap);
     }
 
     private void eat(SimulationMap simulationMap, Coordinate food) {
-        if (coordinate.isFood(simulationMap, this, food)) {
+        if (simulationMap.isFood(simulationMap, this, food)) {
             simulationMap.removeEntity(food);
         }
     }
 
-    private void makeStep(SimulationMap simulationMap, Coordinate stepCoordinates) {
-        updateCreatureCoordinates(simulationMap, stepCoordinates);
-    }
+    private void moveCreature(SimulationMap simulationMap, Coordinate from, Coordinate to) {
+        Entity entity = this;
 
-    private void updateCreatureCoordinates(SimulationMap simulationMap, Coordinate newCoordinates) {
-        Coordinate oldCell = getCoordinate();
-        Entity oldEntity = this;
+        if (from != null) {
+            simulationMap.removeEntity(from);
 
-        if (oldCell != null) {
-            simulationMap.removeEntity(oldCell);
-
-            oldCell.setCoordinates(newCoordinates.getX(), newCoordinates.getY());
-            simulationMap.addEntity(oldCell, oldEntity);
+            simulationMap.addEntity(to, entity);
         }
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
-    }
+    public abstract boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate);
 }

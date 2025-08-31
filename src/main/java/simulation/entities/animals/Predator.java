@@ -1,12 +1,13 @@
 package simulation.entities.animals;
 
 import simulation.map.Coordinate;
+import simulation.map.SimulationMap;
 
 import static simulation.config.Icons.PREDATOR_ICON;
 
 public class Predator extends Creature {
-    public Predator(Coordinate cell, String name) {
-        super(cell, name);
+    public Predator(String name) {
+        super(name);
 
         speed = 2;
 //        hp = 2;
@@ -16,4 +17,8 @@ public class Predator extends Creature {
 //    void makeMove() {
 //
 //    }
+
+    public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
+        return simulationMap.isTreeOrRock(coordinate) || simulationMap.isGrass(coordinate);
+    }
 }

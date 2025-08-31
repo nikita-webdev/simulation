@@ -47,7 +47,7 @@ public class Game {
     }
 
     private void handleStoppedThread() {
-        System.out.println("Поток остановлен.");
+        System.out.println("The thread has been stopped.");
         try {
             Thread.sleep(THREAD_STOP_DELAY);
         } catch (InterruptedException e) {
@@ -58,7 +58,7 @@ public class Game {
     public void updateMap(SimulationMap simulationMap) {
         renderer.renderMap(simulationMap);
         turn++;
-        System.out.println("Ход: " + turn);
+        System.out.println("Iteration: " + turn);
         try {
             Thread.sleep(SLEEP_TIME);
         } catch (InterruptedException e) {

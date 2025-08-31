@@ -3,6 +3,7 @@ package simulation.map;
 import simulation.entities.Entity;
 import simulation.entities.animals.Creature;
 import simulation.entities.animals.Herbivore;
+import simulation.entities.animals.Predator;
 import simulation.entities.objects.Grass;
 import simulation.entities.objects.Rock;
 import simulation.entities.objects.Tree;
@@ -11,7 +12,6 @@ import java.util.*;
 
 public class SimulationMap {
     private final Map<Coordinate, Entity> entities = new HashMap<>();
-    private final Coordinate coordinate = new Coordinate();
 
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
@@ -64,51 +64,32 @@ public class SimulationMap {
         return countOfHerbivores;
     }
 
-    public Entity checkEntityByCoordinate(Coordinate coordinate) {
-        Coordinate targetCoordinate = coordinate.findCellInMap(getEntities(), coordinate);
-
-        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
-            Coordinate entryCell = entry.getKey();
-            Entity entity = entry.getValue();
-
-            if (entryCell.equals(targetCoordinate)) {
-                return entity;
-            }
-        }
-
-//        return getEntities().get(coordinate);
-
-        return null;
-    }
-
-//    public Entity getEntity(Coordinate coordinate) {
-//        return getEntities().get(coordinate);
-//    }
-//
-//    public boolean isGrass(Coordinate currentPosition) {
-//        return getEntity(currentPosition) instanceof Grass;
-//    }
-
     public boolean isGrass(Coordinate currentPosition) {
-        return checkEntityByCoordinate(currentPosition) instanceof Grass;
+        return getEntities().get(currentPosition) instanceof Grass;
     }
 
     public boolean isHerbivore(Coordinate currentPosition) {
-        return checkEntityByCoordinate(currentPosition) instanceof Herbivore;
+        return getEntities().get(currentPosition) instanceof Herbivore;
     }
 
     public boolean isTreeOrRock(Coordinate currentPosition) {
-        return (checkEntityByCoordinate(currentPosition) instanceof Tree || checkEntityByCoordinate(currentPosition) instanceof Rock);
+        return (getEntities().get(currentPosition) instanceof Tree || getEntities().get(currentPosition) instanceof Rock);
     }
 
     public boolean isCoordinatesOccupied(Coordinate targetCoordinates) {
-        boolean isContain = false;
+        return getEntities().containsKey(targetCoordinates);
+    }
 
-        if (targetCoordinates.findCellInMap(getEntities(), targetCoordinates.getX(), targetCoordinates.getY()) != null) {
-            isContain = true;
+    public boolean isFood(SimulationMap simulationMap, Creature creature, Coordinate coordinate) {
+        boolean isFood = false;
+
+        if (creature instanceof Herbivore) {
+            isFood = simulationMap.isGrass(coordinate);
+        } else if (creature instanceof Predator) {
+            isFood = simulationMap.isHerbivore(coordinate);
         }
 
-        return isContain;
+        return isFood;
     }
 
     public Map<Coordinate, Creature> getAllCreatures() {
@@ -130,7 +111,7 @@ public class SimulationMap {
         entities.remove(coordinate);
     }
 
-    public boolean isCoordinatesWithinMapBounds(Coordinate targetCoordinate) {
+    public boolean isCoordinateWithinMapBounds(Coordinate targetCoordinate) {
         int x = targetCoordinate.getX();
         int y = targetCoordinate.getY();
 

@@ -19,7 +19,7 @@ public class SpawnPredatorAction implements Action {
 
             Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
-            simulationMap.addEntity(cell, new Predator(cell,"predator" + (i + 1)));
+            simulationMap.addEntity(cell, new Predator("predator" + (i + 1)));
         }
     }
 }
