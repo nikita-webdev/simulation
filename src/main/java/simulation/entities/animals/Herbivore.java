@@ -9,13 +9,11 @@ public class Herbivore extends Creature {
     public Herbivore(String name) {
         super(name);
 
-        hp = 1;
+        this.setHp(100);
+        this.setSpeed(1);
+
         icon = HERBIVORE_ICON;
     }
-
-//    void makeMove() {
-//
-//    }
 
     public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
         return simulationMap.isTreeOrRock(coordinate);

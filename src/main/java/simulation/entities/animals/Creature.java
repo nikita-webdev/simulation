@@ -10,15 +10,15 @@ import java.util.*;
 public abstract class Creature extends Entity {
     Game game = new Game();
 
-    public int speed = 1;
-    int hp;
+    public int speed;
+    private int hp;
 
     public Creature(String name) {
         super(name);
     }
 
     public void makeMove(SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
-        int countOfSteps = Math.min(speed, path.size());
+        int countOfSteps = Math.min(getSpeed(), path.size());
 
         for (int i = 0; i < countOfSteps; i++) {
             Coordinate nextStep = path.get(i);
@@ -39,10 +39,25 @@ public abstract class Creature extends Entity {
         }
     }
 
-    private void eat(SimulationMap simulationMap, Coordinate food) {
+    public void eat(SimulationMap simulationMap, Coordinate food) {
         if (simulationMap.isFood(this, food)) {
             simulationMap.removeEntity(food);
         }
+    }
+
+    public void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
+        if (getHp() > 0) {
+            setHp(getHp() - damage);
+            System.out.println(getHp());
+        }
+
+        if (getHp() <= 0) {
+            die(simulationMap, coordinate);
+        }
+    }
+
+    public void die(SimulationMap simulationMap, Coordinate coordinate) {
+        simulationMap.removeEntity(coordinate);
     }
 
     private void moveCreature(SimulationMap simulationMap, Coordinate from, Coordinate to) {
@@ -56,4 +71,24 @@ public abstract class Creature extends Entity {
     }
 
     public abstract boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate);
+
+    public int getHp() {
+        return hp;
+    }
+
+    protected void setHp(int hp) {
+        if (hp < 0) {
+            hp = 0;
+        }
+
+        this.hp = hp;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    protected void setSpeed(int speed) {
+        this.speed = speed;
+    }
 }

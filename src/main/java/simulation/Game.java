@@ -56,9 +56,9 @@ public class Game {
     }
 
     public void updateMap(SimulationMap simulationMap) {
-        renderer.renderMap(simulationMap);
         turn++;
         System.out.println("Iteration: " + turn);
+        renderer.renderMap(simulationMap);
         try {
             Thread.sleep(SLEEP_TIME);
         } catch (InterruptedException e) {
