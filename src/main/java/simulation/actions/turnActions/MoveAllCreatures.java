@@ -1,6 +1,5 @@
 package simulation.actions.turnActions;
 
-import simulation.Game;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 import simulation.entities.animals.Creature;

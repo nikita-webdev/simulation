@@ -1,14 +1,16 @@
 package simulation.entities.animals;
 
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import simulation.Game;
 import simulation.entities.Entity;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
-import java.util.*;
-
 public abstract class Creature extends Entity {
     Game game = new Game();
+    private static final Logger logger = Logger.getLogger(Creature.class.getName());
 
     public int speed;
     private int hp;
@@ -25,30 +27,28 @@ public abstract class Creature extends Entity {
 
             if(simulationMap.isFood(this, nextStep)) {
                 eat(simulationMap, nextStep);
+                break;
             } else if (!simulationMap.isCoordinatesOccupied(nextStep)) {
                 if (i < 1) {
                     moveCreature(simulationMap, from, nextStep);
+                    logger.log(Level.INFO, String.format("%s moves to (%d,%d).", this.name, nextStep.getX(), nextStep.getY()));
                 } else {
                     moveCreature(simulationMap, path.get(i - 1), nextStep);
+                    logger.log(Level.INFO, String.format("%s moves to (%d,%d).", this.name, nextStep.getX(), nextStep.getY()));
                 }
             } else {
-                System.out.println(name + " should have taken a step, but it was not taken on: " + Arrays.toString(new int[] {nextStep.getX(), nextStep.getY()}));
+                logger.log(Level.INFO, String.format("%s couldn't find any suitable food.", this.name));
             }
 
             game.updateMap(simulationMap);
         }
     }
 
-    public void eat(SimulationMap simulationMap, Coordinate food) {
-        if (simulationMap.isFood(this, food)) {
-            simulationMap.removeEntity(food);
-        }
-    }
+    public abstract void eat(SimulationMap simulationMap, Coordinate food);
 
     public void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
         if (getHp() > 0) {
             setHp(getHp() - damage);
-            System.out.println(getHp());
         }
 
         if (getHp() <= 0) {
@@ -57,6 +57,7 @@ public abstract class Creature extends Entity {
     }
 
     public void die(SimulationMap simulationMap, Coordinate coordinate) {
+        logger.log(Level.INFO, String.format("%s died.", simulationMap.getAllCreatures().get(coordinate).name));
         simulationMap.removeEntity(coordinate);
     }
 

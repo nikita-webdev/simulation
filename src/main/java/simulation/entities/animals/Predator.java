@@ -1,11 +1,14 @@
 package simulation.entities.animals;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 import static simulation.config.Icons.PREDATOR_ICON;
 
 public class Predator extends Creature {
+    private static final Logger logger = Logger.getLogger(Predator.class.getName());
     private final int attackPower;
 
     public Predator(String name) {
@@ -20,7 +23,11 @@ public class Predator extends Creature {
 
     public void eat(SimulationMap simulationMap, Coordinate food) {
         if (simulationMap.isFood(this, food)) {
-            attack(simulationMap, food);
+            if (simulationMap.getAllCreatures().get(food).getHp() > 0) {
+                String preyName = simulationMap.getAllCreatures().get(food).name;
+                logger.log(Level.INFO, String.format("%s attacked %s at (%d,%d).", this.name, preyName, food.getX(), food.getY()));
+                attack(simulationMap, food);
+            }
         }
     }
 

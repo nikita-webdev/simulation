@@ -1,5 +1,7 @@
 package simulation;
 
+import java.io.FileInputStream;
+import java.util.logging.LogManager;
 import simulation.actions.initActions.InitObjects;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
@@ -16,6 +18,12 @@ public class Simulation {
 //        final int NUMBER_OF_OBJECTS = 10;
 //        final int MAX_X_MAP_SIZE = 9;
 //        final int MAX_Y_MAP_SIZE = 5;
+
+        try {
+            LogManager.getLogManager().readConfiguration(new FileInputStream("src/main/resources/logging.properties"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         SimulationMap simulationMap = new SimulationMap();
 
@@ -62,17 +70,6 @@ public class Simulation {
 
         gameThread.start();
         userInputThread.start();
-
-//            try {
-//                if (System.getProperty("os.name").contains("Windows")) {
-//                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-//                } else {
-//                    // Для Unix-подобных систем
-//                    new ProcessBuilder("clear").inheritIO().start().waitFor();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
     }
 
     static void nextTurn() {

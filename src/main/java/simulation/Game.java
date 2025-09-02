@@ -1,12 +1,16 @@
 package simulation;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import simulation.actions.turnActions.MoveAllCreatures;
+import simulation.entities.animals.Creature;
 import simulation.map.Renderer;
 import simulation.map.SimulationMap;
 
 import static simulation.Simulation.turn;
 
 public class Game {
+    private static final Logger logger = Logger.getLogger(Creature.class.getName());
     private final Renderer renderer = new Renderer();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
     private int turnCount;
@@ -47,7 +51,8 @@ public class Game {
     }
 
     private void handleStoppedThread() {
-        System.out.println("The thread has been stopped.");
+        logger.log(Level.INFO, "The thread has been paused.");
+
         try {
             Thread.sleep(THREAD_STOP_DELAY);
         } catch (InterruptedException e) {
@@ -57,7 +62,7 @@ public class Game {
 
     public void updateMap(SimulationMap simulationMap) {
         turn++;
-        System.out.println("Iteration: " + turn);
+        logger.log(Level.INFO, String.format("Iteration: %d", turn));
         renderer.renderMap(simulationMap);
         try {
             Thread.sleep(SLEEP_TIME);
