@@ -18,9 +18,9 @@ public class SpawnGrassAction implements Action {
             // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate coordinate = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
-            simulationMap.addEntity(cell, new Grass("grass" + (i + 1)));
+            simulationMap.addEntity(coordinate, new Grass("grass" + (i + 1)));
         }
     }
 }

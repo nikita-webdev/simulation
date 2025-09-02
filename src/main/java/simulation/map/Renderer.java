@@ -33,11 +33,11 @@ public class Renderer {
 
     public void updateMap(SimulationMap simulationMap) {
         for (Map.Entry<Coordinate, Entity> entry : simulationMap.getEntities().entrySet()) {
-            Coordinate currentCell = entry.getKey();
+            Coordinate currentCoordinate = entry.getKey();
             Entity entity = entry.getValue();
 
-            int x = currentCell.getX();
-            int y = currentCell.getY();
+            int x = currentCoordinate.getX();
+            int y = currentCoordinate.getY();
             String entityIcon = entity.icon;
 
             field[y][x] = entityIcon;

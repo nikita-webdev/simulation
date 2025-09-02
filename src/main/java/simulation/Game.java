@@ -62,7 +62,7 @@ public class Game {
 
     public void updateMap(SimulationMap simulationMap) {
         turn++;
-        logger.log(Level.INFO, String.format("Iteration: %d", turn));
+//        logger.log(Level.INFO, String.format("Iteration: %d", turn));
         renderer.renderMap(simulationMap);
         try {
             Thread.sleep(SLEEP_TIME);

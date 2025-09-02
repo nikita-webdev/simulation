@@ -15,9 +15,9 @@ public class RespawnHerbivoreAction implements Action {
         for (int i = 0; i < initialHerbivoreAmount; i++) {
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate coordinate = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
-            simulationMap.addEntity(cell, new Herbivore("herbivore" + (herbivoresCounter + 1)));
+            simulationMap.addEntity(coordinate, new Herbivore("herbivore" + (herbivoresCounter + 1)));
             herbivoresCounter = simulationMap.getCountOfHerbivores();
         }
     }

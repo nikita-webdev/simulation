@@ -10,16 +10,14 @@ public class RespawnGrassAction implements Action {
 
     @Override
     public void execute(SimulationMap simulationMap) {
-        // Quantity counter for assigning a number
         int grassesCount = simulationMap.getCountOfGrasses();
 
         for (int i = 0; i < initialGrassAmount; i++) {
-            // Random coordinates are checked for a match in the map. If there is no match, the object is added to these coordinates.
             int[] xyCoordinates = simulationMap.generateRandomCoordinates();
 
-            Coordinate cell = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate coordinate = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
 
-            simulationMap.addEntity(cell, new Grass("grass" + (grassesCount + 1)));
+            simulationMap.addEntity(coordinate, new Grass("grass" + (grassesCount + 1)));
             grassesCount++;
         }
     }
