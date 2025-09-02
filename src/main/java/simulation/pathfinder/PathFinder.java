@@ -21,8 +21,8 @@ public class PathFinder {
     public List<Coordinate> searchPath(SimulationMap simulationMap, Creature creature, Coordinate from) {
         Queue<Coordinate> queue = new ArrayDeque<>();
         Set<Coordinate> visitedNodes = new HashSet<>();
-        Map<String, Coordinate> path = new HashMap<>();
-        List<Coordinate> pathToFood = new LinkedList<>();
+        Map<Coordinate, Coordinate> cameFrom = new HashMap<>();
+        List<Coordinate> path = new LinkedList<>();
 
         queue.add(from);
         visitedNodes.add(from);
@@ -39,16 +39,16 @@ public class PathFinder {
                 }
 
                 if (simulationMap.isFood(creature, currentNeighbor)) {
-                    path.put(Arrays.toString(new int[] {currentNeighbor.getX(), currentNeighbor.getY()}), currentPosition);
-                    pathToFood = reconstructPath(path, currentNeighbor);
-                    return pathToFood;
+                    cameFrom.put(currentNeighbor, currentPosition);
+                    path = reconstructPath(cameFrom, currentNeighbor);
+                    return path;
                 }
 
                 if (creature.isObstacle(simulationMap, currentNeighbor)) {
                     visitedNodes.add(currentNeighbor);
                 } else {
-                    if (!path.containsKey(Arrays.toString(new int[] {currentNeighbor.getX(), currentNeighbor.getY()}))) {
-                        path.put(Arrays.toString(new int[] {currentNeighbor.getX(), currentNeighbor.getY()}), currentPosition);
+                    if (!cameFrom.containsKey(currentNeighbor)) {
+                        cameFrom.put(currentNeighbor, currentPosition);
                     }
 
                     queue.add(currentNeighbor);
@@ -57,14 +57,14 @@ public class PathFinder {
             }
         }
 
-        pathToFood.add(new Coordinate(from.getX(), from.getY()));
-        return pathToFood;
+        path.add(new Coordinate(from.getX(), from.getY()));
+        return path;
     }
 
-    public List<Coordinate> reconstructPath(Map<String, Coordinate> parentMap, Coordinate goalCoordinate) {
+    public List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate food) {
         List<Coordinate> path = new LinkedList<>();
 
-        for (Coordinate i = new Coordinate(goalCoordinate.getX(), goalCoordinate.getY()); i != null; i = parentMap.get(Arrays.toString(new int[] {i.getX(), i.getY()}))) {
+        for (Coordinate i = new Coordinate(food.getX(), food.getY()); i != null; i = cameFrom.get(i)) {
             Coordinate coordinate = new Coordinate(i.getX(), i.getY());
             path.add(coordinate);
         }
