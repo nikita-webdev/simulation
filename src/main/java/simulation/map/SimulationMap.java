@@ -10,7 +10,10 @@ import simulation.entities.objects.Tree;
 
 import java.util.*;
 
+import static simulation.Simulation.DELAY_MOVE;
+
 public class SimulationMap {
+    Renderer renderer = new Renderer();
     private final Map<Coordinate, Entity> entities = new HashMap<>();
 
     public static final int MAP_SIZE_X = 20;
@@ -112,9 +115,19 @@ public class SimulationMap {
     }
 
     public boolean isCoordinateWithinMapBounds(Coordinate targetCoordinate) {
-        int x = targetCoordinate.getX();
-        int y = targetCoordinate.getY();
+        int x = targetCoordinate.x();
+        int y = targetCoordinate.y();
 
         return (x < SimulationMap.MAP_SIZE_X && x >= 0) && (y < SimulationMap.MAP_SIZE_Y && y >= 0);
+    }
+
+    public void updateMap() {
+        renderer.renderMap(this);
+
+        try {
+            Thread.sleep(DELAY_MOVE);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

@@ -1,90 +1,124 @@
 package simulation;
 
-import java.io.FileInputStream;
-import java.util.logging.LogManager;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import simulation.actions.initActions.InitObjects;
+import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
 import simulation.map.SimulationMap;
-
-import java.util.Scanner;
+import simulation.printer.StartPrinter;
 
 public class Simulation {
-    public static boolean runningThread = true; // Thread with game is running
+    private static final Logger logger = Logger.getLogger(Simulation.class.getName());
+    private static final StartPrinter startPrinter = new StartPrinter();
+    SimulationMap simulationMap = new SimulationMap();
+    InitObjects initObjects = new InitObjects();
+    RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
+    RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
+    private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+    private final static Object pauseLock = new Object();
+
+    public static final int DELAY_MOVE = 1000;
+    public static boolean runningThread = false;
     public static boolean nextTurn = false;
-    public static int turn = 0;
 
-    public static void main(String[] args) {
-//        final int NUMBER_OF_OBJECTS = 10;
-//        final int MAX_X_MAP_SIZE = 9;
-//        final int MAX_Y_MAP_SIZE = 5;
-
-        try {
-            LogManager.getLogManager().readConfiguration(new FileInputStream("src/main/resources/logging.properties"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        SimulationMap simulationMap = new SimulationMap();
-
-        Game game = new Game(2000);
-
-        InitObjects initObjects = new InitObjects();
-        initObjects.initObjectsOnTheMap(simulationMap);
-
-        RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
-        RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
-
-        Thread gameThread = new Thread() {
-            public void run() {
-                try {
-                    game.gameLoop(simulationMap);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-
-        Thread userInputThread = new Thread() {
-            public void run() {
-                while (true) {
-                    Scanner scanner = new Scanner(System.in);
-                    String userInput = scanner.nextLine().trim().toLowerCase();
-
-                    if (userInput.equals("p")) {
-                        pauseSimulation();
-                    } else if (userInput.equals("s")) {
-                        startSimulation();
-                    } else if (userInput.equals("n")) {
-                        nextTurn();
-                    } else if (userInput.equals("g")) {
-//                        initObjects.initGrass(10);
-                        respawnGrassAction.execute(simulationMap);
-                    } else if (userInput.equals("h")) {
-//                        initObjects.initHerbivore(1);
-                        respawnHerbivoreAction.execute(simulationMap);
-                    }
-                }
-            }
-        };
-
-        gameThread.start();
+    public void start() {
+        simulationThread.start();
         userInputThread.start();
     }
 
+    public void simulationLoop(SimulationMap simulationMap) throws InterruptedException {
+        initObjects.initObjectsOnTheMap(simulationMap);
+
+        while (true) {
+            if (!Thread.currentThread().isInterrupted()) {
+                if (runningThread) {
+                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
+                } else {
+                    handleStoppedThread();
+                }
+
+                if (!runningThread && nextTurn) {
+                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
+
+                    nextTurn = false;
+                }
+            }
+        }
+    }
+
+    Thread simulationThread = new Thread() {
+        public void run() {
+            try {
+                simulationLoop(simulationMap);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    };
+
+    Thread userInputThread = new Thread() {
+        public void run() {
+            Scanner scanner = new Scanner(System.in);
+
+            if (!Thread.currentThread().isInterrupted()) {
+                while (true) {
+                    String userInput = scanner.nextLine().trim().toLowerCase();
+
+                    switch (userInput) {
+                        case "2" -> pauseSimulation();
+                        case "1", "3" -> startSimulation();
+                        case "4" -> nextTurn();
+                        case "5" -> respawnGrassAction.execute(simulationMap);
+                        case "6" -> respawnHerbivoreAction.execute(simulationMap);
+                        case "0" -> stopSimulation();
+                        default -> logger.log(Level.INFO, "Enter a number from the list.");
+                    }
+                }
+            } else {
+                scanner.close();
+            }
+        }
+    };
+
+    private void handleStoppedThread() throws InterruptedException {
+        logger.log(Level.INFO, "The simulation has been paused.");
+        startPrinter.startPrint();
+
+        synchronized (pauseLock) {
+            pauseLock.wait();
+        }
+    }
+
     static void nextTurn() {
-        // просимулировать и отрендерить один ход
-        // For each creature
         nextTurn = true;
+
+        synchronized (pauseLock) {
+            pauseLock.notify();
+        }
     }
 
     static void startSimulation() {
-        // запустить бесконечный цикл симуляции и рендеринга
         runningThread = true;
+
+        synchronized (pauseLock) {
+            pauseLock.notify();
+        }
     }
 
     private static void pauseSimulation() {
-        // приостановить бесконечный цикл симуляции и рендеринга
         runningThread = false;
+    }
+
+    private void stopSimulation() {
+//        logger.log(Level.INFO, String.format("The simulation lasted %d turns", turn));
+        logger.log(Level.INFO, "The simulation has been stopped.");
+        startSimulation();
+        simulationThread.interrupt();
+        userInputThread.interrupt();
+        System.exit(0);
     }
 }

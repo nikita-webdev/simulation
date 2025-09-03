@@ -18,20 +18,12 @@ public class LogFormatter extends Formatter {
         String baseFormat = dateFormat.format(new Date(record.getMillis())) + " " +
                 record.getLevel() + ": " + record.getMessage() + "\n";
 
-        String color;
-        switch (record.getLevel().toString()) {
-            case "INFO":
-                color = ANSI_LIGHT_GRAY;
-                break;
-            case "WARNING":
-                color = ANSI_YELLOW;
-                break;
-            case "SEVERE":
-                color = ANSI_RED;
-                break;
-            default:
-                color = ANSI_LIGHT_GRAY;
-        }
+        String color = switch (record.getLevel().toString()) {
+            case "INFO" -> ANSI_LIGHT_GRAY;
+            case "WARNING" -> ANSI_YELLOW;
+            case "SEVERE" -> ANSI_RED;
+            default -> ANSI_LIGHT_GRAY;
+        };
 
         return color + baseFormat + ANSI_RESET;
     }

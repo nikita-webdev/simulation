@@ -6,7 +6,7 @@ import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 public class RespawnHerbivoreAction implements Action {
-    private static final int initialHerbivoreAmount = 10;
+    private static final int initialHerbivoreAmount = 5;
 
     @Override
     public void execute(SimulationMap simulationMap) {

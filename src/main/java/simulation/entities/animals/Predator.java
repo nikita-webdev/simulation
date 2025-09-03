@@ -26,7 +26,7 @@ public class Predator extends Creature {
             int preyHp = simulationMap.getAllCreatures().get(food).getHp();
             if (preyHp > 0) {
                 String preyName = simulationMap.getAllCreatures().get(food).name;
-                logger.log(Level.INFO, String.format("❗ %s attacked %s at (%d,%d).", this.name, preyName, food.getX(), food.getY()));
+                logger.log(Level.INFO, String.format("❗ %s attacked %s at (%d,%d).", this.name, preyName, food.x(), food.y()));
                 attack(simulationMap, food);
             }
         }

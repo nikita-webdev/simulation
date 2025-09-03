@@ -22,7 +22,7 @@ public class Herbivore extends Creature {
     public void eat(SimulationMap simulationMap, Coordinate food) {
         if (simulationMap.isFood(this, food)) {
             String foodName = simulationMap.getEntities().get(food).name;
-            logger.log(Level.INFO, String.format("\uD83C\uDF3E %s ate %s at (%d,%d).", this.name, foodName, food.getX(), food.getY()));
+            logger.log(Level.INFO, String.format("\uD83C\uDF3E %s ate %s at (%d,%d).", this.name, foodName, food.x(), food.y()));
             simulationMap.removeEntity(food);
         }
     }

@@ -3,13 +3,12 @@ package simulation.entities.animals;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import simulation.Game;
+import simulation.Simulation;
 import simulation.entities.Entity;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 public abstract class Creature extends Entity {
-    Game game = new Game();
     private static final Logger logger = Logger.getLogger(Creature.class.getName());
 
     public int speed;
@@ -27,21 +26,21 @@ public abstract class Creature extends Entity {
 
             if(simulationMap.isFood(this, nextStep)) {
                 eat(simulationMap, nextStep);
-                game.updateMap(simulationMap);
+                simulationMap.updateMap();
                 break;
             } else if (!simulationMap.isCoordinatesOccupied(nextStep)) {
                 if (i < 1) {
                     moveCreature(simulationMap, from, nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.getX(), nextStep.getY()));
+                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.x(), nextStep.y()));
                 } else {
                     moveCreature(simulationMap, path.get(i - 1), nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.getX(), nextStep.getY()));
+                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.x(), nextStep.y()));
                 }
             } else {
                 logger.log(Level.INFO, String.format("❌ %s couldn't find any suitable food.", this.name));
             }
 
-            game.updateMap(simulationMap);
+            simulationMap.updateMap();
         }
     }
 

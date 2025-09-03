@@ -36,8 +36,8 @@ public class Renderer {
             Coordinate currentCoordinate = entry.getKey();
             Entity entity = entry.getValue();
 
-            int x = currentCoordinate.getX();
-            int y = currentCoordinate.getY();
+            int x = currentCoordinate.x();
+            int y = currentCoordinate.y();
             String entityIcon = entity.icon;
 
             field[y][x] = entityIcon;
