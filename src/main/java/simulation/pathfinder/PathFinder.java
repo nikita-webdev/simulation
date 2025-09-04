@@ -7,17 +7,6 @@ import simulation.entities.animals.Creature;
 import java.util.*;
 
 public class PathFinder {
-    int[][] offsets = {
-            {0, -1},
-            {1, -1},
-            {1, 0},
-            {1, 1},
-            {0, 1},
-            {-1, 1},
-            {-1, 0},
-            {-1, -1}
-    };
-
     public List<Coordinate> searchPath(SimulationMap simulationMap, Creature creature, Coordinate from) {
         Queue<Coordinate> queue = new ArrayDeque<>();
         Set<Coordinate> visitedNodes = new HashSet<>();
@@ -73,6 +62,17 @@ public class PathFinder {
         path.remove(0);
         return path;
     }
+
+    int[][] offsets = {
+        {0, -1},
+        {1, -1},
+        {1, 0},
+        {1, 1},
+        {0, 1},
+        {-1, 1},
+        {-1, 0},
+        {-1, -1}
+    };
 
     private List<Coordinate> generateNeighboringNodes(Coordinate currentPosition) {
         List<Coordinate> neighboringNodes = new LinkedList<>();

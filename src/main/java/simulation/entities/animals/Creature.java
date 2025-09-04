@@ -3,7 +3,6 @@ package simulation.entities.animals;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import simulation.Simulation;
 import simulation.entities.Entity;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
@@ -28,7 +27,9 @@ public abstract class Creature extends Entity {
                 eat(simulationMap, nextStep);
                 simulationMap.updateMap();
                 break;
-            } else if (!simulationMap.isCoordinatesOccupied(nextStep)) {
+            }
+
+            if (!simulationMap.isCoordinatesOccupied(nextStep)) {
                 if (i < 1) {
                     moveCreature(simulationMap, from, nextStep);
                     logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.x(), nextStep.y()));
@@ -44,9 +45,9 @@ public abstract class Creature extends Entity {
         }
     }
 
-    public abstract void eat(SimulationMap simulationMap, Coordinate food);
+    protected abstract void eat(SimulationMap simulationMap, Coordinate food);
 
-    public void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
+    protected void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
         if (getHp() > 0) {
             setHp(getHp() - damage);
         }
@@ -56,7 +57,7 @@ public abstract class Creature extends Entity {
         }
     }
 
-    public void die(SimulationMap simulationMap, Coordinate coordinate) {
+    protected void die(SimulationMap simulationMap, Coordinate coordinate) {
         logger.log(Level.INFO, String.format("\uD83D\uDC80 %s died.", simulationMap.getAllCreatures().get(coordinate).name));
         simulationMap.removeEntity(coordinate);
     }

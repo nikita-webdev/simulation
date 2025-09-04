@@ -10,6 +10,7 @@ import static simulation.config.Icons.HERBIVORE_ICON;
 
 public class Herbivore extends Creature {
     private static final Logger logger = Logger.getLogger(Herbivore.class.getName());
+
     public Herbivore(String name) {
         super(name);
 

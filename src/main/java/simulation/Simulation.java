@@ -14,35 +14,35 @@ import simulation.printer.StartPrinter;
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
     private static final StartPrinter startPrinter = new StartPrinter();
-    SimulationMap simulationMap = new SimulationMap();
-    InitObjects initObjects = new InitObjects();
-    RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
-    RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
+    private static final Object pauseLock = new Object();
+    private final SimulationMap simulationMap = new SimulationMap();
+    private final InitObjects initObjects = new InitObjects();
+    private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
+    private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
-    private final static Object pauseLock = new Object();
 
-    public static final int DELAY_MOVE = 1000;
+
     public static boolean runningThread = false;
     public static boolean nextTurn = false;
 
-    public void start() {
+    public void launch() {
         simulationThread.start();
         userInputThread.start();
     }
 
-    public void simulationLoop(SimulationMap simulationMap) throws InterruptedException {
+    private void simulationLoop(SimulationMap simulationMap) throws InterruptedException {
         initObjects.initObjectsOnTheMap(simulationMap);
 
         while (true) {
             if (!Thread.currentThread().isInterrupted()) {
                 if (runningThread) {
-                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
+                    moveAllCreatures.execute(simulationMap);
                 } else {
                     handleStoppedThread();
                 }
 
                 if (!runningThread && nextTurn) {
-                    moveAllCreatures.makeMoveAllCreatures(simulationMap);
+                    moveAllCreatures.execute(simulationMap);
 
                     nextTurn = false;
                 }
@@ -93,7 +93,7 @@ public class Simulation {
         }
     }
 
-    static void nextTurn() {
+    private static void nextTurn() {
         nextTurn = true;
 
         synchronized (pauseLock) {
@@ -101,7 +101,7 @@ public class Simulation {
         }
     }
 
-    static void startSimulation() {
+    private static void startSimulation() {
         runningThread = true;
 
         synchronized (pauseLock) {
@@ -114,7 +114,6 @@ public class Simulation {
     }
 
     private void stopSimulation() {
-//        logger.log(Level.INFO, String.format("The simulation lasted %d turns", turn));
         logger.log(Level.INFO, "The simulation has been stopped.");
         startSimulation();
         simulationThread.interrupt();

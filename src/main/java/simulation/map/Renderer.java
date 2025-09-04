@@ -19,7 +19,7 @@ public class Renderer {
         this.field = new String[mapSizeY][mapSizeX];
     }
 
-    public void createMap() {
+    private void createMap() {
         for(int i = 0; i < field.length; i++) {
             Arrays.fill(field[i], EMPTY_ICON);
         }
@@ -31,7 +31,7 @@ public class Renderer {
         printMap();
     }
 
-    public void updateMap(SimulationMap simulationMap) {
+    private void updateMap(SimulationMap simulationMap) {
         for (Map.Entry<Coordinate, Entity> entry : simulationMap.getEntities().entrySet()) {
             Coordinate currentCoordinate = entry.getKey();
             Entity entity = entry.getValue();
@@ -44,7 +44,7 @@ public class Renderer {
         }
     }
 
-    public void printMap() {
+    private void printMap() {
         StringBuilder line = new StringBuilder();
 
         for(int i = 0; i < field.length; i++) {
