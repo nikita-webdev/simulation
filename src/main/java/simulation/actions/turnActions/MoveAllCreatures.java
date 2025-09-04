@@ -10,12 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MoveAllCreatures {
-    private final List<Coordinate> coordinates = new LinkedList<>();
-
-    public void makeMoveAllCreatures(SimulationMap simulationMap) {
+    public void execute(SimulationMap simulationMap) {
         PathFinder pathFinder = new PathFinder();
-
-        collectAllCreatures(simulationMap, coordinates);
+        final List<Coordinate> coordinates = collectAllCreatures(simulationMap);
 
         for (Coordinate coordinate : coordinates) {
             Creature creature = simulationMap.getAllCreatures().get(coordinate);
@@ -30,11 +27,14 @@ public class MoveAllCreatures {
         }
     }
 
-    private void collectAllCreatures(SimulationMap simulationMap, List<Coordinate> coordinates) {
+    private List<Coordinate> collectAllCreatures(SimulationMap simulationMap) {
+        List<Coordinate> coordinates = new LinkedList<>();
         for (Map.Entry<Coordinate, Creature> entry : simulationMap.getAllCreatures().entrySet()) {
             Coordinate coordinate = entry.getKey();
 
             coordinates.add(coordinate);
         }
+
+        return coordinates;
     }
 }
