@@ -9,18 +9,31 @@ import simulation.entities.objects.Rock;
 import simulation.entities.objects.Tree;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class SimulationMap {
-    Renderer renderer = new Renderer();
+    private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
     private final Map<Coordinate, Entity> entities = new HashMap<>();
+    Renderer renderer = new Renderer();
 
     public static final int DELAY_MOVE = 500;
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
 
     public void addEntity(Coordinate coordinate, Entity entity) {
-        entities.put(coordinate, entity);
+        if (isMapFull()) {
+            logger.log(Level.INFO, "Unable to add new object. Maximum number of objects on the map reached.");
+        } else {
+            entities.put(coordinate, entity);
+        }
+    }
+
+    public boolean isMapFull() {
+        int maxEntities = MAP_SIZE_Y * MAP_SIZE_Y;
+
+        return getCountOfEntity() == maxEntities;
     }
 
     public Map<Coordinate, Entity> getEntities() {
@@ -37,6 +50,10 @@ public class SimulationMap {
         } while (isCoordinatesOccupied(new Coordinate(xy[0], xy[1])));
 
         return xy;
+    }
+
+    public int getCountOfEntity() {
+        return getEntities().size();
     }
 
     public int getCountOfGrasses() {
