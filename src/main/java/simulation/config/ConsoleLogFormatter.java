@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-public class LogFormatter extends Formatter {
+public class ConsoleLogFormatter extends Formatter {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     public static final String ANSI_RESET = "\u001B[0m";

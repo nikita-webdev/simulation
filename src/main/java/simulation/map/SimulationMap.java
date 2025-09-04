@@ -15,7 +15,7 @@ public class SimulationMap {
     Renderer renderer = new Renderer();
     private final Map<Coordinate, Entity> entities = new HashMap<>();
 
-    public static final int DELAY_MOVE = 1000;
+    public static final int DELAY_MOVE = 500;
     public static final int MAP_SIZE_X = 20;
     public static final int MAP_SIZE_Y = 15;
 

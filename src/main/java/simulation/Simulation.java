@@ -9,11 +9,11 @@ import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
 import simulation.map.SimulationMap;
-import simulation.printer.StartPrinter;
+import simulation.printer.Printer;
 
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
-    private static final StartPrinter startPrinter = new StartPrinter();
+    private static final Printer PRINTER = new Printer();
     private static final Object pauseLock = new Object();
     private final SimulationMap simulationMap = new SimulationMap();
     private final InitObjects initObjects = new InitObjects();
@@ -22,41 +22,43 @@ public class Simulation {
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
 
-    public static boolean runningThread = false;
-    public static boolean nextTurn = false;
+    private boolean isSimulationRunning = false;
+    private boolean isLoopActive = false;
+    private boolean isNextTurn = false;
+    private int turnCount = 0;
 
     public void launch() {
-        simulationThread.start();
+        PRINTER.printStartMenu();
         userInputThread.start();
     }
 
-    private void simulationLoop(SimulationMap simulationMap) throws InterruptedException {
+    private void simulationLoop(SimulationMap simulationMap) {
         initObjects.initObjectsOnTheMap(simulationMap);
 
-        while (true) {
-            if (!Thread.currentThread().isInterrupted()) {
-                if (runningThread) {
-                    moveAllCreatures.execute(simulationMap);
-                } else {
-                    handleStoppedThread();
-                }
-
-                if (!runningThread && nextTurn) {
-                    moveAllCreatures.execute(simulationMap);
-
-                    nextTurn = false;
-                }
+        while (!Thread.currentThread().isInterrupted()) {
+            if (turnCount % 10 == 0) {
+                respawnGrassAction.execute(simulationMap);
+                respawnHerbivoreAction.execute(simulationMap);
             }
+
+            if (isLoopActive) {
+                moveAllCreatures.execute(simulationMap);
+            } else {
+                handleStoppedThread();
+            }
+
+            if (!isLoopActive && isNextTurn) {
+                moveAllCreatures.execute(simulationMap);
+                isNextTurn = false;
+            }
+
+            turnCount++;
         }
     }
 
     Thread simulationThread = new Thread() {
         public void run() {
-            try {
-                simulationLoop(simulationMap);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            simulationLoop(simulationMap);
         }
     };
 
@@ -64,60 +66,99 @@ public class Simulation {
         public void run() {
             Scanner scanner = new Scanner(System.in);
 
-            if (!Thread.currentThread().isInterrupted()) {
-                while (true) {
+                while (!Thread.currentThread().isInterrupted()) {
                     String userInput = scanner.nextLine().trim().toLowerCase();
 
-                    switch (userInput) {
-                        case "1" -> startSimulation();
-                        case "2" -> pauseSimulation();
-                        case "3" -> nextTurn();
-                        case "4" -> respawnGrassAction.execute(simulationMap);
-                        case "5" -> respawnHerbivoreAction.execute(simulationMap);
-                        case "0" -> stopSimulation();
-                        default -> logger.log(Level.INFO, "No such command. Enter a number from the list.");
+                    if (!isSimulationRunning) {
+                        handleStartMenu(userInput);
+                    } else {
+                        handlePauseMenu(userInput);
                     }
                 }
-            } else {
-                scanner.close();
-            }
+
+            scanner.close();
         }
     };
 
-    private void handleStoppedThread() throws InterruptedException {
+    private void startSimulation() {
+        simulationThread.start();
+        resumeSimulation();
+    }
+
+    private void resumeSimulation() {
+        isLoopActive = true;
+
+        synchronized (pauseLock) {
+            pauseLock.notify();
+        }
+    }
+
+    private void handleStoppedThread() {
         logger.log(Level.INFO, "The simulation has been paused.");
-        startPrinter.startPrint();
+        PRINTER.printPauseMenu();
 
         synchronized (pauseLock) {
-            pauseLock.wait();
+            try {
+                pauseLock.wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.log(Level.INFO, "The thread was interrupted.");
+            }
         }
     }
 
-    private static void nextTurn() {
-        nextTurn = true;
+    private void pauseSimulation() {
+        isLoopActive = false;
+    }
+
+    private void nextTurn() {
+        isNextTurn = true;
 
         synchronized (pauseLock) {
             pauseLock.notify();
         }
-    }
-
-    private static void startSimulation() {
-        runningThread = true;
-
-        synchronized (pauseLock) {
-            pauseLock.notify();
-        }
-    }
-
-    private static void pauseSimulation() {
-        runningThread = false;
     }
 
     private void stopSimulation() {
         logger.log(Level.INFO, "The simulation has been stopped.");
-        startSimulation();
+        resumeSimulation();
         simulationThread.interrupt();
         userInputThread.interrupt();
         System.exit(0);
+    }
+
+    private void handleStartMenu(String userInput) {
+        switch (userInput) {
+            case "1" -> {
+                startSimulation();
+                isSimulationRunning = true;
+            }
+            case "0" -> stopSimulation();
+            default -> {
+                logger.log(Level.INFO, "No such command. Enter a number from the list:");
+                PRINTER.printStartMenu();
+            }
+        }
+    }
+
+    private void handlePauseMenu(String userInput) {
+        switch (userInput) {
+            case "1" -> resumeSimulation();
+            case "2" -> pauseSimulation();
+            case "3" -> nextTurn();
+            case "4" -> {
+                respawnGrassAction.execute(simulationMap);
+                logger.log(Level.INFO, "Grass has been added to the simulation.");
+            }
+            case "5" -> {
+                respawnHerbivoreAction.execute(simulationMap);
+                logger.log(Level.INFO, "Herbivores have been added to the simulation.");
+            }
+            case "0" -> stopSimulation();
+            default -> {
+                logger.log(Level.INFO, "No such command. Enter a number from the list:");
+                PRINTER.printPauseMenu();
+            }
+        }
     }
 }

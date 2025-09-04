@@ -6,10 +6,15 @@ import java.util.logging.LogManager;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        LogManager.getLogManager().readConfiguration(new FileInputStream("src/main/resources/logging.properties"));
+    public static void main(String[] args) {
+        try {
+            LogManager.getLogManager().readConfiguration(new FileInputStream("src/main/resources/logging.properties"));
+        } catch (IOException e) {
+            System.err.println("Message logger configuration file not found.");
+        }
+
         Simulation simulation = new Simulation();
 
-        simulation.start();
+        simulation.launch();
     }
 }
