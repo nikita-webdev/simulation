@@ -69,13 +69,13 @@ public class Simulation {
                     String userInput = scanner.nextLine().trim().toLowerCase();
 
                     switch (userInput) {
+                        case "1" -> startSimulation();
                         case "2" -> pauseSimulation();
-                        case "1", "3" -> startSimulation();
-                        case "4" -> nextTurn();
-                        case "5" -> respawnGrassAction.execute(simulationMap);
-                        case "6" -> respawnHerbivoreAction.execute(simulationMap);
+                        case "3" -> nextTurn();
+                        case "4" -> respawnGrassAction.execute(simulationMap);
+                        case "5" -> respawnHerbivoreAction.execute(simulationMap);
                         case "0" -> stopSimulation();
-                        default -> logger.log(Level.INFO, "Enter a number from the list.");
+                        default -> logger.log(Level.INFO, "No such command. Enter a number from the list.");
                     }
                 }
             } else {
