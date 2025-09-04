@@ -24,6 +24,7 @@ public class Simulation {
 
     private boolean isSimulationRunning = false;
     private boolean isLoopActive = false;
+    public static boolean isMoveActive = false;
     private boolean isNextTurn = false;
     private int turnCount = 0;
 
@@ -36,7 +37,7 @@ public class Simulation {
         initObjects.initObjectsOnTheMap(simulationMap);
 
         while (!Thread.currentThread().isInterrupted()) {
-            if (turnCount % 10 == 0) {
+            if (turnCount % 10 == 0 && !simulationMap.isMapFull()) {
                 respawnGrassAction.execute(simulationMap);
                 respawnHerbivoreAction.execute(simulationMap);
             }
@@ -87,6 +88,7 @@ public class Simulation {
 
     private void resumeSimulation() {
         isLoopActive = true;
+        isMoveActive = false;
 
         synchronized (pauseLock) {
             pauseLock.notify();
@@ -109,10 +111,12 @@ public class Simulation {
 
     private void pauseSimulation() {
         isLoopActive = false;
+        isMoveActive = true;
     }
 
     private void nextTurn() {
         isNextTurn = true;
+        isMoveActive = false;
 
         synchronized (pauseLock) {
             pauseLock.notify();

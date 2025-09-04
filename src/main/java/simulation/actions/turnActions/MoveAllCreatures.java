@@ -9,12 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static simulation.Simulation.isMoveActive;
+
 public class MoveAllCreatures {
     public void execute(SimulationMap simulationMap) {
         PathFinder pathFinder = new PathFinder();
         final List<Coordinate> coordinates = collectAllCreatures(simulationMap);
 
         for (Coordinate coordinate : coordinates) {
+            if (!isMoveActive) {
             Creature creature = simulationMap.getAllCreatures().get(coordinate);
 
             boolean isCreatureAlive = simulationMap.getAllCreatures().containsKey(coordinate);
@@ -23,6 +26,7 @@ public class MoveAllCreatures {
                 List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
 
                 creature.makeMove(simulationMap, coordinate, path);
+            }
             }
         }
     }
