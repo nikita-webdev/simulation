@@ -13,9 +13,6 @@ public class Renderer {
     String[][] field;
 
     public Renderer() {
-//        this.mapSizeX = mapSizeX;
-//        this.mapSizeY = mapSizeY;
-
         this.field = new String[mapSizeY][mapSizeX];
     }
 

@@ -1,7 +1,7 @@
 package simulation.printer;
 
 public class Printer {
-    public void printStartMenu() {
+    public void printStartOptions() {
         System.out.println("Welcome to the simulation!");
         System.out.println("Please select an option and enter a number:");
         System.out.println("1 - Start");
@@ -9,7 +9,7 @@ public class Printer {
         System.out.println("0 - Quit");
     }
 
-    public void printPauseMenu() {
+    public void printPauseOptions() {
         System.out.println("Please select an option and enter a number:");
         System.out.println("1 - Resume");
         System.out.println("2 - Pause");

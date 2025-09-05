@@ -13,9 +13,9 @@ import simulation.printer.Printer;
 
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
-    private static final Printer PRINTER = new Printer();
+    private final Printer printer = new Printer();
     private static final Object pauseLock = new Object();
-    private final SimulationMap simulationMap = new SimulationMap();
+    private final SimulationMap simulationMap;
     private final InitObjects initObjects = new InitObjects();
     private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
     private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
@@ -28,8 +28,12 @@ public class Simulation {
     private boolean isNextTurn = false;
     private int turnCount = 0;
 
+    public Simulation(SimulationMap simulationMap) {
+        this.simulationMap = simulationMap;
+    }
+
     public void launch() {
-        PRINTER.printStartMenu();
+        printer.printStartOptions();
         userInputThread.start();
     }
 
@@ -97,7 +101,7 @@ public class Simulation {
 
     private void handleStoppedThread() {
         logger.log(Level.INFO, "The simulation has been paused.");
-        PRINTER.printPauseMenu();
+        printer.printPauseOptions();
 
         synchronized (pauseLock) {
             try {
@@ -137,10 +141,13 @@ public class Simulation {
                 startSimulation();
                 isSimulationRunning = true;
             }
+            case "2" -> {
+                logger.log(Level.INFO, "Pause unavailable: simulation hasn't started yet. Choose option 1 to start.");
+            }
             case "0" -> stopSimulation();
             default -> {
                 logger.log(Level.INFO, "No such command. Enter a number from the list:");
-                PRINTER.printStartMenu();
+                printer.printStartOptions();
             }
         }
     }
@@ -161,7 +168,7 @@ public class Simulation {
             case "0" -> stopSimulation();
             default -> {
                 logger.log(Level.INFO, "No such command. Enter a number from the list:");
-                PRINTER.printPauseMenu();
+                printer.printPauseOptions();
             }
         }
     }
