@@ -57,15 +57,15 @@ public class PathFinder {
             }
         }
 
-        path.add(new Coordinate(from.x(), from.y()));
+        path.add(new Coordinate(from.row(), from.column()));
         return path;
     }
 
     public List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate food) {
         List<Coordinate> path = new LinkedList<>();
 
-        for (Coordinate i = new Coordinate(food.x(), food.y()); i != null; i = cameFrom.get(i)) {
-            Coordinate coordinate = new Coordinate(i.x(), i.y());
+        for (Coordinate i = new Coordinate(food.row(), food.column()); i != null; i = cameFrom.get(i)) {
+            Coordinate coordinate = new Coordinate(i.row(), i.column());
             path.add(coordinate);
         }
 
@@ -79,8 +79,8 @@ public class PathFinder {
 
         for (int i = 0; i < OFFSETS.length; i++) {
             neighboringNodes.add(new Coordinate(
-                    currentPosition.x() + OFFSETS[i][0],
-                    currentPosition.y() + OFFSETS[i][1]
+                    currentPosition.row() + OFFSETS[i][0],
+                    currentPosition.column() + OFFSETS[i][1]
             ));
         }
 

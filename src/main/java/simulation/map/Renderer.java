@@ -8,12 +8,12 @@ import java.util.Map;
 import static simulation.config.Icons.EMPTY_ICON;
 
 public class Renderer {
-    int mapSizeX = SimulationMap.MAP_SIZE_X;
-    int mapSizeY = SimulationMap.MAP_SIZE_Y;
+    int mapSizeRow = SimulationMap.MAP_SIZE_ROW;
+    int mapSizeColumn = SimulationMap.MAP_SIZE_COLUMN;
     String[][] field;
 
     public Renderer() {
-        this.field = new String[mapSizeY][mapSizeX];
+        this.field = new String[mapSizeColumn][mapSizeRow];
     }
 
     private void createMap() {
@@ -33,11 +33,11 @@ public class Renderer {
             Coordinate currentCoordinate = entry.getKey();
             Entity entity = entry.getValue();
 
-            int x = currentCoordinate.x();
-            int y = currentCoordinate.y();
+            int row = currentCoordinate.row();
+            int column = currentCoordinate.column();
             String entityIcon = entity.icon;
 
-            field[y][x] = entityIcon;
+            field[column][row] = entityIcon;
         }
     }
 

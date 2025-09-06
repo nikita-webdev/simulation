@@ -32,10 +32,10 @@ public abstract class Creature extends Entity {
             if (!simulationMap.isCoordinatesOccupied(nextStep)) {
                 if (i < 1) {
                     moveCreature(simulationMap, from, nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.x(), nextStep.y()));
+                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.row(), nextStep.column()));
                 } else {
                     moveCreature(simulationMap, path.get(i - 1), nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.x(), nextStep.y()));
+                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.row(), nextStep.column()));
                 }
             } else {
                 logger.log(Level.INFO, String.format("❌ %s couldn't find any suitable food.", this.name));

@@ -19,8 +19,8 @@ public class SimulationMap {
     Renderer renderer = new Renderer();
 
     public static final int DELAY_MOVE = 500;
-    public static final int MAP_SIZE_X = 20;
-    public static final int MAP_SIZE_Y = 15;
+    public static final int MAP_SIZE_ROW = 20;
+    public static final int MAP_SIZE_COLUMN = 15;
 
     public void addEntity(Coordinate coordinate, Entity entity) {
         if (isMapFull()) {
@@ -31,7 +31,7 @@ public class SimulationMap {
     }
 
     public boolean isMapFull() {
-        int maxEntities = MAP_SIZE_Y * MAP_SIZE_Y;
+        int maxEntities = MAP_SIZE_COLUMN * MAP_SIZE_COLUMN;
 
         return getCountOfEntity() == maxEntities;
     }
@@ -42,15 +42,15 @@ public class SimulationMap {
 
     public Coordinate generateRandomFreeCoordinate() {
         Random random = new Random();
-        int x;
-        int y;
+        int row;
+        int column;
 
         do {
-            x = random.nextInt((SimulationMap.MAP_SIZE_X));
-            y = random.nextInt((SimulationMap.MAP_SIZE_Y));
-        } while (isCoordinatesOccupied(new Coordinate(x, y)));
+            row = random.nextInt((SimulationMap.MAP_SIZE_ROW));
+            column = random.nextInt((SimulationMap.MAP_SIZE_COLUMN));
+        } while (isCoordinatesOccupied(new Coordinate(row, column)));
 
-        return new Coordinate(x, y);
+        return new Coordinate(row, column);
     }
 
     public int getCountOfEntity() {
@@ -133,10 +133,10 @@ public class SimulationMap {
     }
 
     public boolean isCoordinateWithinMapBounds(Coordinate targetCoordinate) {
-        int x = targetCoordinate.x();
-        int y = targetCoordinate.y();
+        int row = targetCoordinate.row();
+        int column = targetCoordinate.column();
 
-        return (x < SimulationMap.MAP_SIZE_X && x >= 0) && (y < SimulationMap.MAP_SIZE_Y && y >= 0);
+        return (row < SimulationMap.MAP_SIZE_ROW && row >= 0) && (column < SimulationMap.MAP_SIZE_COLUMN && column >= 0);
     }
 
     public void updateMap() {
