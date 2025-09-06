@@ -1,6 +1,6 @@
 package simulation.printer;
 
-public class Printer {
+public class MenuOptionsPrinter {
     public void printStartOptions() {
         System.out.println("Welcome to the simulation!");
         System.out.println("Please select an option and enter a number:");

@@ -9,11 +9,17 @@ import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
 import simulation.map.SimulationMap;
-import simulation.printer.Printer;
+import simulation.printer.MenuOptionsPrinter;
 
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
-    private final Printer printer = new Printer();
+    private static final String START_RESUME = "1";
+    private static final String PAUSE = "2";
+    private static final String NEXT_TURN = "3";
+    private static final String RESPAWN_GRASS = "4";
+    private static final String RESPAWN_HERBIVORE = "5";
+    private static final String EXIT = "0";
+    private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private static final Object pauseLock = new Object();
     private final SimulationMap simulationMap;
     private final InitObjects initObjects = new InitObjects();
@@ -33,7 +39,7 @@ public class Simulation {
     }
 
     public void launch() {
-        printer.printStartOptions();
+        menuOptionsPrinter.printStartOptions();
         userInputThread.start();
     }
 
@@ -101,7 +107,7 @@ public class Simulation {
 
     private void handleStoppedThread() {
         logger.log(Level.INFO, "The simulation has been paused.");
-        printer.printPauseOptions();
+        menuOptionsPrinter.printPauseOptions();
 
         synchronized (pauseLock) {
             try {
@@ -137,38 +143,38 @@ public class Simulation {
 
     private void handleStartMenu(String userInput) {
         switch (userInput) {
-            case "1" -> {
+            case START_RESUME -> {
                 startSimulation();
                 isSimulationRunning = true;
             }
-            case "2" -> {
+            case PAUSE -> {
                 logger.log(Level.INFO, "Pause unavailable: simulation hasn't started yet. Choose option 1 to start.");
             }
-            case "0" -> stopSimulation();
+            case EXIT -> stopSimulation();
             default -> {
                 logger.log(Level.INFO, "No such command. Enter a number from the list:");
-                printer.printStartOptions();
+                menuOptionsPrinter.printStartOptions();
             }
         }
     }
 
     private void handlePauseMenu(String userInput) {
         switch (userInput) {
-            case "1" -> resumeSimulation();
-            case "2" -> pauseSimulation();
-            case "3" -> nextTurn();
-            case "4" -> {
+            case START_RESUME -> resumeSimulation();
+            case PAUSE -> pauseSimulation();
+            case NEXT_TURN -> nextTurn();
+            case RESPAWN_GRASS -> {
                 respawnGrassAction.execute(simulationMap);
                 logger.log(Level.INFO, "Grass has been added to the simulation.");
             }
-            case "5" -> {
+            case RESPAWN_HERBIVORE -> {
                 respawnHerbivoreAction.execute(simulationMap);
                 logger.log(Level.INFO, "Herbivores have been added to the simulation.");
             }
-            case "0" -> stopSimulation();
+            case EXIT -> stopSimulation();
             default -> {
                 logger.log(Level.INFO, "No such command. Enter a number from the list:");
-                printer.printPauseOptions();
+                menuOptionsPrinter.printPauseOptions();
             }
         }
     }
