@@ -15,9 +15,7 @@ public class SpawnTreeAction implements Action {
     @Override
     public void execute(SimulationMap simulationMap) {
         for (int i = 0; i < initialTreeAmount; i++) {
-            int[] xyCoordinates = simulationMap.generateRandomCoordinates();
-
-            Coordinate coordinate = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
             simulationMap.addEntity(coordinate, new Tree("tree" + (i + 1)));
         }

@@ -40,16 +40,17 @@ public class SimulationMap {
         return Collections.unmodifiableMap(entities);
     }
 
-    public int[] generateRandomCoordinates() {
-        int[] xy = new int[2];
+    public Coordinate generateRandomFreeCoordinate() {
         Random random = new Random();
+        int x;
+        int y;
 
         do {
-            xy[0] = random.nextInt((SimulationMap.MAP_SIZE_X));
-            xy[1] = random.nextInt((SimulationMap.MAP_SIZE_Y));
-        } while (isCoordinatesOccupied(new Coordinate(xy[0], xy[1])));
+            x = random.nextInt((SimulationMap.MAP_SIZE_X));
+            y = random.nextInt((SimulationMap.MAP_SIZE_Y));
+        } while (isCoordinatesOccupied(new Coordinate(x, y)));
 
-        return xy;
+        return new Coordinate(x, y);
     }
 
     public int getCountOfEntity() {

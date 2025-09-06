@@ -15,9 +15,7 @@ public class SpawnHerbivoreAction implements Action {
     @Override
     public void execute(SimulationMap simulationMap) {
         for (int i = 0; i < initialHerbivoreAmount; i++) {
-            int[] xyCoordinates = simulationMap.generateRandomCoordinates();
-
-            Coordinate coordinate = new Coordinate(xyCoordinates[0], xyCoordinates[1]);
+            Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
             simulationMap.addEntity(coordinate, new Herbivore("herbivore" + (i + 1)));
         }
