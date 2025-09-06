@@ -10,7 +10,7 @@ import simulation.map.SimulationMap;
 public abstract class Creature extends Entity {
     private static final Logger logger = Logger.getLogger(Creature.class.getName());
 
-    public int speed;
+    private int speed;
     private int hp;
 
     public Creature(String name) {
@@ -58,7 +58,9 @@ public abstract class Creature extends Entity {
     }
 
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
-        logger.log(Level.INFO, String.format("\uD83D\uDC80 %s died.", simulationMap.getAllCreatures().get(coordinate).name));
+        String creatureName = simulationMap.getAllCreatures().get(coordinate).name;
+
+        logger.log(Level.INFO, String.format("\uD83D\uDC80 %s died.", creatureName));
         simulationMap.removeEntity(coordinate);
     }
 

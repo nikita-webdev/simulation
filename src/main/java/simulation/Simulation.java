@@ -43,11 +43,11 @@ public class Simulation {
         userInputThread.start();
     }
 
-    private void simulationLoop(SimulationMap simulationMap) {
-        initObjects.initObjectsOnTheMap(simulationMap);
+    private void runSimulationLoop(SimulationMap simulationMap) {
+        initMap();
 
         while (!Thread.currentThread().isInterrupted()) {
-            if (turnCount % 10 == 0 && !simulationMap.isMapFull()) {
+            if (shouldRespawn()) {
                 respawnGrassAction.execute(simulationMap);
                 respawnHerbivoreAction.execute(simulationMap);
             }
@@ -55,7 +55,7 @@ public class Simulation {
             if (isLoopActive) {
                 moveAllCreatures.execute(simulationMap);
             } else {
-                handleStoppedThread();
+                handleStoppedSimulationThread();
             }
 
             if (!isLoopActive && isNextTurn) {
@@ -69,7 +69,7 @@ public class Simulation {
 
     Thread simulationThread = new Thread() {
         public void run() {
-            simulationLoop(simulationMap);
+            runSimulationLoop(simulationMap);
         }
     };
 
@@ -91,6 +91,14 @@ public class Simulation {
         }
     };
 
+    private void initMap() {
+        initObjects.initObjectsOnTheMap(simulationMap);
+    }
+
+    private boolean shouldRespawn() {
+        return turnCount % 10 == 0 && !simulationMap.isMapFull();
+    }
+
     private void startSimulation() {
         simulationThread.start();
         resumeSimulation();
@@ -105,7 +113,7 @@ public class Simulation {
         }
     }
 
-    private void handleStoppedThread() {
+    private void handleStoppedSimulationThread() {
         logger.log(Level.INFO, "The simulation has been paused.");
         menuOptionsPrinter.printPauseOptions();
 
