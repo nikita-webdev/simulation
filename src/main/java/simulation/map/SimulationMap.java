@@ -57,18 +57,18 @@ public class SimulationMap {
         return getEntities().size();
     }
 
-    public int getCountOfGrasses() {
-        int countOfGrasses = 0;
+    public int getCountOfGrass() {
+        int countOfGrass = 0;
 
         for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
             Entity entity = entry.getValue();
 
             if (entity instanceof Grass) {
-                countOfGrasses++;
+                countOfGrass++;
             }
         }
 
-        return countOfGrasses;
+        return countOfGrass;
     }
 
     public int getCountOfHerbivores() {

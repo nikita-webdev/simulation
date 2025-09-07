@@ -1,4 +1,4 @@
-package simulation.printer;
+package simulation.menu;
 
 public class MenuOptionsPrinter {
     public void printStartOptions() {
