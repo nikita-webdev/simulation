@@ -15,7 +15,7 @@ public class RespawnGrassAction implements Action {
         for (int i = 0; i < initialGrassAmount; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
-            simulationMap.addEntity(coordinate, new Grass("grass" + (grassCount + 1)));
+            simulationMap.addEntity(coordinate, new Grass("Grass" + (grassCount + 1)));
             grassCount++;
         }
     }

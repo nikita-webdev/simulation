@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static simulation.config.Icons.HERBIVORE_ICON;
+import static simulation.config.LoggerMessages.EAT_MESSAGE;
 
 public class Herbivore extends Creature {
     private static final Logger logger = Logger.getLogger(Herbivore.class.getName());
@@ -23,7 +24,7 @@ public class Herbivore extends Creature {
     public void eat(SimulationMap simulationMap, Coordinate food) {
         if (simulationMap.isFood(this, food)) {
             String foodName = simulationMap.getEntities().get(food).name;
-            logger.log(Level.INFO, String.format("\uD83C\uDF3E %s ate %s at (%d,%d).", this.name, foodName, food.row(), food.column()));
+            logger.log(Level.INFO, String.format(EAT_MESSAGE, this.name, foodName, food.row(), food.column()));
             simulationMap.removeEntity(food);
         }
     }

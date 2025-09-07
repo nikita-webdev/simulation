@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static simulation.config.LoggerMessages.*;
+
 public class UserInput {
     private static final Logger logger = Logger.getLogger(UserInput.class.getName());
     private static final String START_RESUME = "1";
@@ -47,11 +49,11 @@ public class UserInput {
                 simulation.isRunning = true;
             }
             case PAUSE -> {
-                logger.log(Level.INFO, "Pause unavailable: simulation hasn't started yet. Choose option 1 to start.");
+                logger.log(Level.INFO, PAUSE_UNAVAILABLE);
             }
             case EXIT -> simulation.stopSimulation();
             default -> {
-                logger.log(Level.INFO, "No such command. Enter a number from the list:");
+                logger.log(Level.INFO, NO_SUCH_COMMAND);
                 menuOptionsPrinter.printStartOptions();
             }
         }
@@ -66,7 +68,7 @@ public class UserInput {
             case RESPAWN_HERBIVORE -> simulation.respawnHerbivore();
             case EXIT -> simulation.stopSimulation();
             default -> {
-                logger.log(Level.INFO, "No such command. Enter a number from the list:");
+                logger.log(Level.INFO, NO_SUCH_COMMAND);
                 menuOptionsPrinter.printPauseOptions();
             }
         }

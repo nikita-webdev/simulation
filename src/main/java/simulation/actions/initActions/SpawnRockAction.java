@@ -17,7 +17,7 @@ public class SpawnRockAction implements Action {
         for (int i = 0; i < initialRockAmount; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
-            simulationMap.addEntity(coordinate, new Rock("rock" + (i + 1)));
+            simulationMap.addEntity(coordinate, new Rock("Rock" + (i + 1)));
         }
     }
 }

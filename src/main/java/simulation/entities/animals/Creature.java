@@ -7,6 +7,8 @@ import simulation.entities.Entity;
 import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
+import static simulation.config.LoggerMessages.*;
+
 public abstract class Creature extends Entity {
     private static final Logger logger = Logger.getLogger(Creature.class.getName());
 
@@ -20,8 +22,8 @@ public abstract class Creature extends Entity {
     public void makeMove(SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
         int countOfSteps = Math.min(getSpeed(), path.size());
 
-        for (int i = 0; i < countOfSteps; i++) {
-            Coordinate nextStep = path.get(i);
+        for (int step = 0; step < countOfSteps; step++) {
+            Coordinate nextStep = path.get(step);
 
             if(simulationMap.isFood(this, nextStep)) {
                 eat(simulationMap, nextStep);
@@ -30,15 +32,15 @@ public abstract class Creature extends Entity {
             }
 
             if (!simulationMap.isCoordinatesOccupied(nextStep)) {
-                if (i < 1) {
+                if (step < 1) {
                     moveCreature(simulationMap, from, nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.row(), nextStep.column()));
                 } else {
-                    moveCreature(simulationMap, path.get(i - 1), nextStep);
-                    logger.log(Level.INFO, String.format("\uD83D\uDC3E %s moves to (%d,%d).", this.name, nextStep.row(), nextStep.column()));
+                    moveCreature(simulationMap, path.get(step - 1), nextStep);
                 }
+
+                logger.log(Level.INFO, String.format(MOVE_MESSAGE, this.name, nextStep.row(), nextStep.column()));
             } else {
-                logger.log(Level.INFO, String.format("❌ %s couldn't find any suitable food.", this.name));
+                logger.log(Level.INFO, String.format(FOOD_NOT_FOUND, this.name));
             }
 
             simulationMap.updateMap();
@@ -60,7 +62,7 @@ public abstract class Creature extends Entity {
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
         String creatureName = simulationMap.getAllCreatures().get(coordinate).name;
 
-        logger.log(Level.INFO, String.format("\uD83D\uDC80 %s died.", creatureName));
+        logger.log(Level.INFO, String.format(DIE_MESSAGE, creatureName));
         simulationMap.removeEntity(coordinate);
     }
 

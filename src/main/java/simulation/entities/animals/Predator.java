@@ -6,6 +6,7 @@ import simulation.map.Coordinate;
 import simulation.map.SimulationMap;
 
 import static simulation.config.Icons.PREDATOR_ICON;
+import static simulation.config.LoggerMessages.ATTACK_MESSAGE;
 
 public class Predator extends Creature {
     private static final Logger logger = Logger.getLogger(Predator.class.getName());
@@ -26,7 +27,7 @@ public class Predator extends Creature {
             int preyHp = simulationMap.getAllCreatures().get(food).getHp();
             if (preyHp > 0) {
                 String preyName = simulationMap.getAllCreatures().get(food).name;
-                logger.log(Level.INFO, String.format("❗ %s attacked %s at (%d,%d).", this.name, preyName, food.row(), food.column()));
+                logger.log(Level.INFO, String.format(ATTACK_MESSAGE, this.name, preyName, food.row(), food.column()));
                 attack(simulationMap, food);
             }
         }

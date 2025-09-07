@@ -11,9 +11,12 @@ import simulation.map.SimulationMap;
 import simulation.menu.UserInput;
 import simulation.menu.MenuOptionsPrinter;
 
+import static simulation.config.LoggerMessages.*;
+
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
     private static final Object pauseLock = new Object();
+
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
     private final InitObjects initObjects = new InitObjects();
@@ -90,7 +93,7 @@ public class Simulation {
     }
 
     private void handleStoppedSimulationThread() {
-        logger.log(Level.INFO, "The simulation has been paused.");
+        logger.log(Level.INFO, PAUSED);
         menuOptionsPrinter.printPauseOptions();
 
         synchronized (pauseLock) {
@@ -98,7 +101,7 @@ public class Simulation {
                 pauseLock.wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                logger.log(Level.INFO, "The thread was interrupted.");
+                logger.log(Level.INFO, THREAD_INTERRUPTED);
             }
         }
     }
@@ -118,7 +121,7 @@ public class Simulation {
     }
 
     public void stopSimulation() {
-        logger.log(Level.INFO, "The simulation has been stopped.");
+        logger.log(Level.INFO, STOPPED);
         resumeSimulation();
         simulationThread.interrupt();
         userInput.interruptInputThread();
@@ -127,11 +130,11 @@ public class Simulation {
 
     public void respawnGrass() {
         respawnGrassAction.execute(simulationMap);
-        logger.log(Level.INFO, "Grass has been added to the simulation.");
+        logger.log(Level.INFO, ADDED_GRASS);
     }
 
     public void respawnHerbivore() {
         respawnHerbivoreAction.execute(simulationMap);
-        logger.log(Level.INFO, "Herbivores have been added to the simulation.");
+        logger.log(Level.INFO, ADDED_HERBIVORES);
     }
 }

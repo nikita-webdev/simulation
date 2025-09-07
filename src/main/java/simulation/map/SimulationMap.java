@@ -21,17 +21,18 @@ public class SimulationMap {
     public static final int DELAY_MOVE = 500;
     public static final int MAP_SIZE_ROW = 20;
     public static final int MAP_SIZE_COLUMN = 15;
+    public static final String MESSAGE_MAP_FULL = "Unable to add new object. Maximum number of objects on the map reached.";
 
     public void addEntity(Coordinate coordinate, Entity entity) {
         if (isMapFull()) {
-            logger.log(Level.INFO, "Unable to add new object. Maximum number of objects on the map reached.");
+            logger.log(Level.INFO, MESSAGE_MAP_FULL);
         } else {
             entities.put(coordinate, entity);
         }
     }
 
     public boolean isMapFull() {
-        int maxEntities = MAP_SIZE_COLUMN * MAP_SIZE_COLUMN;
+        int maxEntities = MAP_SIZE_ROW * MAP_SIZE_COLUMN;
 
         return getCountOfEntity() == maxEntities;
     }

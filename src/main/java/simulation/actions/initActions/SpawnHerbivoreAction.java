@@ -17,7 +17,7 @@ public class SpawnHerbivoreAction implements Action {
         for (int i = 0; i < initialHerbivoreAmount; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
-            simulationMap.addEntity(coordinate, new Herbivore("herbivore" + (i + 1)));
+            simulationMap.addEntity(coordinate, new Herbivore("Herbivore" + (i + 1)));
         }
     }
 }

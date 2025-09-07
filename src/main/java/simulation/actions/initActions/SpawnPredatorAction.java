@@ -17,7 +17,7 @@ public class SpawnPredatorAction implements Action {
         for (int i = 0; i < initialPredatorAmount; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
 
-            simulationMap.addEntity(coordinate, new Predator("predator" + (i + 1)));
+            simulationMap.addEntity(coordinate, new Predator("Predator" + (i + 1)));
         }
     }
 }
