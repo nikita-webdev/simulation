@@ -141,7 +141,7 @@ public class SimulationMap {
     }
 
     public void updateMap() {
-        renderer.renderMap(this);
+        renderer.renderMap();
 
         try {
             Thread.sleep(DELAY_MOVE);
