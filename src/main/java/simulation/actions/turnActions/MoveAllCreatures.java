@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static simulation.Simulation.isMoveActive;
+import static simulation.Simulation.isMovementDisabled;
 
 public class MoveAllCreatures {
     public void execute(SimulationMap simulationMap) {
@@ -17,16 +17,16 @@ public class MoveAllCreatures {
         final List<Coordinate> coordinates = collectAllCreatures(simulationMap);
 
         for (Coordinate coordinate : coordinates) {
-            if (!isMoveActive) {
-            Creature creature = simulationMap.getAllCreatures().get(coordinate);
+            if (!isMovementDisabled) {
+                Creature creature = simulationMap.getAllCreatures().get(coordinate);
 
-            boolean isCreatureAlive = simulationMap.getAllCreatures().containsKey(coordinate);
+                boolean isCreatureAlive = simulationMap.getAllCreatures().containsKey(coordinate);
 
-            if (isCreatureAlive) {
-                List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
+                if (isCreatureAlive) {
+                    List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
 
-                creature.makeMove(simulationMap, coordinate, path);
-            }
+                    creature.makeMove(simulationMap, coordinate, path);
+                }
             }
         }
     }

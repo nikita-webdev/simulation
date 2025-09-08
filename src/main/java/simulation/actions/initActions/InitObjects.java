@@ -1,6 +1,9 @@
 package simulation.actions.initActions;
 
+import simulation.actions.Action;
 import simulation.map.SimulationMap;
+
+import java.util.List;
 
 public class InitObjects {
     private final SpawnGrassAction spawnGrassAction = new SpawnGrassAction(40);
@@ -9,11 +12,11 @@ public class InitObjects {
     private final SpawnPredatorAction spawnPredatorAction = new SpawnPredatorAction(2);
     private final SpawnHerbivoreAction spawnHerbivoreAction = new SpawnHerbivoreAction(5);
 
+    List<Action> spawnActions = List.of(spawnGrassAction, spawnRockAction, spawnTreeAction, spawnPredatorAction, spawnHerbivoreAction);
+
     public void initObjectsOnTheMap(SimulationMap simulationMap) {
-        spawnGrassAction.execute(simulationMap);
-        spawnRockAction.execute(simulationMap);
-        spawnTreeAction.execute(simulationMap);
-        spawnPredatorAction.execute(simulationMap);
-        spawnHerbivoreAction.execute(simulationMap);
+        for (Action action : spawnActions) {
+            action.execute(simulationMap);
+        }
     }
 }

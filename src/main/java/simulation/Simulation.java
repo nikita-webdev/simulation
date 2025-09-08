@@ -1,5 +1,6 @@
 package simulation;
 
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -8,7 +9,6 @@ import simulation.actions.turnActions.MoveAllCreatures;
 import simulation.actions.turnActions.RespawnGrassAction;
 import simulation.actions.turnActions.RespawnHerbivoreAction;
 import simulation.map.SimulationMap;
-import simulation.menu.UserInput;
 import simulation.menu.MenuOptionsPrinter;
 
 import static simulation.config.LoggerMessages.*;
@@ -16,6 +16,12 @@ import static simulation.config.LoggerMessages.*;
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
     private static final Object pauseLock = new Object();
+    private static final String START_RESUME = "1";
+    private static final String PAUSE = "2";
+    private static final String NEXT_TURN = "3";
+    private static final String RESPAWN_GRASS = "4";
+    private static final String RESPAWN_HERBIVORE = "5";
+    private static final String EXIT = "0";
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
@@ -23,11 +29,10 @@ public class Simulation {
     private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
     private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
-    private final UserInput userInput = new UserInput(this);
 
-    public boolean isRunning = false;
+    private boolean isRunning = false;
     private boolean isPaused = false;
-    public static boolean isMoveActive = false;
+    public static boolean isMovementDisabled = false;
     private boolean isNextTurn = false;
     private int turnCount = 0;
 
@@ -37,7 +42,12 @@ public class Simulation {
 
     public void launch() {
         menuOptionsPrinter.printStartOptions();
-        userInput.startInputThread();
+        userInputThread.start();
+    }
+
+    private void startSimulation() {
+        simulationThread.start();
+        resumeSimulation();
     }
 
     private void runSimulationLoop(SimulationMap simulationMap) {
@@ -50,7 +60,7 @@ public class Simulation {
             }
 
             if (isPaused) {
-                handleStoppedSimulationThread();
+                handlePausedSimulationThread();
             } else {
                 moveAllCreatures.execute(simulationMap);
             }
@@ -64,35 +74,38 @@ public class Simulation {
         }
     }
 
-    private final Thread simulationThread = new Thread() {
-        public void run() {
-            runSimulationLoop(simulationMap);
-        }
-    };
-
-    private void initMap() {
-        initObjects.initObjectsOnTheMap(simulationMap);
-    }
-
-    private boolean shouldRespawn() {
-        return turnCount % 10 == 0 && !simulationMap.isMapFull();
-    }
-
-    public void startSimulation() {
-        simulationThread.start();
-        resumeSimulation();
-    }
-
-    public void resumeSimulation() {
+    private void resumeSimulation() {
         isPaused = false;
-        isMoveActive = false;
+        isMovementDisabled = false;
 
         synchronized (pauseLock) {
             pauseLock.notify();
         }
     }
 
-    private void handleStoppedSimulationThread() {
+    private void nextTurn() {
+        isNextTurn = true;
+        isMovementDisabled = false;
+
+        synchronized (pauseLock) {
+            pauseLock.notify();
+        }
+    }
+
+    private void pauseSimulation() {
+        isPaused = true;
+        isMovementDisabled = true;
+    }
+
+    private void stopSimulation() {
+        logger.log(Level.INFO, STOPPED);
+        resumeSimulation();
+        simulationThread.interrupt();
+        userInputThread.interrupt();
+        System.exit(0);
+    }
+
+    private void handlePausedSimulationThread() {
         logger.log(Level.INFO, PAUSED);
         menuOptionsPrinter.printPauseOptions();
 
@@ -106,35 +119,74 @@ public class Simulation {
         }
     }
 
-    public void pauseSimulation() {
-        isPaused = true;
-        isMoveActive = true;
+    private void initMap() {
+        initObjects.initObjectsOnTheMap(simulationMap);
     }
 
-    public void nextTurn() {
-        isNextTurn = true;
-        isMoveActive = false;
+    private boolean shouldRespawn() {
+        boolean isTurnMultipleOfTen = turnCount % 10 == 0;
 
-        synchronized (pauseLock) {
-            pauseLock.notify();
+        return isTurnMultipleOfTen && !simulationMap.isMapFull();
+    }
+
+    private final Thread simulationThread = new Thread() {
+        public void run() {
+            runSimulationLoop(simulationMap);
+        }
+    };
+
+    private final Thread userInputThread = new Thread() {
+        public void run() {
+            Scanner scanner = new Scanner(System.in);
+
+            while (!Thread.currentThread().isInterrupted()) {
+                String userInput = scanner.nextLine().trim().toLowerCase();
+
+                if (!isRunning) {
+                    handleStartMenu(userInput);
+                } else {
+                    handlePauseMenu(userInput);
+                }
+            }
+
+            scanner.close();
+        }
+    };
+
+    private void handleStartMenu(String userInput) {
+        switch (userInput) {
+            case START_RESUME -> {
+                startSimulation();
+                isRunning = true;
+            }
+            case PAUSE -> {
+                logger.log(Level.INFO, PAUSE_UNAVAILABLE);
+            }
+            case EXIT -> stopSimulation();
+            default -> {
+                logger.log(Level.INFO, NO_SUCH_COMMAND);
+            }
         }
     }
 
-    public void stopSimulation() {
-        logger.log(Level.INFO, STOPPED);
-        resumeSimulation();
-        simulationThread.interrupt();
-        userInput.interruptInputThread();
-        System.exit(0);
-    }
-
-    public void respawnGrass() {
-        respawnGrassAction.execute(simulationMap);
-        logger.log(Level.INFO, ADDED_GRASS);
-    }
-
-    public void respawnHerbivore() {
-        respawnHerbivoreAction.execute(simulationMap);
-        logger.log(Level.INFO, ADDED_HERBIVORES);
+    private void handlePauseMenu(String userInput) {
+        switch (userInput) {
+            case START_RESUME -> resumeSimulation();
+            case PAUSE -> pauseSimulation();
+            case NEXT_TURN -> nextTurn();
+            case RESPAWN_GRASS -> {
+                respawnGrassAction.execute(simulationMap);
+                logger.log(Level.INFO, ADDED_GRASS);
+            }
+            case RESPAWN_HERBIVORE -> {
+                respawnHerbivoreAction.execute(simulationMap);
+                logger.log(Level.INFO, ADDED_HERBIVORES);
+            }
+            case EXIT -> stopSimulation();
+            default -> {
+                logger.log(Level.INFO, NO_SUCH_COMMAND);
+                menuOptionsPrinter.printPauseOptions();
+            }
+        }
     }
 }

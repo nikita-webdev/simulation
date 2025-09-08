@@ -33,11 +33,11 @@ public class Predator extends Creature {
         }
     }
 
-    private void attack(SimulationMap simulationMap, Coordinate prey) {
-        takeDamage(simulationMap, prey, attackPower);
-    }
-
     public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
         return simulationMap.isTreeOrRock(coordinate) || simulationMap.isGrass(coordinate);
+    }
+
+    private void attack(SimulationMap simulationMap, Coordinate prey) {
+        takeDamage(simulationMap, prey, attackPower);
     }
 }

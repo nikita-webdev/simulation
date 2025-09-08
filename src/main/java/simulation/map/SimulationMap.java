@@ -12,20 +12,20 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static simulation.config.LoggerMessages.MAP_FULL;
 
 public class SimulationMap {
     private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
-    private final Map<Coordinate, Entity> entities = new HashMap<>();
-    Renderer renderer = new Renderer();
-
     public static final int DELAY_MOVE = 500;
     public static final int MAP_SIZE_ROW = 20;
     public static final int MAP_SIZE_COLUMN = 15;
-    public static final String MESSAGE_MAP_FULL = "Unable to add new object. Maximum number of objects on the map reached.";
+
+    private final Map<Coordinate, Entity> entities = new HashMap<>();
+    private final Renderer renderer = new Renderer(this, MAP_SIZE_ROW, MAP_SIZE_COLUMN);
 
     public void addEntity(Coordinate coordinate, Entity entity) {
         if (isMapFull()) {
-            logger.log(Level.INFO, MESSAGE_MAP_FULL);
+            logger.log(Level.INFO, MAP_FULL);
         } else {
             entities.put(coordinate, entity);
         }

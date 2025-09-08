@@ -47,6 +47,16 @@ public abstract class Creature extends Entity {
         }
     }
 
+    public abstract boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate);
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
     protected abstract void eat(SimulationMap simulationMap, Coordinate food);
 
     protected void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
@@ -66,22 +76,6 @@ public abstract class Creature extends Entity {
         simulationMap.removeEntity(coordinate);
     }
 
-    private void moveCreature(SimulationMap simulationMap, Coordinate from, Coordinate to) {
-        Entity entity = this;
-
-        if (from != null) {
-            simulationMap.removeEntity(from);
-
-            simulationMap.addEntity(to, entity);
-        }
-    }
-
-    public abstract boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate);
-
-    public int getHp() {
-        return hp;
-    }
-
     protected void setHp(int hp) {
         if (hp < 0) {
             hp = 0;
@@ -90,11 +84,17 @@ public abstract class Creature extends Entity {
         this.hp = hp;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
     protected void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    private void moveCreature(SimulationMap simulationMap, Coordinate from, Coordinate to) {
+        Entity entity = this;
+
+        if (from != null) {
+            simulationMap.removeEntity(from);
+
+            simulationMap.addEntity(to, entity);
+        }
     }
 }

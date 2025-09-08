@@ -14,7 +14,10 @@ public class LoggerMessages {
 
     // UserInput
     public static final String PAUSE_UNAVAILABLE = "Pause unavailable: simulation hasn't started yet. Choose option 1 to start.";
-    public static final String NO_SUCH_COMMAND = "No such command. Enter a number from the list:";
+    public static final String NO_SUCH_COMMAND = "No such command. Enter a number from the list.";
+
+    // SimulationMap
+    public static final String MAP_FULL = "Unable to add new object. Maximum number of objects on the map reached.";
 
     // Creature
     public static final String MOVE_MESSAGE = "\uD83D\uDC3E %s moves to (%d,%d).";
