@@ -26,9 +26,9 @@ Console-based implementation of a simulation in 2D space.
 
 ---
 
-## Installation
+## How to run
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/entity-simulation.git
+   git clone https://github.com/nikita-webdev/simulation.git
    ```

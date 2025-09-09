@@ -32,7 +32,6 @@ public class Simulation {
 
     private boolean isRunning = false;
     private boolean isPaused = false;
-    public static boolean isMovementDisabled = false;
     private boolean isNextTurn = false;
     private int turnCount = 0;
 
@@ -76,7 +75,7 @@ public class Simulation {
 
     private void resumeSimulation() {
         isPaused = false;
-        isMovementDisabled = false;
+        moveAllCreatures.setMoveAllowed(true);
 
         synchronized (pauseLock) {
             pauseLock.notify();
@@ -85,7 +84,7 @@ public class Simulation {
 
     private void nextTurn() {
         isNextTurn = true;
-        isMovementDisabled = false;
+        moveAllCreatures.setMoveAllowed(true);
 
         synchronized (pauseLock) {
             pauseLock.notify();
@@ -94,12 +93,11 @@ public class Simulation {
 
     private void pauseSimulation() {
         isPaused = true;
-        isMovementDisabled = true;
+        moveAllCreatures.setMoveAllowed(false);
     }
 
     private void stopSimulation() {
         logger.log(Level.INFO, STOPPED);
-        resumeSimulation();
         simulationThread.interrupt();
         userInputThread.interrupt();
         System.exit(0);

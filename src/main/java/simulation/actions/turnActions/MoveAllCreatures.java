@@ -9,15 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static simulation.Simulation.isMovementDisabled;
-
 public class MoveAllCreatures {
+    private boolean isMoveAllowed = true;
+
     public void execute(SimulationMap simulationMap) {
         PathFinder pathFinder = new PathFinder();
         final List<Coordinate> coordinates = collectAllCreatures(simulationMap);
 
         for (Coordinate coordinate : coordinates) {
-            if (!isMovementDisabled) {
+            if (isMoveAllowed) {
                 Creature creature = simulationMap.getAllCreatures().get(coordinate);
 
                 boolean isCreatureAlive = simulationMap.getAllCreatures().containsKey(coordinate);
@@ -40,5 +40,9 @@ public class MoveAllCreatures {
         }
 
         return coordinates;
+    }
+
+    public void setMoveAllowed(boolean state) {
+        isMoveAllowed = state;
     }
 }
