@@ -1,6 +1,6 @@
 package simulation;
 
-import simulation.map.SimulationMap;
+import simulation.simulation_map.SimulationMap;
 
 import java.io.FileInputStream;
 import java.io.IOException;

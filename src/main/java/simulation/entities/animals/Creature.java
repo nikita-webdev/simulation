@@ -4,8 +4,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import simulation.entities.Entity;
-import simulation.map.Coordinate;
-import simulation.map.SimulationMap;
+import simulation.simulation_map.Coordinate;
+import simulation.simulation_map.SimulationMap;
 
 import static simulation.config.LoggerMessages.*;
 

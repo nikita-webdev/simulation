@@ -1,4 +1,4 @@
-package simulation.map;
+package simulation.simulation_map;
 
 import simulation.entities.Entity;
 import simulation.entities.animals.Creature;
@@ -17,11 +17,11 @@ import static simulation.config.LoggerMessages.MAP_FULL;
 public class SimulationMap {
     private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
     public static final int DELAY_MOVE = 500;
-    public static final int MAP_SIZE_ROW = 20;
-    public static final int MAP_SIZE_COLUMN = 15;
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 15;
 
     private final Map<Coordinate, Entity> entities = new HashMap<>();
-    private final Renderer renderer = new Renderer(this, MAP_SIZE_ROW, MAP_SIZE_COLUMN);
+    private final Renderer renderer = new Renderer(this, WIDTH, HEIGHT);
 
     public void addEntity(Coordinate coordinate, Entity entity) {
         if (isMapFull()) {
@@ -32,7 +32,7 @@ public class SimulationMap {
     }
 
     public boolean isMapFull() {
-        int maxEntities = MAP_SIZE_ROW * MAP_SIZE_COLUMN;
+        int maxEntities = WIDTH * HEIGHT;
 
         return getCountOfEntity() == maxEntities;
     }
@@ -47,8 +47,8 @@ public class SimulationMap {
         int column;
 
         do {
-            row = random.nextInt((SimulationMap.MAP_SIZE_ROW));
-            column = random.nextInt((SimulationMap.MAP_SIZE_COLUMN));
+            row = random.nextInt((SimulationMap.WIDTH));
+            column = random.nextInt((SimulationMap.HEIGHT));
         } while (isCoordinatesOccupied(new Coordinate(row, column)));
 
         return new Coordinate(row, column);
@@ -137,7 +137,7 @@ public class SimulationMap {
         int row = targetCoordinate.row();
         int column = targetCoordinate.column();
 
-        return (row < SimulationMap.MAP_SIZE_ROW && row >= 0) && (column < SimulationMap.MAP_SIZE_COLUMN && column >= 0);
+        return (row < SimulationMap.WIDTH && row >= 0) && (column < SimulationMap.HEIGHT && column >= 0);
     }
 
     public void updateMap() {

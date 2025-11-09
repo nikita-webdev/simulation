@@ -1,7 +1,7 @@
 package simulation.pathfinder;
 
-import simulation.map.Coordinate;
-import simulation.map.SimulationMap;
+import simulation.simulation_map.Coordinate;
+import simulation.simulation_map.SimulationMap;
 import simulation.entities.animals.Creature;
 
 import java.util.*;

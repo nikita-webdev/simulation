@@ -1,9 +1,9 @@
-package simulation.actions.initActions;
+package simulation.actions.init_actions;
 
 import simulation.actions.Action;
 import simulation.entities.animals.Predator;
-import simulation.map.Coordinate;
-import simulation.map.SimulationMap;
+import simulation.simulation_map.Coordinate;
+import simulation.simulation_map.SimulationMap;
 
 public class SpawnPredatorAction implements Action {
     private final int initialPredatorAmount;

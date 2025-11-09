@@ -4,11 +4,11 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import simulation.actions.initActions.InitObjects;
-import simulation.actions.turnActions.MoveAllCreatures;
-import simulation.actions.turnActions.RespawnGrassAction;
-import simulation.actions.turnActions.RespawnHerbivoreAction;
-import simulation.map.SimulationMap;
+import simulation.actions.init_actions.InitObjects;
+import simulation.actions.turn_actions.MoveAllCreatures;
+import simulation.actions.turn_actions.RespawnGrassAction;
+import simulation.actions.turn_actions.RespawnHerbivoreAction;
+import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
 
 import static simulation.config.LoggerMessages.*;

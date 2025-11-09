@@ -1,4 +1,4 @@
-package simulation.map;
+package simulation.simulation_map;
 
 import simulation.entities.Entity;
 import java.util.Arrays;
@@ -16,14 +16,14 @@ public class Renderer {
     }
 
     public void renderMap() {
-        createMap();
+        initializeEmptyField();
         updateMap();
         printMap();
     }
 
-    private void createMap() {
-        for(int i = 0; i < field.length; i++) {
-            Arrays.fill(field[i], EMPTY_ICON);
+    private void initializeEmptyField() {
+        for (String[] strings : field) {
+            Arrays.fill(strings, EMPTY_ICON);
         }
     }
 

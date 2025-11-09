@@ -1,7 +1,7 @@
-package simulation.actions.initActions;
+package simulation.actions.init_actions;
 
 import simulation.actions.Action;
-import simulation.map.SimulationMap;
+import simulation.simulation_map.SimulationMap;
 
 import java.util.List;
 
