@@ -19,38 +19,33 @@ import static simulation.config.LoggerMessages.*;
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
     private static final Object pauseLock = new Object();
+
     private static final String START_RESUME = "1";
     private static final String PAUSE = "2";
     private static final String NEXT_TURN = "3";
-    private static final String EXIT = "0";
-
     private static final String RESPAWN_GRASS = "4";
     private static final String RESPAWN_HERBIVORE = "5";
+    private static final String EXIT = "0";
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
 
-//    private final InitObjects initObjects = new InitObjects();
-    private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
-    private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
+//    private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
+//    private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
     private final List<Action> initActions;
+    private final List<Action> turnActions;
 
     private boolean isRunning = false;
     private boolean isPaused = false;
     private boolean isNextTurn = false;
     private int turnCount = 0;
 
-    public Simulation(SimulationMap simulationMap) {
+    public Simulation(SimulationMap simulationMap, List<Action> initActions, List<Action> turnActions) {
         this.simulationMap = simulationMap;
-        this.initActions = List.of(
-            new SpawnGrassAction(SpawnConfig.INITIAL_GRASS),
-            new SpawnRockAction(SpawnConfig.INITIAL_ROCKS),
-            new SpawnTreeAction(SpawnConfig.INITIAL_TREES),
-            new SpawnPredatorAction(SpawnConfig.INITIAL_PREDATORS),
-            new SpawnHerbivoreAction(SpawnConfig.INITIAL_HERBIVORES)
-        );
+        this.initActions = initActions;
+        this.turnActions = turnActions;
     }
 
     public void launch() {
@@ -68,8 +63,8 @@ public class Simulation {
 
         while (!Thread.currentThread().isInterrupted()) {
             if (shouldRespawn()) {
-                respawnGrassAction.execute(simulationMap);
-                respawnHerbivoreAction.execute(simulationMap);
+//                respawnGrassAction.execute(simulationMap);
+//                respawnHerbivoreAction.execute(simulationMap);
             }
 
             if (isPaused) {
@@ -189,11 +184,11 @@ public class Simulation {
             case PAUSE -> pauseSimulation();
             case NEXT_TURN -> nextTurn();
             case RESPAWN_GRASS -> {
-                respawnGrassAction.execute(simulationMap);
+//                respawnGrassAction.execute(simulationMap);
                 logger.log(Level.INFO, ADDED_GRASS);
             }
             case RESPAWN_HERBIVORE -> {
-                respawnHerbivoreAction.execute(simulationMap);
+//                respawnHerbivoreAction.execute(simulationMap);
                 logger.log(Level.INFO, ADDED_HERBIVORES);
             }
             case EXIT -> stopSimulation();

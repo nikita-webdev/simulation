@@ -1,5 +1,7 @@
 package simulation;
 
+import simulation.scenario.DefaultScenario;
+import simulation.scenario.SimulationScenario;
 import simulation.simulation_map.SimulationMap;
 
 import java.io.FileInputStream;
@@ -14,8 +16,12 @@ public class Main {
             System.err.println("Logger configuration file not found.");
         }
 
-        SimulationMap simulationMap = new SimulationMap();
-        Simulation simulation = new Simulation(simulationMap);
+//        SimulationMap simulationMap = new SimulationMap();
+//        Simulation simulation = new Simulation(simulationMap);
+
+        DefaultScenario defaultScenario = new DefaultScenario();
+        Simulation simulation = defaultScenario.create();
+
 
         simulation.launch();
     }
