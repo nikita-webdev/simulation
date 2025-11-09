@@ -19,7 +19,7 @@ public class RespawnGrassAction extends SpawnAction {
 
         for (int i = 0; i < RESPAWN_COUNT; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
-            Entity entity = createEntity(grassCount + i, simulationMap);
+            Entity entity = createEntity(simulationMap, grassCount + i);
 
             simulationMap.addEntity(coordinate, entity);
 
@@ -28,7 +28,7 @@ public class RespawnGrassAction extends SpawnAction {
     }
 
     @Override
-    protected Entity createEntity(int index, SimulationMap simulationMap) {
+    protected Entity createEntity(SimulationMap simulationMap, int index) {
         return new Grass("Grass" + (index + 1));
     }
 }

@@ -10,7 +10,7 @@ public class SpawnHerbivoreAction extends SpawnAction{
     }
 
     @Override
-    protected Entity createEntity(int index, SimulationMap simulationMap) {
+    protected Entity createEntity(SimulationMap simulationMap, int index) {
         return new Herbivore("Herbivore" + (index + 1));
     }
 }

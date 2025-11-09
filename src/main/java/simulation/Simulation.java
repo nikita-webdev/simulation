@@ -1,13 +1,16 @@
 package simulation;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import simulation.actions.init_actions.InitObjects;
+import simulation.actions.Action;
+import simulation.actions.init_actions.*;
 import simulation.actions.turn_actions.MoveAllCreatures;
 import simulation.actions.turn_actions.RespawnGrassAction;
 import simulation.actions.turn_actions.RespawnHerbivoreAction;
+import simulation.config.SpawnConfig;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
 
@@ -19,16 +22,20 @@ public class Simulation {
     private static final String START_RESUME = "1";
     private static final String PAUSE = "2";
     private static final String NEXT_TURN = "3";
+    private static final String EXIT = "0";
+
     private static final String RESPAWN_GRASS = "4";
     private static final String RESPAWN_HERBIVORE = "5";
-    private static final String EXIT = "0";
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
-    private final InitObjects initObjects = new InitObjects();
+
+//    private final InitObjects initObjects = new InitObjects();
     private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
     private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
+
+    private final List<Action> initActions;
 
     private boolean isRunning = false;
     private boolean isPaused = false;
@@ -37,6 +44,13 @@ public class Simulation {
 
     public Simulation(SimulationMap simulationMap) {
         this.simulationMap = simulationMap;
+        this.initActions = List.of(
+            new SpawnGrassAction(SpawnConfig.INITIAL_GRASS),
+            new SpawnRockAction(SpawnConfig.INITIAL_ROCKS),
+            new SpawnTreeAction(SpawnConfig.INITIAL_TREES),
+            new SpawnPredatorAction(SpawnConfig.INITIAL_PREDATORS),
+            new SpawnHerbivoreAction(SpawnConfig.INITIAL_HERBIVORES)
+        );
     }
 
     public void launch() {
@@ -50,7 +64,7 @@ public class Simulation {
     }
 
     private void runSimulationLoop(SimulationMap simulationMap) {
-        initMap();
+        init();
 
         while (!Thread.currentThread().isInterrupted()) {
             if (shouldRespawn()) {
@@ -117,8 +131,10 @@ public class Simulation {
         }
     }
 
-    private void initMap() {
-        initObjects.initObjectsOnTheMap(simulationMap);
+    private void init() {
+        for (Action action : initActions) {
+            action.execute(simulationMap);
+        }
     }
 
     private boolean shouldRespawn() {

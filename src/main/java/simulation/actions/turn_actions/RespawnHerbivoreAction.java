@@ -19,7 +19,7 @@ public class RespawnHerbivoreAction extends SpawnAction {
 
         for (int i = 0; i < RESPAWN_COUNT; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
-            Entity entity = createEntity(herbivoresCount + i, simulationMap);
+            Entity entity = createEntity(simulationMap, herbivoresCount + i);
 
             simulationMap.addEntity(coordinate, entity);
 
@@ -28,7 +28,7 @@ public class RespawnHerbivoreAction extends SpawnAction {
     }
 
     @Override
-    protected Entity createEntity(int index, SimulationMap simulationMap) {
+    protected Entity createEntity( SimulationMap simulationMap, int index) {
         return new Herbivore("Herbivore" + (index + 1));
     }
 }

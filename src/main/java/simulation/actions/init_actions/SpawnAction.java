@@ -12,12 +12,12 @@ public abstract class SpawnAction implements Action {
         this.count = count;
     }
 
-    protected abstract Entity createEntity(int index, SimulationMap simulationMap);
+    protected abstract Entity createEntity(SimulationMap simulationMap, int index);
 
     public void execute(SimulationMap simulationMap) {
         for (int i = 0; i < count; i++) {
             Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
-            Entity entity = createEntity(i, simulationMap);
+            Entity entity = createEntity(simulationMap, i);
 
             simulationMap.addEntity(coordinate, entity);
         }
