@@ -8,5 +8,7 @@ public final class Icons {
     public final static String TREE_ICON = "\uD83C\uDF33";
     public final static String EMPTY_ICON = "⬛";
 
-    private Icons() {}
+    private Icons() {
+
+    }
 }

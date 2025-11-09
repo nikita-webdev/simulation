@@ -27,4 +27,8 @@ public class ConsoleLogFormatter extends Formatter {
 
         return color + baseFormat + ANSI_RESET;
     }
+
+    private ConsoleLogFormatter() {
+
+    }
 }

@@ -1,10 +1,6 @@
 package simulation.config;
 
 public class LoggerMessages {
-    private LoggerMessages() {
-
-    }
-
     // Simulation
     public static final String PAUSED = "The simulation has been paused.";
     public static final String THREAD_INTERRUPTED = "The thread was interrupted.";
@@ -26,4 +22,8 @@ public class LoggerMessages {
 
     public static final String EAT_MESSAGE = "\uD83C\uDF3E %s ate %s at (%d,%d).";
     public static final String ATTACK_MESSAGE = "❗ %s attacked %s at (%d,%d).";
+
+    private LoggerMessages() {
+
+    }
 }

@@ -21,4 +21,8 @@ public class FileHandlerLogFormatter extends Formatter {
 
         return date + levelAndMessage;
     }
+
+    private FileHandlerLogFormatter() {
+
+    }
 }
