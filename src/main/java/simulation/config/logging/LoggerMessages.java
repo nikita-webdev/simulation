@@ -1,4 +1,4 @@
-package simulation.config;
+package simulation.config.logging;
 
 public class LoggerMessages {
     // Simulation

@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static simulation.config.LoggerMessages.MAP_FULL;
+import static simulation.config.logging.LoggerMessages.MAP_FULL;
 
 public class SimulationMap {
     private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
@@ -29,6 +29,18 @@ public class SimulationMap {
         } else {
             entities.put(coordinate, entity);
         }
+    }
+
+    public int countEntitiesOfType(Class<? extends Entity> type) {
+        int count = 0;
+        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
+            Entity entity = entry.getValue();
+            if (type.isInstance(entity)) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     public boolean isMapFull() {

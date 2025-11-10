@@ -7,7 +7,7 @@ import simulation.entities.Entity;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
-import static simulation.config.LoggerMessages.*;
+import static simulation.config.logging.LoggerMessages.*;
 
 public abstract class Creature extends Entity {
     private static final Logger logger = Logger.getLogger(Creature.class.getName());

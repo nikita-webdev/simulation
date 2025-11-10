@@ -8,13 +8,12 @@ import java.util.logging.Logger;
 import simulation.actions.Action;
 import simulation.actions.init_actions.*;
 import simulation.actions.turn_actions.MoveAllCreatures;
-import simulation.actions.turn_actions.RespawnGrassAction;
-import simulation.actions.turn_actions.RespawnHerbivoreAction;
-import simulation.config.SpawnConfig;
+import simulation.config.logging.LoggerMessages;
+import simulation.config.spawn.SpawnConfig;
+import simulation.entities.animals.Herbivore;
+import simulation.entities.objects.Grass;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
-
-import static simulation.config.LoggerMessages.*;
 
 public class Simulation {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
@@ -30,8 +29,6 @@ public class Simulation {
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
 
-//    private final RespawnGrassAction respawnGrassAction = new RespawnGrassAction();
-//    private final RespawnHerbivoreAction respawnHerbivoreAction = new RespawnHerbivoreAction();
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
     private final List<Action> initActions;
@@ -62,10 +59,7 @@ public class Simulation {
         init();
 
         while (!Thread.currentThread().isInterrupted()) {
-            if (shouldRespawn()) {
-//                respawnGrassAction.execute(simulationMap);
-//                respawnHerbivoreAction.execute(simulationMap);
-            }
+            respawn();
 
             if (isPaused) {
                 handlePausedSimulationThread();
@@ -106,14 +100,14 @@ public class Simulation {
     }
 
     private void stopSimulation() {
-        logger.log(Level.INFO, STOPPED);
+        logger.log(Level.INFO, LoggerMessages.STOPPED);
         simulationThread.interrupt();
         userInputThread.interrupt();
         System.exit(0);
     }
 
     private void handlePausedSimulationThread() {
-        logger.log(Level.INFO, PAUSED);
+        logger.log(Level.INFO, LoggerMessages.PAUSED);
         menuOptionsPrinter.printPauseOptions();
 
         synchronized (pauseLock) {
@@ -121,7 +115,7 @@ public class Simulation {
                 pauseLock.wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                logger.log(Level.INFO, THREAD_INTERRUPTED);
+                logger.log(Level.INFO, LoggerMessages.THREAD_INTERRUPTED);
             }
         }
     }
@@ -132,10 +126,10 @@ public class Simulation {
         }
     }
 
-    private boolean shouldRespawn() {
-        boolean isTurnMultipleOfTen = turnCount % 10 == 0;
-
-        return isTurnMultipleOfTen && !simulationMap.isMapFull();
+    private void respawn() {
+        for (Action action : turnActions) {
+            action.execute(simulationMap);
+        }
     }
 
     private final Thread simulationThread = new Thread() {
@@ -169,11 +163,11 @@ public class Simulation {
                 isRunning = true;
             }
             case PAUSE -> {
-                logger.log(Level.INFO, PAUSE_UNAVAILABLE);
+                logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
             }
             case EXIT -> stopSimulation();
             default -> {
-                logger.log(Level.INFO, NO_SUCH_COMMAND);
+                logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
             }
         }
     }
@@ -184,16 +178,16 @@ public class Simulation {
             case PAUSE -> pauseSimulation();
             case NEXT_TURN -> nextTurn();
             case RESPAWN_GRASS -> {
-//                respawnGrassAction.execute(simulationMap);
-                logger.log(Level.INFO, ADDED_GRASS);
+                new SpawnAction(() -> new Grass("Grass"), SpawnConfig.RESPAWN_GRASS).execute(simulationMap);
+                logger.log(Level.INFO, LoggerMessages.ADDED_GRASS);
             }
             case RESPAWN_HERBIVORE -> {
-//                respawnHerbivoreAction.execute(simulationMap);
-                logger.log(Level.INFO, ADDED_HERBIVORES);
+                new SpawnAction(() -> new Herbivore("Herbivore"), SpawnConfig.RESPAWN_HERBIVORE).execute(simulationMap);
+                logger.log(Level.INFO, LoggerMessages.ADDED_HERBIVORES);
             }
             case EXIT -> stopSimulation();
             default -> {
-                logger.log(Level.INFO, NO_SUCH_COMMAND);
+                logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
                 menuOptionsPrinter.printPauseOptions();
             }
         }

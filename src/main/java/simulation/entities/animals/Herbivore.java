@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static simulation.config.Icons.HERBIVORE_ICON;
-import static simulation.config.LoggerMessages.EAT_MESSAGE;
+import static simulation.config.logging.LoggerMessages.EAT_MESSAGE;
 
 public class Herbivore extends Creature {
     private static final Logger logger = Logger.getLogger(Herbivore.class.getName());

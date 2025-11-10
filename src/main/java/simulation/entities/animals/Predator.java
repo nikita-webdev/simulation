@@ -6,7 +6,7 @@ import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import static simulation.config.Icons.PREDATOR_ICON;
-import static simulation.config.LoggerMessages.ATTACK_MESSAGE;
+import static simulation.config.logging.LoggerMessages.ATTACK_MESSAGE;
 
 public class Predator extends Creature {
     private static final Logger logger = Logger.getLogger(Predator.class.getName());

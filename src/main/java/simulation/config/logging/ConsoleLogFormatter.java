@@ -1,4 +1,4 @@
-package simulation.config;
+package simulation.config.logging;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
