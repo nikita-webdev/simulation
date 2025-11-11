@@ -3,6 +3,7 @@ package simulation.scenario;
 import simulation.Simulation;
 import simulation.actions.Action;
 import simulation.actions.init_actions.*;
+import simulation.actions.turn_actions.MoveAllCreatures;
 import simulation.actions.turn_actions.RespawnAction;
 import simulation.config.spawn.RespawnThresholds;
 import simulation.config.spawn.SpawnConfig;
@@ -26,6 +27,7 @@ public class DefaultScenario implements SimulationScenario {
         );
 
         List<Action> turnActions = List.of(
+                new MoveAllCreatures(),
                 new RespawnAction(() -> new Grass("Grass"), 10, RespawnThresholds.RESPAWN_GRASS),
                 new RespawnAction(() -> new Herbivore("Herbivore"), 5, RespawnThresholds.RESPAWN_HERBIVORE)
             );

@@ -1,7 +1,13 @@
 package simulation.entities.animals;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import simulation.entities.Entity;
+import simulation.entities.objects.Grass;
+import simulation.entities.objects.Rock;
+import simulation.entities.objects.Tree;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
@@ -22,19 +28,39 @@ public class Predator extends Creature {
         icon = PREDATOR_ICON;
     }
 
-    public void eat(SimulationMap simulationMap, Coordinate food) {
-        if (simulationMap.isFood(this, food)) {
-            int preyHp = simulationMap.getAllCreatures().get(food).getHp();
-            if (preyHp > 0) {
-                String preyName = simulationMap.getAllCreatures().get(food).name;
-                logger.log(Level.INFO, String.format(ATTACK_MESSAGE, this.name, preyName, food.row(), food.column()));
-                attack(simulationMap, food);
+    @Override
+    protected boolean canEat(Entity entity) {
+        return entity instanceof Herbivore;
+    }
+
+    @Override
+    protected void eat(SimulationMap simulationMap, Coordinate target) {
+        Optional <Creature> optionalEntity = simulationMap.getCreatureAt(target);
+
+        if (optionalEntity.isPresent()) {
+            Creature targetCreature = optionalEntity.get();
+
+            if (canEat(targetCreature)) {
+                int preyHp = targetCreature.getHp();
+
+                if (preyHp > 0) {
+                    String preyName = targetCreature.name;
+                    logger.log(Level.INFO, String.format(ATTACK_MESSAGE, this.name, preyName, target.row(), target.column()));
+                    attack(simulationMap, target);
+                }
             }
         }
     }
 
+    @Override
     public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
-        return simulationMap.isTreeOrRock(coordinate) || simulationMap.isGrass(coordinate);
+        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
+
+        if (targetEntity.isPresent()) {
+            return (targetEntity.get() instanceof Tree || targetEntity.get() instanceof Rock || targetEntity.get() instanceof Grass);
+        }
+
+        return false;
     }
 
     private void attack(SimulationMap simulationMap, Coordinate prey) {

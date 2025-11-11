@@ -5,6 +5,7 @@ import simulation.entities.Entity;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class SpawnAction implements Action {
@@ -16,17 +17,20 @@ public class SpawnAction implements Action {
         this.amount = amount;
     }
 
+    @Override
     public void execute(SimulationMap simulationMap) {
+        spawnEntity(simulationMap);
+    }
+
+    protected void spawnEntity(SimulationMap simulationMap) {
         for (int i = 0; i < amount; i++) {
-            Coordinate coordinate = simulationMap.generateRandomFreeCoordinate();
+            Optional <Coordinate> randomCoordinate = simulationMap.generateRandomFreeCoordinate();
 
-            if (coordinate == null) {
-                break;
+            if (randomCoordinate.isPresent()) {
+                Coordinate freeCoordinate = randomCoordinate.get();
+                Entity entity = entitySupplier.get();
+                simulationMap.addEntity(freeCoordinate, entity);
             }
-
-            Entity entity = entitySupplier.get();
-
-            simulationMap.addEntity(coordinate, entity);
         }
     }
 }

@@ -8,14 +8,17 @@ import java.util.logging.Logger;
 import simulation.actions.Action;
 import simulation.actions.init_actions.*;
 import simulation.actions.turn_actions.MoveAllCreatures;
+import simulation.config.SimulationConfig;
 import simulation.config.logging.LoggerMessages;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.animals.Herbivore;
 import simulation.entities.objects.Grass;
+import simulation.renderer.ConsoleRenderer;
+import simulation.simulation_map.MapChangeListener;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
 
-public class Simulation {
+public class Simulation implements MapChangeListener {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
     private static final Object pauseLock = new Object();
 
@@ -26,8 +29,11 @@ public class Simulation {
     private static final String RESPAWN_HERBIVORE = "5";
     private static final String EXIT = "0";
 
-    private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
     private final SimulationMap simulationMap;
+
+    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT);
+
+    private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
 
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
@@ -43,6 +49,8 @@ public class Simulation {
         this.simulationMap = simulationMap;
         this.initActions = initActions;
         this.turnActions = turnActions;
+
+        simulationMap.addListener(this);
     }
 
     public void launch() {
@@ -59,7 +67,7 @@ public class Simulation {
         init();
 
         while (!Thread.currentThread().isInterrupted()) {
-            respawn();
+            tick();
 
             if (isPaused) {
                 handlePausedSimulationThread();
@@ -71,8 +79,6 @@ public class Simulation {
                 moveAllCreatures.execute(simulationMap);
                 isNextTurn = false;
             }
-
-            turnCount++;
         }
     }
 
@@ -126,7 +132,7 @@ public class Simulation {
         }
     }
 
-    private void respawn() {
+    private void tick() {
         for (Action action : turnActions) {
             action.execute(simulationMap);
         }
@@ -190,6 +196,23 @@ public class Simulation {
                 logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
                 menuOptionsPrinter.printPauseOptions();
             }
+        }
+    }
+
+    @Override
+    public void onMapChange(SimulationMap simulationMap) {
+        updateMap();
+        turnCount++;
+        System.out.println("Ход: " + turnCount);
+    }
+
+    public void updateMap() {
+        renderer.render(simulationMap);
+
+        try {
+            Thread.sleep(SimulationConfig.DELAY_MOVE);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }

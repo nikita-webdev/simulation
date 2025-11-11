@@ -1,5 +1,6 @@
 package simulation.actions.turn_actions;
 
+import simulation.actions.Action;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 import simulation.entities.animals.Creature;
@@ -9,9 +10,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MoveAllCreatures {
+public class MoveAllCreatures implements Action {
     private boolean isMoveAllowed = true;
 
+    @Override
     public void execute(SimulationMap simulationMap) {
         PathFinder pathFinder = new PathFinder();
         final List<Coordinate> coordinates = collectAllCreatures(simulationMap);

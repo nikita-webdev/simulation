@@ -1,23 +1,24 @@
-package simulation.simulation_map;
+package simulation.renderer;
 
 import simulation.entities.Entity;
+import simulation.simulation_map.Coordinate;
+import simulation.simulation_map.SimulationMap;
+
 import java.util.Arrays;
 import java.util.Map;
 
 import static simulation.config.Icons.EMPTY_ICON;
 
-public class Renderer {
-    private final SimulationMap simulationMap;
+public class ConsoleRenderer implements Renderer {
     private final String[][] field;
 
-    public Renderer(SimulationMap simulationMap, int mapSizeRow, int mapSizeColumn) {
-        this.simulationMap = simulationMap;
+    public ConsoleRenderer(int mapSizeRow, int mapSizeColumn) {
         this.field = new String[mapSizeColumn][mapSizeRow];
     }
 
-    public void renderMap() {
+    public void render(SimulationMap simulationMap) {
         initializeEmptyField();
-        updateMap();
+        updateMap(simulationMap);
         printMap();
     }
 
@@ -27,7 +28,7 @@ public class Renderer {
         }
     }
 
-    private void updateMap() {
+    private void updateMap(SimulationMap simulationMap) {
         for (Map.Entry<Coordinate, Entity> entry : simulationMap.getEntities().entrySet()) {
             Coordinate currentCoordinate = entry.getKey();
             Entity entity = entry.getValue();

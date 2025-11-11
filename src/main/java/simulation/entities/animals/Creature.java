@@ -25,25 +25,25 @@ public abstract class Creature extends Entity {
         for (int step = 0; step < countOfSteps; step++) {
             Coordinate nextStep = path.get(step);
 
-            if(simulationMap.isFood(this, nextStep)) {
-                eat(simulationMap, nextStep);
-                simulationMap.updateMap();
-                break;
+            Optional <Entity> targetEntity = simulationMap.getEntityAt(nextStep);
+            if (targetEntity.isPresent()) {
+                if(canEat(targetEntity.get())) {
+                    eat(simulationMap, nextStep);
+                    break;
+                }
             }
 
             if (!simulationMap.isCoordinatesOccupied(nextStep)) {
                 if (step < 1) {
-                    moveCreature(simulationMap, from, nextStep);
+                    simulationMap.moveEntity(from, nextStep);
                 } else {
-                    moveCreature(simulationMap, path.get(step - 1), nextStep);
+                    simulationMap.moveEntity(path.get(step - 1), nextStep);
                 }
 
                 logger.log(Level.INFO, String.format(MOVE_MESSAGE, this.name, nextStep.row(), nextStep.column()));
             } else {
                 logger.log(Level.INFO, String.format(FOOD_NOT_FOUND, this.name));
             }
-
-            simulationMap.updateMap();
         }
     }
 
@@ -59,6 +59,8 @@ public abstract class Creature extends Entity {
 
     protected abstract void eat(SimulationMap simulationMap, Coordinate food);
 
+    protected abstract boolean canEat(Entity entity);
+
     protected void takeDamage(SimulationMap simulationMap, Coordinate coordinate, int damage) {
         if (getHp() > 0) {
             setHp(getHp() - damage);
@@ -72,8 +74,8 @@ public abstract class Creature extends Entity {
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
         String creatureName = simulationMap.getAllCreatures().get(coordinate).name;
 
-        logger.log(Level.INFO, String.format(DIE_MESSAGE, creatureName));
         simulationMap.removeEntity(coordinate);
+        logger.log(Level.INFO, String.format(DIE_MESSAGE, creatureName));
     }
 
     protected void setHp(int hp) {
@@ -86,15 +88,5 @@ public abstract class Creature extends Entity {
 
     protected void setSpeed(int speed) {
         this.speed = speed;
-    }
-
-    private void moveCreature(SimulationMap simulationMap, Coordinate from, Coordinate to) {
-        Entity entity = this;
-
-        if (from != null) {
-            simulationMap.removeEntity(from);
-
-            simulationMap.addEntity(to, entity);
-        }
     }
 }

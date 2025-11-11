@@ -1,8 +1,13 @@
 package simulation.entities.animals;
 
+import simulation.entities.Entity;
+import simulation.entities.objects.Grass;
+import simulation.entities.objects.Rock;
+import simulation.entities.objects.Tree;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,15 +26,33 @@ public class Herbivore extends Creature {
         icon = HERBIVORE_ICON;
     }
 
-    public void eat(SimulationMap simulationMap, Coordinate food) {
-        if (simulationMap.isFood(this, food)) {
-            String foodName = simulationMap.getEntities().get(food).name;
-            logger.log(Level.INFO, String.format(EAT_MESSAGE, this.name, foodName, food.row(), food.column()));
-            simulationMap.removeEntity(food);
+    @Override
+    protected boolean canEat(Entity entity) {
+        return entity instanceof Grass;
+    }
+
+    @Override
+    protected void eat(SimulationMap simulationMap, Coordinate target) {
+        Optional<Entity> optionalEntity = simulationMap.getEntityAt(target);
+
+        if (optionalEntity.isPresent()) {
+            Entity targetEntity = optionalEntity.get();
+
+            if (canEat(targetEntity)) {
+                String foodName = targetEntity.name;
+                simulationMap.removeEntity(target);
+                logger.log(Level.INFO, String.format(EAT_MESSAGE, this.name, foodName, target.row(), target.column()));
+            }
         }
     }
 
+    @Override
     public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
-        return simulationMap.isTreeOrRock(coordinate);
+        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
+        if (targetEntity.isPresent()) {
+            return (targetEntity.get() instanceof Tree || targetEntity.get() instanceof Rock);
+        }
+
+        return false;
     }
 }

@@ -1,12 +1,11 @@
 package simulation.simulation_map;
 
+import simulation.config.SimulationConfig;
 import simulation.entities.Entity;
 import simulation.entities.animals.Creature;
 import simulation.entities.animals.Herbivore;
 import simulation.entities.animals.Predator;
 import simulation.entities.objects.Grass;
-import simulation.entities.objects.Rock;
-import simulation.entities.objects.Tree;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -16,12 +15,29 @@ import static simulation.config.logging.LoggerMessages.MAP_FULL;
 
 public class SimulationMap {
     private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
-    public static final int DELAY_MOVE = 500;
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
 
     private final Map<Coordinate, Entity> entities = new HashMap<>();
-    private final Renderer renderer = new Renderer(this, WIDTH, HEIGHT);
+
+    private final List<MapChangeListener> listeners = new ArrayList<>();
+
+    public void addListener(MapChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyListeners() {
+        for(MapChangeListener listener : listeners) {
+            listener.onMapChange(this);
+        }
+    }
+
+    public void moveEntity(Coordinate from, Coordinate to) {
+        if (from != null) {
+            Entity entity = entities.remove(from);
+            addEntity(to, entity);
+        }
+
+        notifyListeners();
+    }
 
     public void addEntity(Coordinate coordinate, Entity entity) {
         if (isMapFull()) {
@@ -44,58 +60,30 @@ public class SimulationMap {
     }
 
     public boolean isMapFull() {
-        int maxEntities = WIDTH * HEIGHT;
+        int maxEntities = SimulationConfig.MAP_WIDTH * SimulationConfig.MAP_HEIGHT;
 
-        return getCountOfEntity() == maxEntities;
+        return countEntitiesOfType(Entity.class) == maxEntities;
     }
 
     public Map<Coordinate, Entity> getEntities() {
         return Collections.unmodifiableMap(entities);
     }
 
-    public Coordinate generateRandomFreeCoordinate() {
+    public Optional <Coordinate> generateRandomFreeCoordinate() {
+        if (isMapFull()) {
+            return Optional.empty();
+        }
+
         Random random = new Random();
         int row;
         int column;
 
         do {
-            row = random.nextInt((SimulationMap.WIDTH));
-            column = random.nextInt((SimulationMap.HEIGHT));
+            row = random.nextInt((SimulationConfig.MAP_WIDTH));
+            column = random.nextInt((SimulationConfig.MAP_HEIGHT));
         } while (isCoordinatesOccupied(new Coordinate(row, column)));
 
-        return new Coordinate(row, column);
-    }
-
-    public int getCountOfEntity() {
-        return getEntities().size();
-    }
-
-    public int getCountOfGrass() {
-        int countOfGrass = 0;
-
-        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
-            Entity entity = entry.getValue();
-
-            if (entity instanceof Grass) {
-                countOfGrass++;
-            }
-        }
-
-        return countOfGrass;
-    }
-
-    public int getCountOfHerbivores() {
-        int countOfHerbivores = 0;
-
-        for (Map.Entry<Coordinate, Entity> entry : getEntities().entrySet()) {
-            Entity entity = entry.getValue();
-
-            if (entity instanceof Herbivore) {
-                countOfHerbivores++;
-            }
-        }
-
-        return countOfHerbivores;
+        return Optional.of(new Coordinate(row, column));
     }
 
     public boolean isGrass(Coordinate currentPosition) {
@@ -106,12 +94,14 @@ public class SimulationMap {
         return getEntities().get(currentPosition) instanceof Herbivore;
     }
 
-    public boolean isTreeOrRock(Coordinate currentPosition) {
-        return (getEntities().get(currentPosition) instanceof Tree || getEntities().get(currentPosition) instanceof Rock);
-    }
+    public boolean isCoordinatesOccupied(Coordinate targetCoordinate) {
+        validateCoordinate(targetCoordinate);
 
-    public boolean isCoordinatesOccupied(Coordinate targetCoordinates) {
-        return getEntities().containsKey(targetCoordinates);
+        if (!isCoordinateWithinMapBounds(targetCoordinate)) {
+            throw new IllegalArgumentException("Coordinate out of bound");
+        }
+
+        return getEntities().containsKey(targetCoordinate);
     }
 
     public boolean isFood(Creature creature, Coordinate coordinate) {
@@ -141,24 +131,38 @@ public class SimulationMap {
         return creatures;
     }
 
+    public Optional<Entity> getEntityAt(Coordinate coordinate) {
+        return Optional.ofNullable(coordinate).map(c -> getEntities().get(coordinate));
+    }
+
+    public Optional<Creature> getCreatureAt(Coordinate coordinate) {
+        Entity entity = getEntities().get(coordinate);
+
+        if (entity instanceof Creature creature) {
+            return Optional.of(creature);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public void removeEntity(Coordinate coordinate) {
         entities.remove(coordinate);
+
+        notifyListeners();
     }
 
     public boolean isCoordinateWithinMapBounds(Coordinate targetCoordinate) {
+        validateCoordinate(targetCoordinate);
+
         int row = targetCoordinate.row();
         int column = targetCoordinate.column();
 
-        return (row < SimulationMap.WIDTH && row >= 0) && (column < SimulationMap.HEIGHT && column >= 0);
+        return (row < SimulationConfig.MAP_WIDTH && row >= 0) && (column < SimulationConfig.MAP_HEIGHT && column >= 0);
     }
 
-    public void updateMap() {
-        renderer.renderMap();
-
-        try {
-            Thread.sleep(DELAY_MOVE);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+    public void validateCoordinate(Coordinate targetCoordinate) {
+        if (targetCoordinate == null) {
+            throw new IllegalArgumentException("Coordinate must not be null");
         }
     }
 }
