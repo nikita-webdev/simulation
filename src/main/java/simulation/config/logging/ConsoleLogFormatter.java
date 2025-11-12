@@ -6,6 +6,9 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class ConsoleLogFormatter extends Formatter {
+    private ConsoleLogFormatter() {
+    }
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     public static final String ANSI_RESET = "\u001B[0m";
@@ -26,9 +29,5 @@ public class ConsoleLogFormatter extends Formatter {
         };
 
         return color + baseFormat + ANSI_RESET;
-    }
-
-    private ConsoleLogFormatter() {
-
     }
 }

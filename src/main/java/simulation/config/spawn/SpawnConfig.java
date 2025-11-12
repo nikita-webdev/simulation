@@ -1,6 +1,9 @@
 package simulation.config.spawn;
 
 public class SpawnConfig {
+    private SpawnConfig() {
+    }
+
     // Spawn config
     public static final int INITIAL_GRASS = 40;
     public static final int INITIAL_ROCKS = 5;
@@ -13,8 +16,4 @@ public class SpawnConfig {
     public static final int RESPAWN_HERBIVORE_THRESHOLD = 3;
     public static final int RESPAWN_GRASS = 10;
     public static final int RESPAWN_HERBIVORE = 5;
-
-    private SpawnConfig() {
-
-    }
 }

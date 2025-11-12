@@ -20,9 +20,9 @@ public class MoveAllCreatures implements Action {
 
         for (Coordinate coordinate : coordinates) {
             if (isMoveAllowed) {
-                Creature creature = simulationMap.getAllCreatures().get(coordinate);
+                Creature creature = simulationMap.getEntitiesOfType(Creature.class).get(coordinate);
 
-                boolean isCreatureAlive = simulationMap.getAllCreatures().containsKey(coordinate);
+                boolean isCreatureAlive = simulationMap.getEntitiesOfType(Creature.class).containsKey(coordinate);
 
                 if (isCreatureAlive) {
                     List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
@@ -35,7 +35,7 @@ public class MoveAllCreatures implements Action {
 
     private List<Coordinate> collectAllCreatures(SimulationMap simulationMap) {
         List<Coordinate> coordinates = new LinkedList<>();
-        for (Map.Entry<Coordinate, Creature> entry : simulationMap.getAllCreatures().entrySet()) {
+        for (Map.Entry<Coordinate, Creature> entry : simulationMap.getEntitiesOfType(Creature.class).entrySet()) {
             Coordinate coordinate = entry.getKey();
 
             coordinates.add(coordinate);

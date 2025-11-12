@@ -32,13 +32,13 @@ public class PathFinder {
             List<Coordinate> neighboringNodes = generateNeighboringNodes(currentPosition);
 
             for (Coordinate currentNeighbor : neighboringNodes) {
-                boolean isWithinBounds = simulationMap.isCoordinateWithinMapBounds(currentNeighbor);
+                boolean isWithinBounds = simulationMap.getMapBounds().isWithinMapBounds(currentNeighbor);
 
                 if(!isWithinBounds || visitedNodes.contains(currentNeighbor)) {
                     continue;
                 }
 
-                if (simulationMap.isFood(creature, currentNeighbor)) {
+                if (creature.isFood(simulationMap, creature, currentNeighbor)) {
                     cameFrom.put(currentNeighbor, currentPosition);
                     path = reconstructPath(cameFrom, currentNeighbor);
                     return path;
@@ -61,7 +61,7 @@ public class PathFinder {
         return path;
     }
 
-    public List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate food) {
+    private List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate food) {
         List<Coordinate> path = new LinkedList<>();
 
         for (Coordinate i = new Coordinate(food.row(), food.column()); i != null; i = cameFrom.get(i)) {

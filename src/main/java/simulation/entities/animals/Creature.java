@@ -33,7 +33,7 @@ public abstract class Creature extends Entity {
                 }
             }
 
-            if (!simulationMap.isCoordinatesOccupied(nextStep)) {
+            if (!simulationMap.isCoordinateOccupied(nextStep)) {
                 if (step < 1) {
                     simulationMap.moveEntity(from, nextStep);
                 } else {
@@ -72,7 +72,7 @@ public abstract class Creature extends Entity {
     }
 
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
-        String creatureName = simulationMap.getAllCreatures().get(coordinate).name;
+        String creatureName = simulationMap.getEntitiesOfType(Creature.class).get(coordinate).name;
 
         simulationMap.removeEntity(coordinate);
         logger.log(Level.INFO, String.format(DIE_MESSAGE, creatureName));
@@ -88,5 +88,15 @@ public abstract class Creature extends Entity {
 
     protected void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public boolean isFood(SimulationMap simulationMap, Creature creature, Coordinate coordinate) {
+        boolean isFood = false;
+
+        if (simulationMap.getEntityAt(coordinate).isPresent()) {
+            isFood = canEat(simulationMap.getEntityAt(coordinate).get());
+        }
+
+        return isFood;
     }
 }

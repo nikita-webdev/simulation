@@ -6,6 +6,9 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class FileHandlerLogFormatter extends Formatter {
+    private FileHandlerLogFormatter() {
+    }
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
     @Override
@@ -20,9 +23,5 @@ public class FileHandlerLogFormatter extends Formatter {
         }
 
         return date + levelAndMessage;
-    }
-
-    private FileHandlerLogFormatter() {
-
     }
 }

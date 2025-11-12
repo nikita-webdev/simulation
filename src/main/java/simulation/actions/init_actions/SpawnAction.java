@@ -4,6 +4,7 @@ import simulation.actions.Action;
 import simulation.entities.Entity;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
+import simulation.simulation_map.utils.SimulationMapUtils;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -24,7 +25,7 @@ public class SpawnAction implements Action {
 
     protected void spawnEntity(SimulationMap simulationMap) {
         for (int i = 0; i < amount; i++) {
-            Optional <Coordinate> randomCoordinate = simulationMap.generateRandomFreeCoordinate();
+            Optional <Coordinate> randomCoordinate = SimulationMapUtils.generateRandomFreeCoordinate(simulationMap, simulationMap.getMapBounds());
 
             if (randomCoordinate.isPresent()) {
                 Coordinate freeCoordinate = randomCoordinate.get();
