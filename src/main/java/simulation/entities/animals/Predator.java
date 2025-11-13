@@ -6,8 +6,6 @@ import java.util.logging.Logger;
 
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
-import simulation.entities.objects.Rock;
-import simulation.entities.objects.Tree;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
@@ -19,7 +17,7 @@ public class Predator extends Creature {
     private final int attackPower;
 
     public Predator(String name) {
-        super(name);
+        super(name, new GroundCreatureMover());
 
         this.setHp(100);
         this.setSpeed(2);
@@ -57,13 +55,18 @@ public class Predator extends Creature {
         Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
 
         if (targetEntity.isPresent()) {
-            return (targetEntity.get() instanceof Tree || targetEntity.get() instanceof Rock || targetEntity.get() instanceof Grass);
+            return (isSolid(targetEntity.get()) || targetEntity.get() instanceof Grass);
         }
 
         return false;
     }
 
     private void attack(SimulationMap simulationMap, Coordinate prey) {
-        takeDamage(simulationMap, prey, attackPower);
+        Optional<Creature> optionalTarget = simulationMap.getCreatureAt(prey);
+
+        if (optionalTarget.isPresent()) {
+            Creature target = optionalTarget.get();
+            target.takeDamage(simulationMap, prey, attackPower);
+        }
     }
 }

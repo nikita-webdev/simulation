@@ -18,7 +18,7 @@ public class Herbivore extends Creature {
     private static final Logger logger = Logger.getLogger(Herbivore.class.getName());
 
     public Herbivore(String name) {
-        super(name);
+        super(name, new GroundCreatureMover());
 
         this.setHp(100);
         this.setSpeed(1);
@@ -50,7 +50,7 @@ public class Herbivore extends Creature {
     public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
         Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
         if (targetEntity.isPresent()) {
-            return (targetEntity.get() instanceof Tree || targetEntity.get() instanceof Rock);
+            return isSolid(targetEntity.get());
         }
 
         return false;

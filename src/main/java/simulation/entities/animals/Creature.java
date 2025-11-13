@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import simulation.entities.Entity;
+import simulation.entities.objects.Rock;
+import simulation.entities.objects.Tree;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
@@ -15,36 +17,15 @@ public abstract class Creature extends Entity {
     private int speed;
     private int hp;
 
-    public Creature(String name) {
+    private final Mover mover;
+
+    public Creature(String name, Mover mover) {
         super(name);
+        this.mover = mover;
     }
 
     public void makeMove(SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
-        int countOfSteps = Math.min(getSpeed(), path.size());
-
-        for (int step = 0; step < countOfSteps; step++) {
-            Coordinate nextStep = path.get(step);
-
-            Optional <Entity> targetEntity = simulationMap.getEntityAt(nextStep);
-            if (targetEntity.isPresent()) {
-                if(canEat(targetEntity.get())) {
-                    eat(simulationMap, nextStep);
-                    break;
-                }
-            }
-
-            if (!simulationMap.isCoordinateOccupied(nextStep)) {
-                if (step < 1) {
-                    simulationMap.moveEntity(from, nextStep);
-                } else {
-                    simulationMap.moveEntity(path.get(step - 1), nextStep);
-                }
-
-                logger.log(Level.INFO, String.format(MOVE_MESSAGE, this.name, nextStep.row(), nextStep.column()));
-            } else {
-                logger.log(Level.INFO, String.format(FOOD_NOT_FOUND, this.name));
-            }
-        }
+        mover.move(this, simulationMap, from, path);
     }
 
     public abstract boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate);
@@ -72,10 +53,9 @@ public abstract class Creature extends Entity {
     }
 
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
-        String creatureName = simulationMap.getEntitiesOfType(Creature.class).get(coordinate).name;
-
         simulationMap.removeEntity(coordinate);
-        logger.log(Level.INFO, String.format(DIE_MESSAGE, creatureName));
+        logger.log(Level.INFO, String.format(DIE_MESSAGE, this.name));
+
     }
 
     protected void setHp(int hp) {
@@ -90,13 +70,7 @@ public abstract class Creature extends Entity {
         this.speed = speed;
     }
 
-    public boolean isFood(SimulationMap simulationMap, Creature creature, Coordinate coordinate) {
-        boolean isFood = false;
-
-        if (simulationMap.getEntityAt(coordinate).isPresent()) {
-            isFood = canEat(simulationMap.getEntityAt(coordinate).get());
-        }
-
-        return isFood;
+    protected boolean isSolid(Entity entity) {
+        return entity instanceof Tree || entity instanceof Rock;
     }
 }
