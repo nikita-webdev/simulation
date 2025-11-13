@@ -1,6 +1,6 @@
 package simulation.config;
 
-public class SimulationConfig {
+public final class SimulationConfig {
     private SimulationConfig() {
     }
 

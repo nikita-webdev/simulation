@@ -1,86 +1,82 @@
 package simulation.pathfinder;
 
+import simulation.entities.Entity;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
-import simulation.entities.animals.Creature;
 
 import java.util.*;
 
 public class PathFinder {
-    private static final int[][] OFFSETS = {
-            {0, -1},
-            {1, -1},
-            {1, 0},
-            {1, 1},
-            {0, 1},
-            {-1, 1},
-            {-1, 0},
-            {-1, -1}
-    };
+    private static final List<Coordinate> OFFSETS = List.of(
+        new Coordinate(0, -1),
+        new Coordinate(1, -1),
+        new Coordinate(1, 0),
+        new Coordinate(1, 1),
+        new Coordinate(0, 1),
+        new Coordinate(-1, 1),
+        new Coordinate(-1, 0),
+        new Coordinate(-1, -1)
+    );
 
-    public List<Coordinate> searchPath(SimulationMap simulationMap, Creature creature, Coordinate from) {
-        Queue<Coordinate> queue = new ArrayDeque<>();
-        Set<Coordinate> visitedNodes = new HashSet<>();
-        Map<Coordinate, Coordinate> cameFrom = new HashMap<>();
-        List<Coordinate> path = new LinkedList<>();
+    public List<Coordinate> searchPath(SimulationMap simulationMap, Coordinate from, Class<? extends Entity> targetType) {
+        Queue<Node> queue = new ArrayDeque<>();
+        Set<Coordinate> visited = new HashSet<>();
 
-        queue.add(from);
-        visitedNodes.add(from);
+        queue.add(new Node(from, null));
+        visited.add(from);
 
         while (!queue.isEmpty()) {
-            Coordinate currentPosition = queue.poll();
-            List<Coordinate> neighboringNodes = generateNeighboringNodes(currentPosition);
+            Node currentNode = queue.poll();
+            Coordinate currentPosition = currentNode.getCoordinate();
 
-            for (Coordinate currentNeighbor : neighboringNodes) {
-                boolean isWithinBounds = simulationMap.getMapBounds().isWithinMapBounds(currentNeighbor);
-
-                if(!isWithinBounds || visitedNodes.contains(currentNeighbor)) {
+            for (Coordinate neighbor : generateNeighboringNodes(currentPosition)) {
+                if(!simulationMap.getMapBounds().isWithinMapBounds(neighbor)) {
                     continue;
                 }
 
-                if (creature.isFood(simulationMap, creature, currentNeighbor)) {
-                    cameFrom.put(currentNeighbor, currentPosition);
-                    path = reconstructPath(cameFrom, currentNeighbor);
-                    return path;
+                if(visited.contains(neighbor)) {
+                    continue;
                 }
 
-                if (creature.isObstacle(simulationMap, currentNeighbor)) {
-                    visitedNodes.add(currentNeighbor);
-                } else {
-                    if (!cameFrom.containsKey(currentNeighbor)) {
-                        cameFrom.put(currentNeighbor, currentPosition);
-                    }
-
-                    queue.add(currentNeighbor);
-                    visitedNodes.add(currentNeighbor);
+                Optional<Entity> entityTarget = simulationMap.getEntityAt(neighbor);
+                if (entityTarget.isPresent() && targetType.isInstance(entityTarget.get())) {
+                    return reconstructPath(new Node(neighbor, currentNode));
                 }
+
+                if (simulationMap.isCoordinateOccupied(neighbor)) {
+                    continue;
+                }
+
+                visited.add(neighbor);
+                queue.add(new Node(neighbor, currentNode));
+
             }
         }
 
-        path.add(new Coordinate(from.row(), from.column()));
-        return path;
+        return List.of(from);
     }
 
-    private List<Coordinate> reconstructPath(Map<Coordinate, Coordinate> cameFrom, Coordinate food) {
-        List<Coordinate> path = new LinkedList<>();
+    private List<Coordinate> reconstructPath(Node endNode) {
+        LinkedList<Coordinate> path = new LinkedList<>();
 
-        for (Coordinate i = new Coordinate(food.row(), food.column()); i != null; i = cameFrom.get(i)) {
-            Coordinate coordinate = new Coordinate(i.row(), i.column());
-            path.add(coordinate);
+        for (Node node = endNode; node != null; node = node.getParent()) {
+            path.addFirst(node.getCoordinate());
         }
 
-        Collections.reverse(path);
-        path.remove(0);
+        if (!path.isEmpty()) {
+            path.removeFirst();
+        }
+
         return path;
     }
 
     private List<Coordinate> generateNeighboringNodes(Coordinate currentPosition) {
         List<Coordinate> neighboringNodes = new LinkedList<>();
 
-        for (int i = 0; i < OFFSETS.length; i++) {
+        for (Coordinate offset : OFFSETS) {
             neighboringNodes.add(new Coordinate(
-                    currentPosition.row() + OFFSETS[i][0],
-                    currentPosition.column() + OFFSETS[i][1]
+                    currentPosition.row() + offset.row(),
+                    currentPosition.column() + offset.column()
             ));
         }
 

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-public class FileHandlerLogFormatter extends Formatter {
+public final class FileHandlerLogFormatter extends Formatter {
     private FileHandlerLogFormatter() {
     }
 
@@ -20,7 +20,9 @@ public class FileHandlerLogFormatter extends Formatter {
             case "INFO", "SEVERE", "WARNING":
                 break;
             default:
+                throw new IllegalArgumentException("Unexpected log level: " + record.getLevel());
         }
+
 
         return date + levelAndMessage;
     }

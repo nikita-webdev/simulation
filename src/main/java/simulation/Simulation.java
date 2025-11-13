@@ -13,6 +13,7 @@ import simulation.config.logging.LoggerMessages;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.animals.Herbivore;
 import simulation.entities.objects.Grass;
+import simulation.menu.MenuOptions;
 import simulation.renderer.ConsoleRenderer;
 import simulation.simulation_map.MapChangeListener;
 import simulation.simulation_map.SimulationMap;

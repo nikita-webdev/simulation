@@ -1,6 +1,9 @@
 package simulation.menu;
 
-public class MenuOptions {
+public final class MenuOptions {
+    private MenuOptions() {
+    }
+
     public static final String START = "1";
     public static final String PAUSE = "2";
     public static final String QUIT = "0";

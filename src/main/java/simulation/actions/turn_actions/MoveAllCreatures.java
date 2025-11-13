@@ -1,6 +1,7 @@
 package simulation.actions.turn_actions;
 
 import simulation.actions.Action;
+import simulation.entities.objects.Grass;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 import simulation.entities.animals.Creature;
@@ -25,7 +26,7 @@ public class MoveAllCreatures implements Action {
                 boolean isCreatureAlive = simulationMap.getEntitiesOfType(Creature.class).containsKey(coordinate);
 
                 if (isCreatureAlive) {
-                    List<Coordinate> path = pathFinder.searchPath(simulationMap, creature, coordinate);
+                    List<Coordinate> path = pathFinder.searchPath(simulationMap, coordinate, Grass.class);
 
                     creature.makeMove(simulationMap, coordinate, path);
                 }

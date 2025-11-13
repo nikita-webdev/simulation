@@ -9,7 +9,7 @@ import simulation.simulation_map.SimulationMapBounds;
 import java.util.Optional;
 import java.util.Random;
 
-public class SimulationMapUtils {
+public final class SimulationMapUtils {
     private SimulationMapUtils() {
     }
 

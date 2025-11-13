@@ -11,10 +11,8 @@ import java.util.logging.Logger;
 
 public class SimulationMap {
     private static final Logger logger = Logger.getLogger(SimulationMap.class.getName());
-
     private final SimulationMapBounds simulationMapBounds;
     private final Map<Coordinate, Entity> entities = new HashMap<>();
-
     private final List<MapChangeListener> listeners = new ArrayList<>();
 
     public SimulationMap(SimulationMapBounds simulationMapBounds) {
@@ -32,7 +30,7 @@ public class SimulationMap {
     }
 
     public void moveEntity(Coordinate from, Coordinate to) {
-        if (from != null) {
+        if (from != null && to != null) {
             Entity entity = entities.remove(from);
             addEntity(to, entity);
         }

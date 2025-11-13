@@ -9,6 +9,5 @@ public final class Icons {
     public final static String EMPTY_ICON = "⬛";
 
     private Icons() {
-
     }
 }
