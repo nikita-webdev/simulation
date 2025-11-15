@@ -1,13 +1,10 @@
 package simulation.entities.objects;
 
 import simulation.entities.Entity;
-
-import static simulation.config.Icons.ROCK_ICON;
+import simulation.entities.EntityType;
 
 public class Rock extends Entity {
-    public Rock(String name) {
-        super(name);
-
-        icon = ROCK_ICON;
+    public Rock(EntityType entityType, String name) {
+        super(entityType, name);
     }
 }

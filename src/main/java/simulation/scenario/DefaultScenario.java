@@ -6,10 +6,12 @@ import simulation.actions.init_actions.*;
 import simulation.actions.turn_actions.MoveAllCreatures;
 import simulation.actions.turn_actions.RespawnAction;
 import simulation.config.SimulationConfig;
+import simulation.config.entities.AnimalStats;
 import simulation.config.spawn.RespawnThresholds;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.objects.*;
 import simulation.entities.animals.*;
+import simulation.entities.EntityType;
 import simulation.simulation_map.SimulationMapBounds;
 import simulation.simulation_map.SimulationMap;
 
@@ -22,17 +24,17 @@ public class DefaultScenario implements SimulationScenario {
         SimulationMap defaultMap = new SimulationMap(simulationMapBounds);
 
         List<Action> initActions = List.of(
-                new SpawnAction(() -> new Grass("Grass"), SpawnConfig.INITIAL_GRASS),
-                new SpawnAction(() -> new Rock("Rock"), SpawnConfig.INITIAL_ROCKS),
-                new SpawnAction(() -> new Tree("Tree"), SpawnConfig.INITIAL_TREES),
-                new SpawnAction(() -> new Predator("Predator"), SpawnConfig.INITIAL_PREDATORS),
-                new SpawnAction(() -> new Herbivore("Herbivore"), SpawnConfig.INITIAL_HERBIVORES)
+                new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.INITIAL_GRASS),
+                new SpawnAction(() -> new Rock(EntityType.ROCK, "Rock"), SpawnConfig.INITIAL_ROCKS),
+                new SpawnAction(() -> new Tree(EntityType.TREE, "Tree"), SpawnConfig.INITIAL_TREES),
+                new SpawnAction(() -> new Predator(EntityType.PREDATOR, "Predator", AnimalStats.DEFAULT_PREDATOR_ATTACK_POWER), SpawnConfig.INITIAL_PREDATORS),
+                new SpawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), SpawnConfig.INITIAL_HERBIVORES)
         );
 
         List<Action> turnActions = List.of(
                 new MoveAllCreatures(),
-                new RespawnAction(() -> new Grass("Grass"), 10, RespawnThresholds.RESPAWN_GRASS),
-                new RespawnAction(() -> new Herbivore("Herbivore"), 5, RespawnThresholds.RESPAWN_HERBIVORE)
+                new RespawnAction(() -> new Grass(EntityType.GRASS, "Grass"), 10, RespawnThresholds.RESPAWN_GRASS),
+                new RespawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), 5, RespawnThresholds.RESPAWN_HERBIVORE)
             );
 
         return new Simulation(defaultMap, initActions, turnActions);

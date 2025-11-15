@@ -13,8 +13,10 @@ import simulation.config.logging.LoggerMessages;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.animals.Herbivore;
 import simulation.entities.objects.Grass;
-import simulation.menu.MenuOptions;
 import simulation.renderer.ConsoleRenderer;
+import simulation.renderer.icon.AsciiIconProvider;
+import simulation.renderer.icon.EmojiIconProvider;
+import simulation.entities.EntityType;
 import simulation.simulation_map.MapChangeListener;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
@@ -32,7 +34,8 @@ public class Simulation implements MapChangeListener {
 
     private final SimulationMap simulationMap;
 
-    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT);
+    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT, new EmojiIconProvider());
+//    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT, new AsciiIconProvider());
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
 
@@ -185,11 +188,11 @@ public class Simulation implements MapChangeListener {
             case PAUSE -> pauseSimulation();
             case NEXT_TURN -> nextTurn();
             case RESPAWN_GRASS -> {
-                new SpawnAction(() -> new Grass("Grass"), SpawnConfig.RESPAWN_GRASS).execute(simulationMap);
+                new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.RESPAWN_GRASS).execute(simulationMap);
                 logger.log(Level.INFO, LoggerMessages.ADDED_GRASS);
             }
             case RESPAWN_HERBIVORE -> {
-                new SpawnAction(() -> new Herbivore("Herbivore"), SpawnConfig.RESPAWN_HERBIVORE).execute(simulationMap);
+                new SpawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), SpawnConfig.RESPAWN_HERBIVORE).execute(simulationMap);
                 logger.log(Level.INFO, LoggerMessages.ADDED_HERBIVORES);
             }
             case EXIT -> stopSimulation();
@@ -204,7 +207,7 @@ public class Simulation implements MapChangeListener {
     public void onMapChange(SimulationMap simulationMap) {
         updateMap();
         turnCount++;
-        System.out.println("Ход: " + turnCount);
+        System.out.println("Turn: " + turnCount);
     }
 
     public void updateMap() {

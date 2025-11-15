@@ -1,6 +1,6 @@
 package simulation.config.logging;
 
-public class LoggerMessages {
+public final class LoggerMessages {
     private LoggerMessages() {
     }
 

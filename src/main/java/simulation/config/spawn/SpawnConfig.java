@@ -1,6 +1,6 @@
 package simulation.config.spawn;
 
-public class SpawnConfig {
+public final class SpawnConfig {
     private SpawnConfig() {
     }
 

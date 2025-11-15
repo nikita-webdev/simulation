@@ -22,7 +22,6 @@ public class MoveAllCreatures implements Action {
         for (Coordinate coordinate : coordinates) {
             if (isMoveAllowed) {
                 Creature creature = simulationMap.getEntitiesOfType(Creature.class).get(coordinate);
-
                 boolean isCreatureAlive = simulationMap.getEntitiesOfType(Creature.class).containsKey(coordinate);
 
                 if (isCreatureAlive) {

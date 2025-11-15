@@ -3,25 +3,28 @@ package simulation.entities.animals;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Rock;
 import simulation.entities.objects.Tree;
+import simulation.entities.EntityType;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
-
-import static simulation.config.logging.LoggerMessages.*;
 
 public abstract class Creature extends Entity {
     private static final Logger logger = Logger.getLogger(Creature.class.getName());
 
+    private final Mover mover;
+
     private int speed;
     private int hp;
 
-    private final Mover mover;
-
-    public Creature(String name, Mover mover) {
-        super(name);
+    public Creature(EntityType entityType, String name, Mover mover, int speed, int hp) {
+        super(entityType, name);
         this.mover = mover;
+        this.speed = speed;
+        this.hp = hp;
     }
 
     public void makeMove(SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
@@ -54,7 +57,7 @@ public abstract class Creature extends Entity {
 
     protected void die(SimulationMap simulationMap, Coordinate coordinate) {
         simulationMap.removeEntity(coordinate);
-        logger.log(Level.INFO, String.format(DIE_MESSAGE, this.name));
+        logger.log(Level.INFO, String.format(LoggerMessages.DIE_MESSAGE, this.getName()));
 
     }
 

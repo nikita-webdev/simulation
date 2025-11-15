@@ -1,9 +1,10 @@
 package simulation.entities.animals;
 
+import simulation.config.entities.AnimalStats;
+import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
-import simulation.entities.objects.Rock;
-import simulation.entities.objects.Tree;
+import simulation.entities.EntityType;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
@@ -11,19 +12,12 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static simulation.config.Icons.HERBIVORE_ICON;
-import static simulation.config.logging.LoggerMessages.EAT_MESSAGE;
-
 public class Herbivore extends Creature {
     private static final Logger logger = Logger.getLogger(Herbivore.class.getName());
+    private static final Mover GROUND_MOVER = new GroundCreatureMover();
 
-    public Herbivore(String name) {
-        super(name, new GroundCreatureMover());
-
-        this.setHp(100);
-        this.setSpeed(1);
-
-        icon = HERBIVORE_ICON;
+    public Herbivore(EntityType entityType, String name) {
+        super(entityType, name, GROUND_MOVER, AnimalStats.HERBIVORE_SPEED, AnimalStats.HERBIVORE_HP);
     }
 
     @Override
@@ -39,9 +33,9 @@ public class Herbivore extends Creature {
             Entity targetEntity = optionalEntity.get();
 
             if (canEat(targetEntity)) {
-                String foodName = targetEntity.name;
+                String foodName = targetEntity.getName();
                 simulationMap.removeEntity(target);
-                logger.log(Level.INFO, String.format(EAT_MESSAGE, this.name, foodName, target.row(), target.column()));
+                logger.log(Level.INFO, String.format(LoggerMessages.EAT_MESSAGE, this.getName(), foodName, target.row(), target.column()));
             }
         }
     }

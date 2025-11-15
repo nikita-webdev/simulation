@@ -4,26 +4,22 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import simulation.config.entities.AnimalStats;
+import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
+import simulation.entities.EntityType;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
-import static simulation.config.Icons.PREDATOR_ICON;
-import static simulation.config.logging.LoggerMessages.ATTACK_MESSAGE;
-
 public class Predator extends Creature {
     private static final Logger logger = Logger.getLogger(Predator.class.getName());
+    private static final Mover GROUND_MOVER = new GroundCreatureMover();
     private final int attackPower;
 
-    public Predator(String name) {
-        super(name, new GroundCreatureMover());
-
-        this.setHp(100);
-        this.setSpeed(2);
-        this.attackPower = 50;
-
-        icon = PREDATOR_ICON;
+    public Predator(EntityType entityType, String name, int attackPower) {
+        super(entityType, name, GROUND_MOVER, AnimalStats.PREDATOR_SPEED, AnimalStats.PREDATOR_HP);
+        this.attackPower = attackPower;
     }
 
     @Override
@@ -42,8 +38,8 @@ public class Predator extends Creature {
                 int preyHp = targetCreature.getHp();
 
                 if (preyHp > 0) {
-                    String preyName = targetCreature.name;
-                    logger.log(Level.INFO, String.format(ATTACK_MESSAGE, this.name, preyName, target.row(), target.column()));
+                    String preyName = targetCreature.getName();
+                    logger.log(Level.INFO, String.format(LoggerMessages.ATTACK_MESSAGE, this.getName(), preyName, target.row(), target.column()));
                     attack(simulationMap, target);
                 }
             }

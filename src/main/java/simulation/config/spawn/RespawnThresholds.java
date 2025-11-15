@@ -7,7 +7,10 @@ import simulation.simulation_map.utils.SimulationMapUtils;
 
 import java.util.function.Predicate;
 
-public class RespawnThresholds {
+public final class RespawnThresholds {
+    private RespawnThresholds() {
+    }
+
     public static final Predicate<SimulationMap> RESPAWN_GRASS = new Predicate<>() {
         @Override
         public boolean test(SimulationMap simulationMap) {

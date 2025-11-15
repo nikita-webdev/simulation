@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class GroundCreatureMover implements Mover {
     private static final Logger logger = Logger.getLogger(GroundCreatureMover.class.getName());
 
+    @Override
     public void move(Creature creature, SimulationMap simulationMap, Coordinate from, List<Coordinate> path) {
         int steps = Math.min(creature.getSpeed(), path.size());
 
@@ -21,7 +22,7 @@ public class GroundCreatureMover implements Mover {
             Coordinate next = path.get(i);
 
             if (creature.isObstacle(simulationMap, next)) {
-                logger.log(Level.INFO, String.format(LoggerMessages.OBSTACLE_BLOCKED, creature.name, next.row(), next.column()));
+                logger.log(Level.INFO, String.format(LoggerMessages.OBSTACLE_BLOCKED, creature.getName(), next.row(), next.column()));
 
                 return;
             }
@@ -37,9 +38,9 @@ public class GroundCreatureMover implements Mover {
                 simulationMap.moveEntity(current, next);
                 current = next;
 
-                logger.log(Level.INFO, String.format(LoggerMessages.MOVE_MESSAGE, creature.name, next.row(), next.column()));
+                logger.log(Level.INFO, String.format(LoggerMessages.MOVE_MESSAGE, creature.getName(), next.row(), next.column()));
             } else {
-                logger.log(Level.INFO, String.format(LoggerMessages.FOOD_NOT_FOUND, creature.name));
+                logger.log(Level.INFO, String.format(LoggerMessages.FOOD_NOT_FOUND, creature.getName()));
 
                 return;
             }

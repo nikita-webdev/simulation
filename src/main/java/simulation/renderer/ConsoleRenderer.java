@@ -1,21 +1,23 @@
 package simulation.renderer;
 
 import simulation.entities.Entity;
+import simulation.renderer.icon.IconProvider;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import java.util.Arrays;
 import java.util.Map;
 
-import static simulation.config.Icons.EMPTY_ICON;
-
 public class ConsoleRenderer implements Renderer {
+    private final IconProvider iconProvider;
     private final String[][] field;
 
-    public ConsoleRenderer(int mapSizeRow, int mapSizeColumn) {
+    public ConsoleRenderer(int mapSizeRow, int mapSizeColumn, IconProvider iconProvider) {
+        this.iconProvider = iconProvider;
         this.field = new String[mapSizeColumn][mapSizeRow];
     }
 
+    @Override
     public void render(SimulationMap simulationMap) {
         initializeEmptyField();
         updateMap(simulationMap);
@@ -24,7 +26,7 @@ public class ConsoleRenderer implements Renderer {
 
     private void initializeEmptyField() {
         for (String[] strings : field) {
-            Arrays.fill(strings, EMPTY_ICON);
+            Arrays.fill(strings, iconProvider.getEmptyCellIcon());
         }
     }
 
@@ -35,7 +37,7 @@ public class ConsoleRenderer implements Renderer {
 
             int row = currentCoordinate.row();
             int column = currentCoordinate.column();
-            String entityIcon = entity.icon;
+            String entityIcon = iconProvider.getIcon(entity);
 
             field[column][row] = entityIcon;
         }

@@ -29,7 +29,7 @@ public class PathFinder {
             Node currentNode = queue.poll();
             Coordinate currentPosition = currentNode.getCoordinate();
 
-            for (Coordinate neighbor : generateNeighboringNodes(currentPosition)) {
+            for (Coordinate neighbor : generateNeighboringCoordinates(currentPosition)) {
                 if(!simulationMap.getMapBounds().isWithinMapBounds(neighbor)) {
                     continue;
                 }
@@ -70,16 +70,16 @@ public class PathFinder {
         return path;
     }
 
-    private List<Coordinate> generateNeighboringNodes(Coordinate currentPosition) {
-        List<Coordinate> neighboringNodes = new LinkedList<>();
+    private List<Coordinate> generateNeighboringCoordinates(Coordinate currentPosition) {
+        List<Coordinate> neighboringCoordinates = new LinkedList<>();
 
         for (Coordinate offset : OFFSETS) {
-            neighboringNodes.add(new Coordinate(
+            neighboringCoordinates.add(new Coordinate(
                     currentPosition.row() + offset.row(),
                     currentPosition.column() + offset.column()
             ));
         }
 
-        return neighboringNodes;
+        return neighboringCoordinates;
     }
 }
