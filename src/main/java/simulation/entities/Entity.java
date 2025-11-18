@@ -1,5 +1,7 @@
 package simulation.entities;
 
+import simulation.renderer.EntityType;
+
 public abstract class Entity {
     private final EntityType entityType;
     private final String name;

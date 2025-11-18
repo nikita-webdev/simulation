@@ -2,7 +2,7 @@ package simulation.renderer.icon;
 
 import simulation.entities.Entity;
 
-public class EmojiIconProvider implements IconProvider {
+public final class EmojiIconProvider implements IconProvider {
     @Override
     public String getIcon(Entity entity) {
         return switch (entity.getEntityType()) {

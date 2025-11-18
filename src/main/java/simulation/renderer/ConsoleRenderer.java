@@ -5,53 +5,35 @@ import simulation.renderer.icon.IconProvider;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.Optional;
 
 public class ConsoleRenderer implements Renderer {
     private final IconProvider iconProvider;
-    private final String[][] field;
 
-    public ConsoleRenderer(int mapSizeRow, int mapSizeColumn, IconProvider iconProvider) {
+    public ConsoleRenderer(IconProvider iconProvider) {
         this.iconProvider = iconProvider;
-        this.field = new String[mapSizeColumn][mapSizeRow];
     }
 
     @Override
     public void render(SimulationMap simulationMap) {
-        initializeEmptyField();
-        updateMap(simulationMap);
-        printMap();
-    }
+        int width = simulationMap.getMapBounds().getWidth();
+        int height = simulationMap.getMapBounds().getHeight();
 
-    private void initializeEmptyField() {
-        for (String[] strings : field) {
-            Arrays.fill(strings, iconProvider.getEmptyCellIcon());
-        }
-    }
+        for (int column = 0; column < height; column++) {
+            for (int row = 0; row < width; row++) {
+                Coordinate coordinate = new Coordinate(row, column);
 
-    private void updateMap(SimulationMap simulationMap) {
-        for (Map.Entry<Coordinate, Entity> entry : simulationMap.getEntities().entrySet()) {
-            Coordinate currentCoordinate = entry.getKey();
-            Entity entity = entry.getValue();
+                if (!simulationMap.isCoordinateOccupied(coordinate)) {
+                    System.out.print(iconProvider.getEmptyCellIcon());
+                } else {
+                    Optional<Entity> entityOpt = simulationMap.getEntityAt(coordinate);
 
-            int row = currentCoordinate.row();
-            int column = currentCoordinate.column();
-            String entityIcon = iconProvider.getIcon(entity);
-
-            field[column][row] = entityIcon;
-        }
-    }
-
-    private void printMap() {
-        StringBuilder line = new StringBuilder();
-
-        for(int i = 0; i < field.length; i++) {
-            for(int j = 0; j < field[i].length; j++) {
-                line.append(field[i][j] + " ");
+                    if (entityOpt.isPresent()) {
+                        System.out.print(iconProvider.getIcon(entityOpt.get()));
+                    }
+                }
             }
-            line.append("\n");
+            System.out.println();
         }
-        System.out.println(line);
     }
 }

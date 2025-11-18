@@ -8,7 +8,7 @@ import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Rock;
 import simulation.entities.objects.Tree;
-import simulation.entities.EntityType;
+import simulation.renderer.EntityType;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 

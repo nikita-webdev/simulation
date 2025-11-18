@@ -16,7 +16,7 @@ import simulation.entities.objects.Grass;
 import simulation.renderer.ConsoleRenderer;
 import simulation.renderer.icon.AsciiIconProvider;
 import simulation.renderer.icon.EmojiIconProvider;
-import simulation.entities.EntityType;
+import simulation.renderer.EntityType;
 import simulation.simulation_map.MapChangeListener;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
@@ -34,8 +34,8 @@ public class Simulation implements MapChangeListener {
 
     private final SimulationMap simulationMap;
 
-    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT, new EmojiIconProvider());
-//    private final ConsoleRenderer renderer = new ConsoleRenderer(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT, new AsciiIconProvider());
+    private final ConsoleRenderer renderer = new ConsoleRenderer(new EmojiIconProvider());
+//    private final ConsoleRenderer renderer = new ConsoleRenderer(new AsciiIconProvider());
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
 

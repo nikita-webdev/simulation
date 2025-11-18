@@ -8,7 +8,7 @@ import simulation.config.entities.AnimalStats;
 import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
-import simulation.entities.EntityType;
+import simulation.renderer.EntityType;
 import simulation.simulation_map.Coordinate;
 import simulation.simulation_map.SimulationMap;
 

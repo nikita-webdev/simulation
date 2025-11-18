@@ -1,4 +1,4 @@
-package simulation.entities;
+package simulation.renderer;
 
 public enum EntityType {
     GRASS,

@@ -1,7 +1,7 @@
 package simulation.entities.objects;
 
 import simulation.entities.Entity;
-import simulation.entities.EntityType;
+import simulation.renderer.EntityType;
 
 public class Rock extends Entity {
     public Rock(EntityType entityType, String name) {

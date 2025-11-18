@@ -11,7 +11,7 @@ import simulation.config.spawn.RespawnThresholds;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.objects.*;
 import simulation.entities.animals.*;
-import simulation.entities.EntityType;
+import simulation.renderer.EntityType;
 import simulation.simulation_map.SimulationMapBounds;
 import simulation.simulation_map.SimulationMap;
 

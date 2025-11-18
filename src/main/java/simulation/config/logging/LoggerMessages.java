@@ -23,7 +23,6 @@ public final class LoggerMessages {
     public static final String FOOD_NOT_FOUND = "❌ %s couldn't find any suitable food.";
     public static final String OBSTACLE_BLOCKED = "❌ %s cannot pass: obstacle at (%d,%d).";
 
-
     public static final String DIE_MESSAGE = "\uD83D\uDC80 %s died.";
     public static final String EAT_MESSAGE = "\uD83C\uDF3E %s ate %s at (%d,%d).";
 
