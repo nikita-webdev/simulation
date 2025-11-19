@@ -11,7 +11,6 @@ import simulation.entities.animals.Herbivore;
 import simulation.entities.objects.Grass;
 import simulation.renderer.EntityType;
 import simulation.simulation_map.SimulationMap;
-import simulation.menu.MenuOptionsPrinter;
 import simulation.actions.init_actions.SpawnAction;
 
 public class ConsoleMenuHandler implements Runnable {
@@ -54,7 +53,10 @@ public class ConsoleMenuHandler implements Runnable {
             menuOptionsPrinter.printStartOptions();
 
             while (running && !Thread.currentThread().isInterrupted()) {
-                if (!scanner.hasNextLine()) break;
+                if (!scanner.hasNextLine()) {
+                    break;
+                }
+
                 String userInput = scanner.nextLine().trim().toLowerCase();
 
                 if (!simulation.isRunning()) {
@@ -71,12 +73,17 @@ public class ConsoleMenuHandler implements Runnable {
     private void handleStartMenu(String userInput) {
         switch (userInput) {
             case START_RESUME -> {
-                simulation.startSimulation();
+                simulation.start();
             }
             case PAUSE -> {
+                simulation.pauseSimulation();
                 logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
             }
-            case EXIT -> simulation.stopSimulation();
+            case EXIT -> {
+                simulation.stopSimulation();
+                stop();
+                logger.log(Level.INFO, LoggerMessages.STOPPED);
+            }
             default -> logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
         }
     }
@@ -84,19 +91,24 @@ public class ConsoleMenuHandler implements Runnable {
     private void handlePauseMenu(String userInput) {
         switch (userInput) {
             case START_RESUME -> simulation.resumeSimulation();
-            case PAUSE -> simulation.pauseSimulation();
+            case PAUSE -> {
+                simulation.pauseSimulation();
+                logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
+            }
             case NEXT_TURN -> simulation.nextTurn();
             case RESPAWN_GRASS -> {
-                new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.RESPAWN_GRASS)
-                        .execute(simulationMap);
+                new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.RESPAWN_GRASS).execute(simulationMap);
                 logger.log(Level.INFO, LoggerMessages.ADDED_GRASS);
             }
             case RESPAWN_HERBIVORE -> {
-                new SpawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), SpawnConfig.RESPAWN_HERBIVORE)
-                        .execute(simulationMap);
+                new SpawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), SpawnConfig.RESPAWN_HERBIVORE).execute(simulationMap);
                 logger.log(Level.INFO, LoggerMessages.ADDED_HERBIVORES);
             }
-            case EXIT -> simulation.stopSimulation();
+            case EXIT -> {
+                simulation.stopSimulation();
+                stop();
+                logger.log(Level.INFO, LoggerMessages.STOPPED);
+            }
             default -> {
                 logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
                 menuOptionsPrinter.printPauseOptions();

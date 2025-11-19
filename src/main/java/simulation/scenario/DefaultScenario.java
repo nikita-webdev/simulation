@@ -11,7 +11,10 @@ import simulation.config.spawn.RespawnThresholds;
 import simulation.config.spawn.SpawnConfig;
 import simulation.entities.objects.*;
 import simulation.entities.animals.*;
+import simulation.renderer.ConsoleRenderer;
 import simulation.renderer.EntityType;
+import simulation.renderer.Renderer;
+import simulation.renderer.icon.EmojiIconProvider;
 import simulation.simulation_map.SimulationMapBounds;
 import simulation.simulation_map.SimulationMap;
 
@@ -22,6 +25,7 @@ public class DefaultScenario implements SimulationScenario {
     public Simulation create() {
         SimulationMapBounds simulationMapBounds = new SimulationMapBounds(SimulationConfig.MAP_WIDTH, SimulationConfig.MAP_HEIGHT);
         SimulationMap defaultMap = new SimulationMap(simulationMapBounds);
+        Renderer renderer = new ConsoleRenderer(new EmojiIconProvider());
 
         List<Action> initActions = List.of(
                 new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.INITIAL_GRASS),
@@ -37,6 +41,6 @@ public class DefaultScenario implements SimulationScenario {
                 new RespawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), 5, RespawnThresholds.RESPAWN_HERBIVORE)
             );
 
-        return new Simulation(defaultMap, initActions, turnActions);
+        return new Simulation(defaultMap, renderer, initActions, turnActions);
     }
 }

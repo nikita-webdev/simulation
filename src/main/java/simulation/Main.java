@@ -14,9 +14,12 @@ public class Main {
             System.err.println("Logger configuration file not found.");
         }
 
-        DefaultScenario defaultScenario = new DefaultScenario();
-        Simulation simulation = defaultScenario.create();
+        Launcher launcher = new Launcher();
+        launcher.launch();
 
-        simulation.launch();
+//        DefaultScenario defaultScenario = new DefaultScenario();
+//        Simulation simulation = defaultScenario.create();
+//
+//        simulation.launch();
     }
 }
