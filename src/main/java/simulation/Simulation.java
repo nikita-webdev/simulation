@@ -1,52 +1,40 @@
 package simulation;
 
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import simulation.actions.Action;
-import simulation.actions.init_actions.*;
 import simulation.actions.turn_actions.MoveAllCreatures;
 import simulation.config.SimulationConfig;
 import simulation.config.logging.LoggerMessages;
-import simulation.config.spawn.SpawnConfig;
-import simulation.entities.animals.Herbivore;
-import simulation.entities.objects.Grass;
+import simulation.menu.ConsoleMenuHandler;
 import simulation.renderer.ConsoleRenderer;
 import simulation.renderer.icon.AsciiIconProvider;
 import simulation.renderer.icon.EmojiIconProvider;
-import simulation.renderer.EntityType;
 import simulation.simulation_map.MapChangeListener;
 import simulation.simulation_map.SimulationMap;
 import simulation.menu.MenuOptionsPrinter;
 
 public class Simulation implements MapChangeListener {
     private static final Logger logger = Logger.getLogger(Simulation.class.getName());
-    private static final Object pauseLock = new Object();
 
-    private static final String START_RESUME = "1";
-    private static final String PAUSE = "2";
-    private static final String NEXT_TURN = "3";
-    private static final String RESPAWN_GRASS = "4";
-    private static final String RESPAWN_HERBIVORE = "5";
-    private static final String EXIT = "0";
-
+    private final Object pauseLock = new Object();
     private final SimulationMap simulationMap;
 
     private final ConsoleRenderer renderer = new ConsoleRenderer(new EmojiIconProvider());
 //    private final ConsoleRenderer renderer = new ConsoleRenderer(new AsciiIconProvider());
 
     private final MenuOptionsPrinter menuOptionsPrinter = new MenuOptionsPrinter();
+    private ConsoleMenuHandler consoleMenuHandler;
 
     private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
 
     private final List<Action> initActions;
     private final List<Action> turnActions;
 
-    private boolean isRunning = false;
-    private boolean isPaused = false;
-    private boolean isNextTurn = false;
+    private volatile SimulationState state = SimulationState.NOT_STARTED;
+    private volatile boolean isNextTurn = false;
     private int turnCount = 0;
 
     public Simulation(SimulationMap simulationMap, List<Action> initActions, List<Action> turnActions) {
@@ -57,14 +45,83 @@ public class Simulation implements MapChangeListener {
         simulationMap.addListener(this);
     }
 
-    public void launch() {
-        menuOptionsPrinter.printStartOptions();
-        userInputThread.start();
+    public synchronized void launch() {
+        this.consoleMenuHandler = new ConsoleMenuHandler(this, simulationMap, menuOptionsPrinter);
+        consoleMenuHandler.start();
+        startSimulation();
     }
 
-    private void startSimulation() {
+    public void startSimulation() {
+        if (state != SimulationState.NOT_STARTED) {
+            return;
+        }
+
+        init();
+        state = SimulationState.RUNNING;
         simulationThread.start();
-        resumeSimulation();
+
+        synchronized (pauseLock) {
+            pauseLock.notifyAll();
+        }
+    }
+
+    public synchronized void pauseSimulation() {
+        if (state != SimulationState.RUNNING) {
+            return;
+        }
+
+        state = SimulationState.PAUSED;
+    }
+
+    public synchronized void resumeSimulation() {
+        if (state != SimulationState.PAUSED) {
+            return;
+        }
+
+        state = SimulationState.RUNNING;
+
+        synchronized (pauseLock) {
+            pauseLock.notifyAll();
+        }
+    }
+
+    public void nextTurn() {
+        if (state != SimulationState.PAUSED) {
+            return;
+        }
+
+        isNextTurn = true;
+
+        synchronized (pauseLock) {
+            pauseLock.notifyAll();
+        }
+    }
+
+    public void stopSimulation() {
+        logger.log(Level.INFO, LoggerMessages.STOPPED);
+        state = SimulationState.NOT_STARTED;
+
+        simulationThread.interrupt();
+
+        if (consoleMenuHandler != null) {
+            consoleMenuHandler.stop();
+        }
+
+        synchronized (pauseLock) {
+            pauseLock.notifyAll();
+        }
+    }
+
+    public boolean isRunning() {
+        return state == SimulationState.RUNNING;
+    }
+
+    public boolean isPaused() {
+        return state == SimulationState.PAUSED;
+    }
+
+    public SimulationState getState() {
+        return state;
     }
 
     private void runSimulationLoop(SimulationMap simulationMap) {
@@ -73,47 +130,17 @@ public class Simulation implements MapChangeListener {
         while (!Thread.currentThread().isInterrupted()) {
             tick();
 
-            if (isPaused) {
+            if (isPaused()) {
                 handlePausedSimulationThread();
             } else {
                 moveAllCreatures.execute(simulationMap);
             }
 
-            if (isPaused && isNextTurn) {
+            if (isPaused() && isNextTurn) {
                 moveAllCreatures.execute(simulationMap);
                 isNextTurn = false;
             }
         }
-    }
-
-    private void resumeSimulation() {
-        isPaused = false;
-        moveAllCreatures.setMoveAllowed(true);
-
-        synchronized (pauseLock) {
-            pauseLock.notify();
-        }
-    }
-
-    private void nextTurn() {
-        isNextTurn = true;
-        moveAllCreatures.setMoveAllowed(true);
-
-        synchronized (pauseLock) {
-            pauseLock.notify();
-        }
-    }
-
-    private void pauseSimulation() {
-        isPaused = true;
-        moveAllCreatures.setMoveAllowed(false);
-    }
-
-    private void stopSimulation() {
-        logger.log(Level.INFO, LoggerMessages.STOPPED);
-        simulationThread.interrupt();
-        userInputThread.interrupt();
-        System.exit(0);
     }
 
     private void handlePausedSimulationThread() {
@@ -148,70 +175,16 @@ public class Simulation implements MapChangeListener {
         }
     };
 
-    private final Thread userInputThread = new Thread() {
-        public void run() {
-            Scanner scanner = new Scanner(System.in);
-
-            while (!Thread.currentThread().isInterrupted()) {
-                String userInput = scanner.nextLine().trim().toLowerCase();
-
-                if (!isRunning) {
-                    handleStartMenu(userInput);
-                } else {
-                    handlePauseMenu(userInput);
-                }
-            }
-
-            scanner.close();
-        }
-    };
-
-    private void handleStartMenu(String userInput) {
-        switch (userInput) {
-            case START_RESUME -> {
-                startSimulation();
-                isRunning = true;
-            }
-            case PAUSE -> {
-                logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
-            }
-            case EXIT -> stopSimulation();
-            default -> {
-                logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
-            }
-        }
-    }
-
-    private void handlePauseMenu(String userInput) {
-        switch (userInput) {
-            case START_RESUME -> resumeSimulation();
-            case PAUSE -> pauseSimulation();
-            case NEXT_TURN -> nextTurn();
-            case RESPAWN_GRASS -> {
-                new SpawnAction(() -> new Grass(EntityType.GRASS, "Grass"), SpawnConfig.RESPAWN_GRASS).execute(simulationMap);
-                logger.log(Level.INFO, LoggerMessages.ADDED_GRASS);
-            }
-            case RESPAWN_HERBIVORE -> {
-                new SpawnAction(() -> new Herbivore(EntityType.HERBIVORE, "Herbivore"), SpawnConfig.RESPAWN_HERBIVORE).execute(simulationMap);
-                logger.log(Level.INFO, LoggerMessages.ADDED_HERBIVORES);
-            }
-            case EXIT -> stopSimulation();
-            default -> {
-                logger.log(Level.INFO, LoggerMessages.NO_SUCH_COMMAND);
-                menuOptionsPrinter.printPauseOptions();
-            }
-        }
-    }
-
     @Override
     public void onMapChange(SimulationMap simulationMap) {
         updateMap();
-        turnCount++;
-        System.out.println("Turn: " + turnCount);
     }
 
     public void updateMap() {
         renderer.render(simulationMap);
+
+        turnCount++;
+        System.out.println("Turn: " + turnCount);
 
         try {
             Thread.sleep(SimulationConfig.DELAY_MOVE);
