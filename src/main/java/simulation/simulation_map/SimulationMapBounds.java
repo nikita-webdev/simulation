@@ -1,5 +1,7 @@
 package simulation.simulation_map;
 
+import simulation.coordinate.Coordinate;
+
 public class SimulationMapBounds {
     private final int width;
     private final int height;

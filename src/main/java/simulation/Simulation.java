@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import simulation.actions.Action;
-import simulation.actions.turn_actions.MoveAllCreatures;
 import simulation.config.SimulationConfig;
 import simulation.config.logging.LoggerMessages;
 import simulation.renderer.Renderer;
@@ -18,7 +17,6 @@ public class Simulation implements MapChangeListener {
     private final Object pauseLock = new Object();
     private final SimulationMap simulationMap;
     private final Renderer renderer;
-    private final MoveAllCreatures moveAllCreatures = new MoveAllCreatures();
     private final List<Action> initActions;
     private final List<Action> turnActions;
 
@@ -49,7 +47,7 @@ public class Simulation implements MapChangeListener {
         state = SimulationState.RUNNING;
     }
 
-    public synchronized void pauseSimulation() {
+    public synchronized void pause() {
         if (!isRunning()) {
             return;
         }
@@ -57,7 +55,7 @@ public class Simulation implements MapChangeListener {
         state = SimulationState.PAUSED;
     }
 
-    public synchronized void resumeSimulation() {
+    public synchronized void resume() {
         if (!isPaused()) {
             return;
         }
@@ -81,9 +79,9 @@ public class Simulation implements MapChangeListener {
         }
     }
 
-    public void stopSimulation() {
+    public void stop() {
         logger.log(Level.INFO, LoggerMessages.STOPPED);
-        state = SimulationState.NOT_STARTED;
+        state = SimulationState.STOPPED;
 
         simulationThread.interrupt();
 
@@ -100,24 +98,29 @@ public class Simulation implements MapChangeListener {
         return state == SimulationState.PAUSED;
     }
 
-    public SimulationState getState() {
-        return state;
+    public boolean isNotStarted() {
+        return state == SimulationState.NOT_STARTED;
     }
 
-    private void runSimulationLoop(SimulationMap simulationMap) {
+    private void runSimulationLoop() {
         init();
 
         while (!Thread.currentThread().isInterrupted()) {
+            if (isPaused()) {
+                if (isNextTurn) {
+                    tick();
+                    isNextTurn = false;
+                } else {
+                    handlePausedSimulationThread();
+                }
+                continue;
+            }
+
+            if (state == SimulationState.STOPPED) {
+                break;
+            }
+
             tick();
-
-            if (isPaused() && !isNextTurn) {
-                handlePausedSimulationThread();
-            }
-
-            if (isPaused() && isNextTurn) {
-                tick();
-                isNextTurn = false;
-            }
         }
     }
 
@@ -130,12 +133,10 @@ public class Simulation implements MapChangeListener {
     private void tick() {
         for (Action action : turnActions) {
             action.execute(simulationMap);
-            turnCount++;
         }
     }
 
     private void startSimulation() {
-        init();
         simulationThread.start();
 
         synchronized (pauseLock) {
@@ -157,8 +158,9 @@ public class Simulation implements MapChangeListener {
     }
 
     private final Thread simulationThread = new Thread() {
+        @Override
         public void run() {
-            runSimulationLoop(simulationMap);
+            runSimulationLoop();
         }
     };
 
@@ -169,6 +171,8 @@ public class Simulation implements MapChangeListener {
 
     private void updateMap() {
         renderer.render(simulationMap);
+
+        turnCount++;
         System.out.println("Turn: " + turnCount);
 
         sleep(SimulationConfig.DELAY_MOVE);

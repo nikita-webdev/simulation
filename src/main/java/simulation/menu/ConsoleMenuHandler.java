@@ -59,7 +59,7 @@ public class ConsoleMenuHandler implements Runnable {
 
                 String userInput = scanner.nextLine().trim().toLowerCase();
 
-                if (!simulation.isRunning()) {
+                if (simulation.isNotStarted()) {
                     handleStartMenu(userInput);
                 } else {
                     handlePauseMenu(userInput);
@@ -76,11 +76,10 @@ public class ConsoleMenuHandler implements Runnable {
                 simulation.start();
             }
             case PAUSE -> {
-                simulation.pauseSimulation();
                 logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
             }
             case EXIT -> {
-                simulation.stopSimulation();
+                simulation.stop();
                 stop();
                 logger.log(Level.INFO, LoggerMessages.STOPPED);
             }
@@ -90,9 +89,9 @@ public class ConsoleMenuHandler implements Runnable {
 
     private void handlePauseMenu(String userInput) {
         switch (userInput) {
-            case START_RESUME -> simulation.resumeSimulation();
+            case START_RESUME -> simulation.resume();
             case PAUSE -> {
-                simulation.pauseSimulation();
+                simulation.pause();
                 logger.log(Level.INFO, LoggerMessages.PAUSE_UNAVAILABLE);
             }
             case NEXT_TURN -> simulation.nextTurn();
@@ -105,7 +104,7 @@ public class ConsoleMenuHandler implements Runnable {
                 logger.log(Level.INFO, LoggerMessages.ADDED_HERBIVORES);
             }
             case EXIT -> {
-                simulation.stopSimulation();
+                simulation.stop();
                 stop();
                 logger.log(Level.INFO, LoggerMessages.STOPPED);
             }

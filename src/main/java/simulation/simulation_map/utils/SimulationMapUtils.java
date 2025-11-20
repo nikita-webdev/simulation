@@ -2,7 +2,7 @@ package simulation.simulation_map.utils;
 
 import simulation.config.SimulationConfig;
 import simulation.entities.Entity;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 import simulation.simulation_map.SimulationMapBounds;
 

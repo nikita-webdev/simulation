@@ -6,7 +6,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public final class FileHandlerLogFormatter extends Formatter {
-    private FileHandlerLogFormatter() {
+    public FileHandlerLogFormatter() {
     }
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");

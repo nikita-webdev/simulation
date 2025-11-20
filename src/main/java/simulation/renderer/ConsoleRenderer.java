@@ -2,7 +2,7 @@ package simulation.renderer;
 
 import simulation.entities.Entity;
 import simulation.renderer.icon.IconProvider;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import java.util.Optional;

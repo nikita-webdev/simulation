@@ -1,6 +1,7 @@
 package simulation.simulation_map;
 
 import simulation.config.logging.LoggerMessages;
+import simulation.coordinate.Coordinate;
 import simulation.entities.Entity;
 import simulation.entities.animals.Creature;
 import simulation.simulation_map.utils.SimulationMapUtils;
@@ -21,12 +22,6 @@ public class SimulationMap {
 
     public void addListener(MapChangeListener listener) {
         listeners.add(listener);
-    }
-
-    private void notifyListeners() {
-        for(MapChangeListener listener : listeners) {
-            listener.onMapChange(this);
-        }
     }
 
     public void moveEntity(Coordinate from, Coordinate to) {
@@ -100,5 +95,11 @@ public class SimulationMap {
 
     public SimulationMapBounds getMapBounds() {
         return simulationMapBounds;
+    }
+
+    private void notifyListeners() {
+        for(MapChangeListener listener : listeners) {
+            listener.onMapChange(this);
+        }
     }
 }

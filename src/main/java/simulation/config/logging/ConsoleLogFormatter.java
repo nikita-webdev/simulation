@@ -6,7 +6,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public final class ConsoleLogFormatter extends Formatter {
-    private ConsoleLogFormatter() {
+    public ConsoleLogFormatter() {
     }
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
