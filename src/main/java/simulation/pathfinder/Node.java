@@ -1,6 +1,6 @@
 package simulation.pathfinder;
 
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 
 public class Node {
     private final Coordinate coordinate;

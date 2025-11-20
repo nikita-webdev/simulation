@@ -2,7 +2,7 @@ package simulation.entities.animals;
 
 import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import java.util.List;

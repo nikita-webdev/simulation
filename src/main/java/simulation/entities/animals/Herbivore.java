@@ -5,7 +5,7 @@ import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
 import simulation.renderer.EntityType;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import java.util.Optional;
@@ -18,6 +18,21 @@ public class Herbivore extends Creature {
 
     public Herbivore(EntityType entityType, String name) {
         super(entityType, name, GROUND_MOVER, AnimalStats.HERBIVORE_SPEED, AnimalStats.HERBIVORE_HP);
+    }
+
+    @Override
+    public Class<? extends Entity> getPreferredFoodType() {
+        return Grass.class;
+    }
+
+    @Override
+    public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
+        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
+        if (targetEntity.isPresent()) {
+            return isSolid(targetEntity.get());
+        }
+
+        return false;
     }
 
     @Override
@@ -38,15 +53,5 @@ public class Herbivore extends Creature {
                 logger.log(Level.INFO, String.format(LoggerMessages.EAT_MESSAGE, this.getName(), foodName, target.row(), target.column()));
             }
         }
-    }
-
-    @Override
-    public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
-        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
-        if (targetEntity.isPresent()) {
-            return isSolid(targetEntity.get());
-        }
-
-        return false;
     }
 }

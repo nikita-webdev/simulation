@@ -9,7 +9,7 @@ import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Grass;
 import simulation.renderer.EntityType;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 public class Predator extends Creature {
@@ -20,6 +20,22 @@ public class Predator extends Creature {
     public Predator(EntityType entityType, String name, int attackPower) {
         super(entityType, name, GROUND_MOVER, AnimalStats.PREDATOR_SPEED, AnimalStats.PREDATOR_HP);
         this.attackPower = attackPower;
+    }
+
+    @Override
+    public Class<? extends Entity> getPreferredFoodType() {
+        return Herbivore.class;
+    }
+
+    @Override
+    public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
+        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
+
+        if (targetEntity.isPresent()) {
+            return (isSolid(targetEntity.get()) || targetEntity.get() instanceof Grass);
+        }
+
+        return false;
     }
 
     @Override
@@ -44,17 +60,6 @@ public class Predator extends Creature {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean isObstacle(SimulationMap simulationMap, Coordinate coordinate) {
-        Optional <Entity> targetEntity = simulationMap.getEntityAt(coordinate);
-
-        if (targetEntity.isPresent()) {
-            return (isSolid(targetEntity.get()) || targetEntity.get() instanceof Grass);
-        }
-
-        return false;
     }
 
     private void attack(SimulationMap simulationMap, Coordinate prey) {

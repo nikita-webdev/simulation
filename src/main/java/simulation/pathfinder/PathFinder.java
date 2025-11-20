@@ -1,7 +1,7 @@
 package simulation.pathfinder;
 
 import simulation.entities.Entity;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 import java.util.*;
@@ -49,7 +49,6 @@ public class PathFinder {
 
                 visited.add(neighbor);
                 queue.add(new Node(neighbor, currentNode));
-
             }
         }
 

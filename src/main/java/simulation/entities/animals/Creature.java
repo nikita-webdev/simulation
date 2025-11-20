@@ -8,8 +8,9 @@ import simulation.config.logging.LoggerMessages;
 import simulation.entities.Entity;
 import simulation.entities.objects.Rock;
 import simulation.entities.objects.Tree;
+import simulation.pathfinder.PathFinder;
 import simulation.renderer.EntityType;
-import simulation.simulation_map.Coordinate;
+import simulation.coordinate.Coordinate;
 import simulation.simulation_map.SimulationMap;
 
 public abstract class Creature extends Entity {
@@ -39,6 +40,13 @@ public abstract class Creature extends Entity {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public abstract Class<? extends Entity> getPreferredFoodType();
+
+    public List<Coordinate> calculatePath(SimulationMap simulationMap, Coordinate from) {
+        PathFinder pathFinder = new PathFinder();
+        return pathFinder.searchPath(simulationMap, from, getPreferredFoodType());
     }
 
     protected abstract void eat(SimulationMap simulationMap, Coordinate food);
